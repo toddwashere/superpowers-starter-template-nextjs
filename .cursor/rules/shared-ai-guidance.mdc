@@ -1,0 +1,10 @@
+---
+description: Shared project AI guidance and data model conventions
+alwaysApply: true
+---
+
+# Shared AI Guidance
+
+Canonical AI guidance lives in `ai/`. Prefer adding durable agent instructions there, with `.cursor/` and `.claude/` containing lightweight references.
+
+When adding or changing database models, Prisma schema, model repositories, or CRUD data access, read `ai/skills/add-data-model-to-database/SKILL.md` before making changes.
