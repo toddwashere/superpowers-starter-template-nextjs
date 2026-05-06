@@ -53,6 +53,8 @@ This SaaS starter template will provide a complete foundation for building moder
 
 ## Architecture Overview
 
+Detailed authentication implementation guidance lives in [`plans/01-add-auth.md`](./01-add-auth.md), including Better Auth configuration, organization/admin role choices, Better Auth UI usage, and package/app ownership boundaries.
+
 ### Monorepo Structure
 
 ```
@@ -72,14 +74,15 @@ This SaaS starter template will provide a complete foundation for building moder
 │   ├── requirements-check/ # install-time environment/tooling checks
 │
 ├── packages/          # Shared packages
-│   ├── auth/          # Authentication & permissions
-│   ├── database/      # Prisma schema & client, seeding, scripts, model Repo methods, types
+│   ├── auth/          # Authentication, permissions, and auth-owned model repos in src/models/
+│   ├── database/      # Centralized Prisma schema/client, migrations, seeding, and DB utilities
 │   ├── worker-queue/  # Event type registry, enqueue() client, queue adapter (pgmq default, swappable)
 │   ├── ui-common/     # Shared UI components across any ui package or ui based app with shadcn components
 │   ├── email/         # Email templates & sending via React email and helper
 │   ├── monitoring/    # Error tracking & analytics
 │   ├── common/        # Shared utilities
-│   ├── billing/       # Stripe integration for in app billing (SaaS)
+│   ├── crm/           # CRM domain logic and CRM-owned model repos in src/models/
+│   ├── billing/       # Stripe/Square billing and payment logic with billing-owned model repos in src/models/
 
 ├── tooling/           # Single @workspace/tooling package — shared dev configs
 │   ├── eslint/        # ESLint configs (base, react, nextjs)
@@ -645,12 +648,18 @@ await enqueue("subscription.created", { subscriptionId: subscription.id, orgId }
 
 **Shared Packages vs Feature Folders**
 
-| Code Type                                                      | Location                             | Example                                                        |
-| -------------------------------------------------------------- | ------------------------------------ | -------------------------------------------------------------- |
-| Stripe/billing logic (types, repos, pure functions, SDK calls) | `packages/billing/src/`              | `stripe-payment-intent.ts`, `order-repo.ts`                    |
-| Stripe UI components & Next.js server actions                  | `apps/dashboard/features/stripe/`    | `stripe-connect-button-modal.tsx`, `stripe-connect-actions.ts` |
-| Auth logic & permissions                                       | `packages/auth/src/`                 | `permissions.ts`                                               |
-| Business feature UI & actions                                  | `apps/dashboard/features/[feature]/` | `feature-repo.ts`, `add-feature-modal.tsx`                     |
+| Code Type                                                      | Location                                      | Example                                                        |
+| -------------------------------------------------------------- | --------------------------------------------- | -------------------------------------------------------------- |
+| Stripe/billing logic (types, pure functions, SDK calls)        | `packages/billing/src/`                       | `stripe-payment-intent.ts`, `stripe-client.ts`                 |
+| Billing model repositories                                     | `packages/billing/src/models/`                | `subscription-repo.ts`, `product-repo.ts`                      |
+| CRM model repositories                                         | `packages/crm/src/models/`                    | `contact-repo.ts`, `address-repo.ts`                           |
+| Auth logic & permissions                                       | `packages/auth/src/`                          | `permissions.ts`, `guards.ts`                                  |
+| Auth model repositories                                        | `packages/auth/src/models/`                   | `member-repo.ts`, `organization-repo.ts`                       |
+| Centralized Prisma schema/client/migrations                    | `packages/database/`                          | `prisma/auth.prisma`, `src/client.ts`                          |
+| Stripe UI components & Next.js server actions                  | `apps/dashboard/features/stripe/`             | `stripe-connect-button-modal.tsx`, `stripe-connect-actions.ts` |
+| Business feature UI & actions                                  | `apps/dashboard/features/[feature]/`          | `feature-repo.ts`, `add-feature-modal.tsx`                     |
+
+See [`plans/01-add-auth.md`](./01-add-auth.md) for the full Better Auth package/app breakdown.
 
 **Rule of thumb**: If code could be reused across multiple apps or is core infrastructure, it belongs in `packages/`. If it's dashboard-specific UI components or Next.js server actions, it belongs in `features/`.
 
@@ -658,9 +667,19 @@ await enqueue("subscription.created", { subscriptionId: subscription.id, orgId }
 
 **Prisma Schema Organization**
 
-- Split schemas across multiple files in `packages/database/prisma/`
-- `schema.prisma`: Main configuration and user/auth tables
-- `models/<model>.prisma`: Business domain models
+- Keep Prisma schema centralized in `packages/database/prisma/`, but split it into a small number of coarse domain files
+- `base.prisma`: Prisma generator, datasource, and shared enums
+- `auth.prisma`: Everything Better Auth gives us, including core auth, organization, admin, and optional 2FA schema
+- `crm.prisma`: CRM-style reusable models such as contacts, companies, street addresses, and related records
+- `billing.prisma`: Stripe subscriptions, products, prices, invoices, app billing state, and payment-provider integration records such as Stripe and Square
+
+**Repository Organization**
+
+- Use the repository pattern for database table access: database reads/writes should go through a `modelname-repo.ts` file
+- Keep repositories domain-owned rather than centralized in `packages/database`
+- Put repos under each package's `src/models/` folder, such as `packages/crm/src/models/contact-repo.ts`, `packages/crm/src/models/address-repo.ts`, `packages/billing/src/models/subscription-repo.ts`, and `packages/auth/src/models/member-repo.ts`
+- `packages/database` should expose the Prisma client, generated types, transactions, migrations, seeds, and shared DB utilities; it should not become a catch-all business logic package
+- Apps should call domain package APIs/repositories instead of importing Prisma directly
 
 **Type Safety with Decimal Types**
 
