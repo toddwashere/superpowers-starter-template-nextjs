@@ -18,7 +18,7 @@ Out of scope: authentication, data fetching, route protection, org switching log
 
 ## 1. Package: `@workspace/ui`
 
-The existing `packages/ui-common` is replaced by `packages/ui`, named `@workspace/ui`. This merges the ui-common package into the new structure.
+The `packages/ui` package, named `@workspace/ui`, holds all shared UI: design tokens, shadcn components, hooks, and utilities.
 
 ### File structure
 
@@ -560,7 +560,7 @@ Add to `.cursor/rules/shared-ai-guidance.mdc`:
 
 ### Deleted
 
-- `packages/ui-common/` — replaced by `packages/ui`
+None — `packages/ui-common` was already renamed to `packages/ui` prior to this phase.
 
 ---
 

@@ -82,7 +82,7 @@ Set up the TurboRepo monorepo structure from scratch with two Next.js 16 apps (`
 │   │   └── src/
 │   │       └── index.ts
 │   │
-│   └── ui-common/                  # @workspace/ui-common — empty shell for Phase 1.2
+│   └── ui/                         # @workspace/ui — empty shell for Phase 1.2
 │       ├── package.json
 │       └── tsconfig.json
 ```
@@ -200,11 +200,11 @@ Dashboard page content defaults to `"use client"` (interactive app). WWW page co
 - Pure functions, no dependencies
 - New route helpers added as pages are created in later phases
 
-### `packages/ui-common` (`@workspace/ui-common`)
+### `packages/ui` (`@workspace/ui`)
 
 - Empty shell: `package.json` and `tsconfig.json` only
 - No `src/`, no components, no dependencies
-- Phase 1.2 (styling/shadcn) populates this per `01-add-styles.md`
+- Phase 1.2 (styling/shadcn) populates this per the Phase 1.2 design spec
 
 ### Build strategy
 

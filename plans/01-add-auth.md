@@ -245,7 +245,7 @@ Contents:
 
 Auth business logic should live in `packages/auth`; this package should stay focused on schema, migrations, and database access.
 
-### `packages/ui-common`
+### `packages/ui`
 
 Owns generic reusable UI primitives.
 

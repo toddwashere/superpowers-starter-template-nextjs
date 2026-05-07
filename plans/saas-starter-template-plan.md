@@ -77,7 +77,7 @@ Detailed authentication implementation guidance lives in [`plans/01-add-auth.md`
 │   ├── auth/          # Authentication, permissions, and auth-owned model repos in src/models/
 │   ├── database/      # Centralized Prisma schema/client, migrations, seeding, and DB utilities
 │   ├── worker-queue/  # Event type registry, enqueue() client, queue adapter (pgmq default, swappable)
-│   ├── ui-common/     # Shared UI components across any ui package or ui based app with shadcn components
+│   ├── ui/            # Shared UI components across any ui package or ui based app with shadcn components
 │   ├── email/         # Email templates & sending via React email and helper
 │   ├── monitoring/    # Error tracking & analytics
 │   ├── common/        # Shared utilities

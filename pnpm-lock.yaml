@@ -110,7 +110,7 @@ importers:
         specifier: ^5.7
         version: 5.9.3
 
-  packages/ui-common:
+  packages/ui:
     devDependencies:
       '@workspace/tooling':
         specifier: workspace:*
