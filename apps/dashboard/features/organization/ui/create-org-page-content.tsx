@@ -1,0 +1,138 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { authClient } from "@workspace/auth/client";
+import { Button } from "@workspace/ui/components/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@workspace/ui/components/card";
+import { Input } from "@workspace/ui/components/input";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@workspace/ui/components/form";
+import { orgPath } from "@workspace/routes";
+import {
+  createOrgSchema,
+  type CreateOrgInput,
+} from "@/features/organization/data/org-types";
+
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/[\s_]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+export function CreateOrgPageContent() {
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const form = useForm<CreateOrgInput>({
+    resolver: zodResolver(createOrgSchema),
+    defaultValues: { name: "", slug: "" },
+  });
+
+  const onNameChange = (value: string) => {
+    form.setValue("name", value);
+    const currentSlug = form.getValues("slug");
+    const expectedSlug = slugify(form.getValues("name"));
+    if (!currentSlug || currentSlug === expectedSlug || currentSlug === slugify(value)) {
+      form.setValue("slug", slugify(value), { shouldValidate: true });
+    }
+  };
+
+  const onSubmit = async (data: CreateOrgInput) => {
+    setIsSubmitting(true);
+    setError(null);
+    try {
+      const result = await authClient.organization.create({
+        name: data.name,
+        slug: data.slug,
+      });
+      if (result.error) {
+        setError(result.error.message ?? "Failed to create organization");
+        return;
+      }
+      router.push(orgPath(data.slug));
+    } catch {
+      setError("An unexpected error occurred");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="mx-auto max-w-lg">
+      <Card>
+        <CardHeader>
+          <CardTitle>Create Organization</CardTitle>
+          <CardDescription>
+            Set up a new organization to collaborate with your team.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Organization Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Acme Inc"
+                        {...field}
+                        onChange={(e) => onNameChange(e.target.value)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="slug"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>URL Slug</FormLabel>
+                    <FormControl>
+                      <Input placeholder="acme-inc" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      This will be used in your organization's URL.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {error && (
+                <p className="text-sm text-destructive">{error}</p>
+              )}
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
+                {isSubmitting ? "Creating..." : "Create Organization"}
+              </Button>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

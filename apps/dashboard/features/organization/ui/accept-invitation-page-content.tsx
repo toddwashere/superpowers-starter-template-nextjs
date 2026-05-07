@@ -1,0 +1,216 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { authClient } from "@workspace/auth/client";
+import { Button } from "@workspace/ui/components/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@workspace/ui/components/card";
+import { Skeleton } from "@workspace/ui/components/skeleton";
+import { orgPath, signInPath } from "@workspace/routes";
+import { useQuery } from "@tanstack/react-query";
+
+interface AcceptInvitationPageContentProps {
+  invitationId: string;
+}
+
+export function AcceptInvitationPageContent({
+  invitationId,
+}: AcceptInvitationPageContentProps) {
+  const router = useRouter();
+  const { data: session, isPending: sessionLoading } =
+    authClient.useSession();
+  const [isAccepting, setIsAccepting] = useState(false);
+  const [isDeclining, setIsDeclining] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const { data: invitation, isLoading: invitationLoading } = useQuery({
+    queryKey: ["invitation", invitationId],
+    queryFn: async () => {
+      const result = await authClient.organization.getInvitation({
+        query: { id: invitationId },
+      });
+      return result.data;
+    },
+  });
+
+  const isLoading = sessionLoading || invitationLoading;
+
+  if (isLoading) {
+    return (
+      <div className="mx-auto max-w-md pt-20">
+        <Card>
+          <CardHeader>
+            <Skeleton className="h-6 w-48" />
+            <Skeleton className="h-4 w-64" />
+          </CardHeader>
+          <CardContent>
+            <Skeleton className="h-20 w-full" />
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!invitation) {
+    return (
+      <div className="mx-auto max-w-md pt-20">
+        <Card>
+          <CardHeader>
+            <CardTitle>Invalid Invitation</CardTitle>
+            <CardDescription>
+              This invitation is invalid or has expired.
+            </CardDescription>
+          </CardHeader>
+          <CardFooter>
+            <Button variant="outline" onClick={() => router.push("/")}>
+              Go to Dashboard
+            </Button>
+          </CardFooter>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!session?.user) {
+    return (
+      <div className="mx-auto max-w-md pt-20">
+        <Card>
+          <CardHeader>
+            <CardTitle>Sign In Required</CardTitle>
+            <CardDescription>
+              You need to sign in to accept this invitation.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">
+              You've been invited to join{" "}
+              <span className="font-medium">
+                {invitation.organizationName}
+              </span>{" "}
+              as a <span className="font-medium">{invitation.role}</span>.
+            </p>
+          </CardContent>
+          <CardFooter>
+            <Button
+              onClick={() =>
+                router.push(
+                  `${signInPath()}?callbackUrl=/accept-invitation/${invitationId}`,
+                )
+              }
+            >
+              Sign In to Continue
+            </Button>
+          </CardFooter>
+        </Card>
+      </div>
+    );
+  }
+
+  const handleAccept = async () => {
+    setIsAccepting(true);
+    setError(null);
+    try {
+      const result = await authClient.organization.acceptInvitation({
+        invitationId,
+      });
+      if (result.error) {
+        setError(result.error.message ?? "Failed to accept invitation");
+        return;
+      }
+      if (invitation.organizationSlug) {
+        router.push(orgPath(invitation.organizationSlug));
+      } else {
+        router.push("/");
+      }
+    } catch {
+      setError("An unexpected error occurred");
+    } finally {
+      setIsAccepting(false);
+    }
+  };
+
+  const handleDecline = async () => {
+    setIsDeclining(true);
+    setError(null);
+    try {
+      const result = await authClient.organization.rejectInvitation({
+        invitationId,
+      });
+      if (result.error) {
+        setError(result.error.message ?? "Failed to decline invitation");
+        return;
+      }
+      router.push("/");
+    } catch {
+      setError("An unexpected error occurred");
+    } finally {
+      setIsDeclining(false);
+    }
+  };
+
+  return (
+    <div className="mx-auto max-w-md pt-20">
+      <Card>
+        <CardHeader>
+          <CardTitle>Organization Invitation</CardTitle>
+          <CardDescription>
+            You've been invited to join an organization.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="rounded-lg border p-4 space-y-2">
+            <div className="flex justify-between">
+              <span className="text-sm text-muted-foreground">
+                Organization
+              </span>
+              <span className="text-sm font-medium">
+                {invitation.organizationName}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-muted-foreground">Role</span>
+              <span className="text-sm font-medium capitalize">
+                {invitation.role}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-muted-foreground">
+                Invited by
+              </span>
+              <span className="text-sm font-medium">
+                {invitation.inviterEmail ?? "Unknown"}
+              </span>
+            </div>
+          </div>
+          {error && (
+            <p className="text-sm text-destructive">{error}</p>
+          )}
+        </CardContent>
+        <CardFooter className="flex gap-3">
+          <Button
+            variant="outline"
+            className="flex-1"
+            onClick={handleDecline}
+            disabled={isDeclining || isAccepting}
+          >
+            {isDeclining ? "Declining..." : "Decline"}
+          </Button>
+          <Button
+            className="flex-1"
+            onClick={handleAccept}
+            disabled={isAccepting || isDeclining}
+          >
+            {isAccepting ? "Accepting..." : "Accept Invitation"}
+          </Button>
+        </CardFooter>
+      </Card>
+    </div>
+  );
+}
