@@ -661,7 +661,42 @@ The existing `OrgSwitcher` placeholder in `common/ui/org-switcher.tsx` is replac
 
 ---
 
-## 10. Verification Criteria
+## 10. Unit Tests
+
+Vitest tests for critical auth logic that doesn't require a database. These tests guard against permission regressions and validate security-critical helpers.
+
+### packages/auth — `src/__tests__/permissions.test.ts`
+
+- Owner role has all permissions (organization.update, organization.delete, member.*, invitation.*, billing.manage, apiKey.*)
+- Admin role has all permissions except organization.delete
+- Member role has no permissions (empty grants for every resource)
+- Adding a new resource to the statement requires updating all role definitions (snapshot test)
+
+### packages/auth — `src/__tests__/guards.test.ts`
+
+Mock Better Auth session API:
+- `requireUser()` returns user+session when session cookie is valid
+- `requireUser()` throws 401 when no session exists
+- `requireSystemAdmin()` returns user when `user.role === "admin"`
+- `requireSystemAdmin()` throws 403 when `user.role === "user"`
+- `requireOrgPermission("member.create")` succeeds for owner/admin roles
+- `requireOrgPermission("member.create")` throws 403 for member role
+- `requireOrgPermission("organization.delete")` throws 403 for admin role (only owner can delete)
+
+### features/organization — `data/__tests__/org-types.test.ts`
+
+Zod schema validation:
+- Valid org name + slug passes validation
+- Empty org name is rejected
+- Slug with invalid characters (spaces, uppercase, special chars) is rejected
+- Slug that's too short or too long is rejected
+- Valid invitation (email + role) passes
+- Invalid email format is rejected
+- Invalid role value is rejected
+
+---
+
+## 11. Verification Criteria
 
 - [ ] `docker compose up -d` starts PostgreSQL successfully
 - [ ] `pnpm prisma migrate dev` creates the auth schema tables
