@@ -179,9 +179,21 @@ importers:
       '@tailwindcss/postcss':
         specifier: ^4
         version: 4.2.4
+      '@types/react':
+        specifier: ^19.1
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: ^19.1
+        version: 19.2.3(@types/react@19.2.14)
       '@workspace/tooling':
         specifier: workspace:*
         version: link:../../tooling
+      react:
+        specifier: ^19.1
+        version: 19.2.6
+      react-dom:
+        specifier: ^19.1
+        version: 19.2.6(react@19.2.6)
       tailwindcss:
         specifier: ^4
         version: 4.2.4
