@@ -324,7 +324,6 @@ await enqueue("user.welcome-email", {
 **Database Design**
 
 - Multi-tenant data model
-- Audit trail tables
 - Soft deletion patterns
 - Optimistic locking
 - Database migrations
@@ -524,14 +523,25 @@ await enqueue("user.welcome-email", {
 
 ## Implementation Roadmap
 
-### Phase 1: Core Foundation (Weeks 1-4)
+### Phase 1.1: Core Foundation (Weeks 1-4)
 
-- [ ] Set up monorepo structure with TurboRepo
+- [ ] Set up monorepo structure with TurboRepo. only include `apps/dashboard`, `apps/www` and whatever packages are required such as `tooling` and `packages/common` for this phase.
 - [ ] Configure TypeScript, ESLint, Prettier
-- [ ] Implement basic Next.js apps (dashboard, marketing)
+- [ ] Implement basic Next.js apps (dashboard, www)
+
+### Phase 1.2: Styling and components → [detailed plan](./01-add-styles.md)
+
+- [ ] Establish CSS styling with tailwind and a central place to manage colors, default styles, custom classes, etc.
+- [ ] Create basic UI component library with shadcn
+
+### Phase 1.3: Database and auth basics
+
 - [ ] Set up Prisma with Better Auth core, organization, and admin plugin schema
 - [ ] Implement Better Auth with email/password and system admin roles
-- [ ] Create basic UI component library
+- [ ] Create basic UI component library (shadcn, look at the `01-add-auth.md` plan)
+
+### Phase 1.3
+
 - [ ] Set up development environment
 - [ ] Enable pgmq and pg_cron extensions in database
 - [ ] Create `packages/worker-queue` with event type registry, pgmq adapter, and `enqueue()` client
@@ -648,16 +658,16 @@ await enqueue("subscription.created", { subscriptionId: subscription.id, orgId }
 
 **Shared Packages vs Feature Folders**
 
-| Code Type                                                      | Location                                      | Example                                                        |
-| -------------------------------------------------------------- | --------------------------------------------- | -------------------------------------------------------------- |
-| Stripe/billing logic (types, pure functions, SDK calls)        | `packages/billing/src/`                       | `stripe-payment-intent.ts`, `stripe-client.ts`                 |
-| Billing model repositories                                     | `packages/billing/src/models/`                | `subscription-repo.ts`, `product-repo.ts`                      |
-| CRM model repositories                                         | `packages/crm/src/models/`                    | `contact-repo.ts`, `address-repo.ts`                           |
-| Auth logic & permissions                                       | `packages/auth/src/`                          | `permissions.ts`, `guards.ts`                                  |
-| Auth model repositories                                        | `packages/auth/src/models/`                   | `member-repo.ts`, `organization-repo.ts`                       |
-| Centralized Prisma schema/client/migrations                    | `packages/database/`                          | `prisma/auth.prisma`, `src/client.ts`                          |
-| Stripe UI components & Next.js server actions                  | `apps/dashboard/features/stripe/`             | `stripe-connect-button-modal.tsx`, `stripe-connect-actions.ts` |
-| Business feature UI & actions                                  | `apps/dashboard/features/[feature]/`          | `feature-repo.ts`, `add-feature-modal.tsx`                     |
+| Code Type                                               | Location                             | Example                                                        |
+| ------------------------------------------------------- | ------------------------------------ | -------------------------------------------------------------- |
+| Stripe/billing logic (types, pure functions, SDK calls) | `packages/billing/src/`              | `stripe-payment-intent.ts`, `stripe-client.ts`                 |
+| Billing model repositories                              | `packages/billing/src/models/`       | `subscription-repo.ts`, `product-repo.ts`                      |
+| CRM model repositories                                  | `packages/crm/src/models/`           | `contact-repo.ts`, `address-repo.ts`                           |
+| Auth logic & permissions                                | `packages/auth/src/`                 | `permissions.ts`, `guards.ts`                                  |
+| Auth model repositories                                 | `packages/auth/src/models/`          | `member-repo.ts`, `organization-repo.ts`                       |
+| Centralized Prisma schema/client/migrations             | `packages/database/`                 | `prisma/auth.prisma`, `src/client.ts`                          |
+| Stripe UI components & Next.js server actions           | `apps/dashboard/features/stripe/`    | `stripe-connect-button-modal.tsx`, `stripe-connect-actions.ts` |
+| Business feature UI & actions                           | `apps/dashboard/features/[feature]/` | `feature-repo.ts`, `add-feature-modal.tsx`                     |
 
 See [`plans/01-add-auth.md`](./01-add-auth.md) for the full Better Auth package/app breakdown.
 
