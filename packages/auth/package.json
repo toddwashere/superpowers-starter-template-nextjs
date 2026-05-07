@@ -1,0 +1,28 @@
+{
+  "name": "@workspace/auth",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./client": "./src/auth-client.ts",
+    "./permissions": "./src/permissions.ts",
+    "./guards": "./src/guards.ts",
+    "./session": "./src/session.ts",
+    "./constants": "./src/constants.ts",
+    "./types": "./src/types.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@workspace/database": "workspace:*",
+    "better-auth": "^1"
+  },
+  "devDependencies": {
+    "@workspace/tooling": "workspace:*",
+    "typescript": "^5.7",
+    "vitest": "^3"
+  }
+}
