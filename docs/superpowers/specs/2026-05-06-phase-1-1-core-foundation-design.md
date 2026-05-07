@@ -43,7 +43,7 @@ Set up the TurboRepo monorepo structure from scratch with two Next.js 16 apps (`
 │       └── react-library.json      # Extends base for library packages
 │
 ├── apps/
-│   ├── dashboard/                  # @workspace/dashboard — main SaaS app
+│   ├── dashboard/                  # @apps/dashboard — main SaaS app
 │   │   ├── package.json
 │   │   ├── next.config.ts
 │   │   ├── tsconfig.json
@@ -56,7 +56,7 @@ Set up the TurboRepo monorepo structure from scratch with two Next.js 16 apps (`
 │   │           └── ui/
 │   │               └── dashboard-page-content.tsx
 │   │
-│   └── www/                        # @workspace/www — marketing site
+│   └── www/                        # @apps/www — marketing site
 │       ├── package.json
 │       ├── next.config.ts
 │       ├── tsconfig.json
@@ -163,7 +163,7 @@ export default nextjsConfig;
 
 ## Next.js Apps
 
-### `apps/dashboard` (`@workspace/dashboard`)
+### `apps/dashboard` (`@apps/dashboard`)
 
 - Next.js 16 with App Router
 - Dependencies: `next`, `react`, `react-dom`, `@workspace/common`, `@workspace/routes`
@@ -171,16 +171,16 @@ export default nextjsConfig;
 - `app/layout.tsx` — Server Component; sets `<html lang="en">`, `<body>`, metadata `title: "Dashboard"`
 - `app/page.tsx` — sparse route file; imports and renders `DashboardPageContent`
 - `features/dashboard/ui/dashboard-page-content.tsx` — `"use client"`; renders "Dashboard" heading
-- Port: 3000 (Next.js default)
+- Port: 4000
 
-### `apps/www` (`@workspace/www`)
+### `apps/www` (`@apps/www`)
 
 - Same Next.js 16 setup
 - Dependencies: `next`, `react`, `react-dom`, `@workspace/common`, `@workspace/routes`
 - `app/layout.tsx` — Server Component; richer metadata with title template, description, OpenGraph placeholders
 - `app/page.tsx` — sparse route file; imports and renders `HomePageContent`
 - `features/marketing/ui/home-page-content.tsx` — Server Component (no `"use client"`); renders "Welcome" heading
-- Port: 3001 (configured in package.json dev script)
+- Port: 4001
 
 ### Key difference
 

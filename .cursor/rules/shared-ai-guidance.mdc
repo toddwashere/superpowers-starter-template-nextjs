@@ -10,3 +10,5 @@ Canonical AI guidance lives in `ai/`. Prefer adding durable agent instructions t
 When adding or changing database models, Prisma schema, model repositories, or CRUD data access, read `ai/skills/add-data-model-to-database/SKILL.md` before making changes.
 
 When adding new pages, routes, or feature page content to any Next.js app, read `ai/skills/add-new-page/SKILL.md` before making changes.
+
+When adding a new app to the monorepo (Next.js app, API server, webhook listener, worker, etc.), read `ai/skills/add-new-app/SKILL.md` before making changes.
