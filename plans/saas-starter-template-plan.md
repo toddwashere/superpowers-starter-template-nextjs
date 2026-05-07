@@ -533,6 +533,7 @@ await enqueue("user.welcome-email", {
 
 - [ ] Establish CSS styling with tailwind and a central place to manage colors, default styles, custom classes, etc.
 - [ ] Create basic UI component library with shadcn
+- [ ] Set up navigation side bar menus in dashboard (org specific, root, org settings)
 
 ### Phase 1.3: Database and auth basics
 
