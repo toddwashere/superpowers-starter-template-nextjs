@@ -1,0 +1,27 @@
+{
+  "name": "@workspace/database",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./client": "./src/client.ts"
+  },
+  "scripts": {
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:push": "prisma db push",
+    "db:seed": "prisma db seed",
+    "db:studio": "prisma studio",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "prisma": "^7"
+  },
+  "devDependencies": {
+    "@workspace/tooling": "workspace:*",
+    "dotenv": "^16",
+    "tsx": "^4",
+    "typescript": "^5.7"
+  }
+}
