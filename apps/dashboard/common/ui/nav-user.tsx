@@ -1,6 +1,9 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { BadgeCheck, Bell, ChevronsUpDown, LogOut } from "lucide-react";
+import { authClient } from "@/features/auth/data/auth-client";
+import { signInPath } from "@workspace/routes";
 import {
   Avatar,
   AvatarFallback,
@@ -21,16 +24,38 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@workspace/ui/components/sidebar";
-
-const placeholderUser = {
-  name: "User",
-  email: "user@example.com",
-  avatar: "",
-};
+import { Skeleton } from "@workspace/ui/components/skeleton";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
-  const user = placeholderUser;
+  const router = useRouter();
+  const { data: session, isPending } = authClient.useSession();
+
+  const user = session?.user;
+  const displayName = user?.name ?? "User";
+  const displayEmail = user?.email ?? "";
+  const displayImage = user?.image ?? "";
+
+  const handleSignOut = async () => {
+    await authClient.signOut();
+    router.push(signInPath());
+  };
+
+  if (isPending) {
+    return (
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <SidebarMenuButton size="lg">
+            <Skeleton className="size-8 rounded-lg" />
+            <div className="grid flex-1 gap-1">
+              <Skeleton className="h-3.5 w-24" />
+              <Skeleton className="h-3 w-32" />
+            </div>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    );
+  }
 
   return (
     <SidebarMenu>
@@ -42,15 +67,15 @@ export function NavUser() {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="size-8 rounded-lg">
-                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarImage src={displayImage} alt={displayName} />
                 <AvatarFallback className="rounded-lg">
-                  {user.name.slice(0, 2).toUpperCase()}
+                  {displayName.slice(0, 2).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.name}</span>
+                <span className="truncate font-medium">{displayName}</span>
                 <span className="truncate text-xs text-muted-foreground">
-                  {user.email}
+                  {displayEmail}
                 </span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
@@ -65,15 +90,15 @@ export function NavUser() {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="size-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
+                  <AvatarImage src={displayImage} alt={displayName} />
                   <AvatarFallback className="rounded-lg">
-                    {user.name.slice(0, 2).toUpperCase()}
+                    {displayName.slice(0, 2).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.name}</span>
+                  <span className="truncate font-medium">{displayName}</span>
                   <span className="truncate text-xs text-muted-foreground">
-                    {user.email}
+                    {displayEmail}
                   </span>
                 </div>
               </div>
@@ -90,7 +115,7 @@ export function NavUser() {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onSelect={handleSignOut}>
               <LogOut />
               Log out
             </DropdownMenuItem>
