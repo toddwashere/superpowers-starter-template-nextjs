@@ -1,6 +1,9 @@
-# Phase 1.2: Styling and Components
+# Phase 1.2: Styling and Components (SUPERSEDED)
 
-## Goal
+> **This plan has been superseded by the design spec at `docs/superpowers/specs/2026-05-07-phase-1-2-styling-and-components-design.md`.**
+> Key changes: Tailwind v4 (CSS-first, OKLCH), `@workspace/ui` naming, ESM-only, sidebar navigation included.
+
+## Original Goal (outdated — see spec above)
 
 Establish Tailwind CSS with a centralized design token system and initialize the Shadcn/ui component library, shared across the monorepo via `packages/ui`.
 
