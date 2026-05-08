@@ -9,7 +9,7 @@ export const auth = betterAuth({
   experimental: { joins: true },
   emailAndPassword: {
     enabled: true,
-    requireEmailVerification: true,
+    requireEmailVerification: false,
     sendVerificationEmail: async ({ user, url }: { user: { email: string }; url: string }) => {
       console.log(`[Auth] Verification email for ${user.email}: ${url}`);
     },
