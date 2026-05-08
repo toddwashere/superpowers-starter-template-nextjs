@@ -10,6 +10,7 @@ const publicPaths = [
   "/reset-password",
   "/verify-email",
   "/accept-invitation",
+  "/dev",
 ];
 
 const authPaths = ["/sign-in", "/sign-up"];

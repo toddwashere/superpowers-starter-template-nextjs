@@ -5,16 +5,19 @@ import type { LucideProps } from "lucide-react"
 import {
   BadgeCheck,
   Bell,
+  Bold,
   Building2,
   ChevronRight,
   ChevronsUpDown,
   CreditCard,
+  Italic,
   LayoutDashboard,
   LogOut,
   MoreHorizontal,
   Plus,
   Settings,
   Shield,
+  Underline,
   UserMinus,
   UserPlus,
   Users,
@@ -133,3 +136,24 @@ export const IconForChevronRight = forwardRef<SVGSVGElement, LucideProps>(
   )
 );
 IconForChevronRight.displayName = "IconForChevronRight";
+
+export const IconForBold = forwardRef<SVGSVGElement, LucideProps>(
+  (props, ref) => (
+    <Bold ref={ref} {...props} className={cn("size-4", props.className)} />
+  )
+);
+IconForBold.displayName = "IconForBold";
+
+export const IconForItalic = forwardRef<SVGSVGElement, LucideProps>(
+  (props, ref) => (
+    <Italic ref={ref} {...props} className={cn("size-4", props.className)} />
+  )
+);
+IconForItalic.displayName = "IconForItalic";
+
+export const IconForUnderline = forwardRef<SVGSVGElement, LucideProps>(
+  (props, ref) => (
+    <Underline ref={ref} {...props} className={cn("size-4", props.className)} />
+  )
+);
+IconForUnderline.displayName = "IconForUnderline";
