@@ -2,7 +2,7 @@
 
 import { IconForChevronRight } from "@workspace/ui/components/icon-for";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useParams } from "next/navigation";
 import {
   Collapsible,
   CollapsibleContent,
@@ -22,20 +22,24 @@ import type { NavConfig } from "@/types/nav";
 
 export function NavMain({ config }: { config: NavConfig }) {
   const pathname = usePathname();
+  const params = useParams<{ "org-slug"?: string }>();
+  const orgSlug = params["org-slug"];
+  const basePath = orgSlug ? `/${orgSlug}` : "";
 
   return (
     <SidebarGroup>
       {config.label && <SidebarGroupLabel>{config.label}</SidebarGroupLabel>}
       <SidebarMenu>
         {config.items.map((item) => {
+          const href = `${basePath}${item.href}`;
           const isActive =
-            pathname === item.href || pathname.startsWith(item.href + "/");
+            pathname === href || pathname.startsWith(href + "/");
 
           if (!item.items?.length) {
             return (
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton asChild isActive={isActive}>
-                  <Link href={item.href}>
+                  <Link href={href}>
                     <item.icon />
                     <span>{item.title}</span>
                   </Link>
@@ -56,18 +60,21 @@ export function NavMain({ config }: { config: NavConfig }) {
                 </CollapsibleTrigger>
                 <CollapsibleContent>
                   <SidebarMenuSub>
-                    {item.items.map((subItem) => (
-                      <SidebarMenuSubItem key={subItem.title}>
-                        <SidebarMenuSubButton
-                          asChild
-                          isActive={pathname === subItem.href}
-                        >
-                          <Link href={subItem.href}>
-                            <span>{subItem.title}</span>
-                          </Link>
-                        </SidebarMenuSubButton>
-                      </SidebarMenuSubItem>
-                    ))}
+                    {item.items.map((subItem) => {
+                      const subHref = `${basePath}${subItem.href}`;
+                      return (
+                        <SidebarMenuSubItem key={subItem.title}>
+                          <SidebarMenuSubButton
+                            asChild
+                            isActive={pathname === subHref}
+                          >
+                            <Link href={subHref}>
+                              <span>{subItem.title}</span>
+                            </Link>
+                          </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                      );
+                    })}
                   </SidebarMenuSub>
                 </CollapsibleContent>
               </SidebarMenuItem>
