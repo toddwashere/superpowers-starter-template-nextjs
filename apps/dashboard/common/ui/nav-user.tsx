@@ -1,7 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { BadgeCheck, Bell, ChevronsUpDown, LogOut } from "lucide-react";
+import {
+  IconForProfile,
+  IconForNotifications,
+  IconForExpand,
+  IconForSignOut,
+} from "@workspace/ui/components/icon-for";
 import { authClient } from "@/features/auth/data/auth-client";
 import { signInPath } from "@workspace/routes";
 import {
@@ -78,7 +83,7 @@ export function NavUser() {
                   {displayEmail}
                 </span>
               </div>
-              <ChevronsUpDown className="ml-auto size-4" />
+              <IconForExpand className="ml-auto" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -106,17 +111,17 @@ export function NavUser() {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <BadgeCheck />
+                <IconForProfile />
                 Account
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Bell />
+                <IconForNotifications />
                 Notifications
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onSelect={handleSignOut}>
-              <LogOut />
+              <IconForSignOut />
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>

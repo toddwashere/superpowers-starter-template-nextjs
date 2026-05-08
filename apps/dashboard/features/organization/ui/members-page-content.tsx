@@ -17,7 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from "@workspace/ui/components/table";
-import { MoreHorizontal, Shield, UserMinus } from "lucide-react";
+import { IconForMore, IconForSecurity, IconForRemove } from "@workspace/ui/components/icon-for";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -165,7 +165,7 @@ export function MembersPageContent({ orgSlug }: { orgSlug: string }) {
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <Button variant="ghost" size="sm">
-                              <MoreHorizontal className="size-4" />
+                              <IconForMore />
                               <span className="sr-only">Actions</span>
                             </Button>
                           </DropdownMenuTrigger>
@@ -180,7 +180,7 @@ export function MembersPageContent({ orgSlug }: { orgSlug: string }) {
                                 })
                               }
                             >
-                              <Shield className="mr-2 size-4" />
+                              <IconForSecurity className="mr-2" />
                               Change Role
                             </DropdownMenuItem>
                             <DropdownMenuItem
@@ -193,7 +193,7 @@ export function MembersPageContent({ orgSlug }: { orgSlug: string }) {
                                 })
                               }
                             >
-                              <UserMinus className="mr-2 size-4" />
+                              <IconForRemove className="mr-2" />
                               Remove
                             </DropdownMenuItem>
                           </DropdownMenuContent>

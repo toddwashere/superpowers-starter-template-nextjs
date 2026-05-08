@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useParams } from "next/navigation";
-import { ChevronsUpDown, Plus } from "lucide-react";
+import { IconForExpand, IconForAdd } from "@workspace/ui/components/icon-for";
 import { authClient } from "@workspace/auth/client";
 import {
   DropdownMenu,
@@ -69,7 +69,7 @@ export function OrgSwitcher() {
                   {activeOrg?.name ?? "Select Organization"}
                 </span>
               </div>
-              <ChevronsUpDown className="ml-auto" />
+              <IconForExpand className="ml-auto" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -101,7 +101,7 @@ export function OrgSwitcher() {
               onSelect={() => router.push(createOrgPath())}
             >
               <div className="flex size-6 items-center justify-center rounded-md border bg-background">
-                <Plus className="size-4" />
+                <IconForAdd />
               </div>
               <span className="font-medium text-muted-foreground">
                 Create Organization

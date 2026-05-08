@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight } from "lucide-react";
+import { IconForChevronRight } from "@workspace/ui/components/icon-for";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -51,7 +51,7 @@ export function NavMain({ config }: { config: NavConfig }) {
                   <SidebarMenuButton tooltip={item.title}>
                     <item.icon />
                     <span>{item.title}</span>
-                    <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                    <IconForChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
                 <CollapsibleContent>

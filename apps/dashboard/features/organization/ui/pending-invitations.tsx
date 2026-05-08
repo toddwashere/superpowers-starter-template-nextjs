@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from "@workspace/ui/components/card";
 import { Badge } from "@workspace/ui/components/badge";
-import { X } from "lucide-react";
+import { IconForClose } from "@workspace/ui/components/icon-for";
 import { useQueryClient } from "@tanstack/react-query";
 
 interface Invitation {
@@ -95,7 +95,7 @@ export function PendingInvitations({
                   onClick={() => handleCancel(invitation.id)}
                   disabled={cancellingId === invitation.id}
                 >
-                  <X className="size-4" />
+                  <IconForClose />
                   <span className="sr-only">Cancel invitation</span>
                 </Button>
               )}

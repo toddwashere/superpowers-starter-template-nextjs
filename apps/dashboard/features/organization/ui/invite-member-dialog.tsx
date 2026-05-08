@@ -30,7 +30,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@workspace/ui/components/form";
-import { UserPlus } from "lucide-react";
+import { IconForInvite } from "@workspace/ui/components/icon-for";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   inviteMemberSchema,
@@ -85,7 +85,7 @@ export function InviteMemberDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button size="sm">
-          <UserPlus className="mr-2 size-4" />
+          <IconForInvite className="mr-2" />
           Invite Member
         </Button>
       </DialogTrigger>
