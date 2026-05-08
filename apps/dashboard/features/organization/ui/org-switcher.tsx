@@ -107,6 +107,15 @@ export function OrgSwitcher() {
                 Create Organization
               </span>
             </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              className="gap-2 p-2"
+              onSelect={() => router.push("/")}
+            >
+              <span className="text-sm text-muted-foreground">
+                All Organizations
+              </span>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
