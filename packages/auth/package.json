@@ -20,8 +20,14 @@
     "@workspace/database": "workspace:*",
     "better-auth": "^1"
   },
+  "peerDependencies": {
+    "next": ">=15"
+  },
   "devDependencies": {
+    "@types/react": "^19",
     "@workspace/tooling": "workspace:*",
+    "next": "^16",
+    "react": "^19",
     "typescript": "^5.7",
     "vitest": "^3"
   }

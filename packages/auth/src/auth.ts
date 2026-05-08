@@ -10,10 +10,10 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
-    sendVerificationEmail: async ({ user, url }) => {
+    sendVerificationEmail: async ({ user, url }: { user: { email: string }; url: string }) => {
       console.log(`[Auth] Verification email for ${user.email}: ${url}`);
     },
-    sendResetPasswordEmail: async ({ user, url }) => {
+    sendResetPasswordEmail: async ({ user, url }: { user: { email: string }; url: string }) => {
       console.log(`[Auth] Password reset for ${user.email}: ${url}`);
     },
   },

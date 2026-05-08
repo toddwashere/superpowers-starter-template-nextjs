@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { ResetPasswordPageContent } from "@/features/auth/ui/reset-password-page-content";
 
 export const metadata: Metadata = { title: "Reset Password" };
 
 export default function ResetPasswordPage() {
-  return <ResetPasswordPageContent />;
+  return (
+    <Suspense>
+      <ResetPasswordPageContent />
+    </Suspense>
+  );
 }

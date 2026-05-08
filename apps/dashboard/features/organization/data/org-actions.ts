@@ -61,7 +61,7 @@ export async function removeMemberAction(data: {
   const requestHeaders = await headers();
   const result = await auth.api.removeMember({
     body: {
-      memberId: data.memberId,
+      memberIdOrEmail: data.memberId,
       organizationId: data.organizationId,
     },
     headers: requestHeaders,

@@ -28,7 +28,7 @@ export function ForgotPasswordPageContent() {
     setIsLoading(true);
 
     try {
-      const result = await authClient.forgetPassword({
+      const result = await authClient.requestPasswordReset({
         email,
         redirectTo: resetPasswordPath(),
       });

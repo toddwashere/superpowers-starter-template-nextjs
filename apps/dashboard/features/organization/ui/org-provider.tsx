@@ -4,20 +4,35 @@ import { createContext, useContext, type ReactNode } from "react";
 import { authClient } from "@workspace/auth/client";
 import { useQuery } from "@tanstack/react-query";
 
+interface OrgMember {
+  id: string;
+  userId: string;
+  organizationId: string;
+  role: "owner" | "admin" | "member";
+  createdAt: Date;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    image?: string | null;
+  };
+}
+
+interface OrgInvitation {
+  id: string;
+  email: string;
+  role: "owner" | "admin" | "member";
+  status: string;
+  organizationId: string;
+  expiresAt: Date;
+}
+
 interface OrgContextValue {
   organization: Awaited<
     ReturnType<typeof authClient.organization.getFullOrganization>
   >["data"] | null;
-  members: NonNullable<
-    Awaited<
-      ReturnType<typeof authClient.organization.listMembers>
-    >["data"]
-  >;
-  invitations: NonNullable<
-    Awaited<
-      ReturnType<typeof authClient.organization.getInvitation>
-    >["data"]
-  >[];
+  members: OrgMember[];
+  invitations: OrgInvitation[];
   isLoading: boolean;
 }
 
@@ -46,7 +61,9 @@ export function OrgProvider({
       const result = await authClient.organization.listMembers({
         query: { organizationId: orgData!.id },
       });
-      return result.data;
+      const data = result.data;
+      if (!data) return [];
+      return (data as { members: OrgMember[] }).members ?? [];
     },
     enabled: !!orgData?.id,
   });

@@ -39,7 +39,7 @@ export function RemoveMemberDialog({
     setIsRemoving(true);
     try {
       await authClient.organization.removeMember({
-        memberId,
+        memberIdOrEmail: memberId,
         organizationId,
       });
       await queryClient.invalidateQueries({
