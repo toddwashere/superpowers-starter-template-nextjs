@@ -1,12 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 import {
   IconForProfile,
   IconForNotifications,
   IconForExpand,
   IconForSignOut,
 } from "@workspace/ui/components/icon-for";
+import { Sun, Moon, Monitor } from "lucide-react";
 import { authClient } from "@/features/auth/data/auth-client";
 import { signInPath } from "@workspace/routes";
 import {
@@ -34,6 +36,7 @@ import { Skeleton } from "@workspace/ui/components/skeleton";
 export function NavUser() {
   const { isMobile } = useSidebar();
   const router = useRouter();
+  const { setTheme } = useTheme();
   const { data: session, isPending } = authClient.useSession();
 
   const user = session?.user;
@@ -117,6 +120,21 @@ export function NavUser() {
               <DropdownMenuItem>
                 <IconForNotifications />
                 Notifications
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem onSelect={() => setTheme("light")}>
+                <Sun className="size-4" />
+                Light
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setTheme("dark")}>
+                <Moon className="size-4" />
+                Dark
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setTheme("system")}>
+                <Monitor className="size-4" />
+                System
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
