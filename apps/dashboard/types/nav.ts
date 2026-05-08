@@ -1,9 +1,10 @@
-import type { LucideIcon } from "lucide-react";
+import type { LucideProps } from "lucide-react";
+import type { ComponentType } from "react";
 
 export interface NavItem {
   title: string;
   href: string;
-  icon: LucideIcon;
+  icon: ComponentType<LucideProps>;
   isActive?: boolean;
   items?: NavSubItem[];
 }

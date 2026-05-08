@@ -1,4 +1,8 @@
-import { LayoutDashboard, Building2, Settings } from "lucide-react";
+import {
+  IconForDashboard,
+  IconForOrganization,
+  IconForSettings,
+} from "@workspace/ui/components/icon-for";
 import type { NavConfig } from "@/types/nav";
 
 export const rootNavConfig: NavConfig = {
@@ -7,17 +11,17 @@ export const rootNavConfig: NavConfig = {
     {
       title: "Dashboard",
       href: "/",
-      icon: LayoutDashboard,
+      icon: IconForDashboard,
     },
     {
       title: "Organizations",
       href: "/organizations",
-      icon: Building2,
+      icon: IconForOrganization,
     },
     {
       title: "Settings",
       href: "/settings",
-      icon: Settings,
+      icon: IconForSettings,
     },
   ],
 };

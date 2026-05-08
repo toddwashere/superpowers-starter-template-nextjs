@@ -1,4 +1,9 @@
-import { Settings, CreditCard, Users, Shield } from "lucide-react";
+import {
+  IconForSettings,
+  IconForMembers,
+  IconForBilling,
+  IconForSecurity,
+} from "@workspace/ui/components/icon-for";
 import type { NavConfig } from "@/types/nav";
 
 export const orgSettingsNavConfig: NavConfig = {
@@ -7,22 +12,22 @@ export const orgSettingsNavConfig: NavConfig = {
     {
       title: "General",
       href: "/settings/general",
-      icon: Settings,
+      icon: IconForSettings,
     },
     {
       title: "Members",
       href: "/settings/members",
-      icon: Users,
+      icon: IconForMembers,
     },
     {
       title: "Billing",
       href: "/settings/billing",
-      icon: CreditCard,
+      icon: IconForBilling,
     },
     {
       title: "Security",
       href: "/settings/security",
-      icon: Shield,
+      icon: IconForSecurity,
     },
   ],
 };
