@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { DashboardPageContent } from "@/features/dashboard/ui/dashboard-page-content";
+import { OrgPickerPageContent } from "@/features/dashboard/ui/org-picker-page-content";
 
 export const metadata: Metadata = {
-  title: "Dashboard",
+  title: "Organizations",
 };
 
 export default function DashboardPage() {
-  return <DashboardPageContent />;
+  return <OrgPickerPageContent />;
 }
