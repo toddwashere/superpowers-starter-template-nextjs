@@ -7,6 +7,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@workspace/ui/components/sidebar";
+import { ThemeToggle } from "@workspace/ui/components/theme-toggle";
 import { OrgSwitcher } from "./org-switcher";
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
@@ -25,6 +26,7 @@ export function AppSidebar({
         <NavMain config={navConfig} />
       </SidebarContent>
       <SidebarFooter>
+        <ThemeToggle />
         <NavUser />
       </SidebarFooter>
       <SidebarRail />
