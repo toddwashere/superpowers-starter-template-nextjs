@@ -15,4 +15,6 @@ When adding a new app to the monorepo (Next.js app, API server, webhook listener
 
 When adding or using icons in app code (apps/*), read `.ai/skills/add-icon/SKILL.md` before making changes. Never import directly from lucide-react in app code.
 
+When creating a new project-level AI skill (SKILL.md), read `.ai/skills/create-skill/SKILL.md` before making changes.
+
 Always use ESM `import`/`export` syntax. Never use `require()` or `module.exports`. This applies to all source code, config files, scripts, and generated code across the entire monorepo.

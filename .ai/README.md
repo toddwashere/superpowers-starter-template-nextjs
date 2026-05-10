@@ -7,3 +7,4 @@ Tool-specific folders such as `.cursor/` and `.claude/` should keep only lightwe
 ## Skills
 
 - [`skills/add-data-model-to-database/SKILL.md`](./skills/add-data-model-to-database/SKILL.md) - Conventions for adding Prisma schema models, domain-owned repositories, and database access patterns.
+- [`skills/create-skill/SKILL.md`](./skills/create-skill/SKILL.md) - Create new project-level AI agent skills following this monorepo's three-tier pattern (canonical .ai/ + .cursor/ and .claude/ wrappers).
