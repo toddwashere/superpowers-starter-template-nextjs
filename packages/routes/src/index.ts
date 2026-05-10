@@ -12,4 +12,4 @@ export {
   getPathForOrgMembers,
   getPathForAcceptInvitation,
   getPathForAccount,
-} from "./getPathFor.js";
+} from "./getPathFor";
