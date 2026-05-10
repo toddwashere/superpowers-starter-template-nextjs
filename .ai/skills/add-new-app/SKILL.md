@@ -1,6 +1,6 @@
 ---
 name: add-new-app
-description: Add a new app to the monorepo workspace. Use when creating a new Next.js app, API server, webhook listener, background worker, or any new entry in apps/.
+description: Add a new app to the monorepo workspace. Use when creating a new directory under apps/, a new package.json in apps/, or setting up any runnable service — Next.js app, API server, webhook listener, background worker, preview server, email preview, or any new entry in apps/.
 ---
 
 # Add New App

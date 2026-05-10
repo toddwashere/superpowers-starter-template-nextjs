@@ -11,7 +11,7 @@ When adding or changing database models, Prisma schema, model repositories, or C
 
 When adding new pages, routes, or feature page content to any Next.js app, read `.ai/skills/add-new-page/SKILL.md` before making changes.
 
-When adding a new app to the monorepo (Next.js app, API server, webhook listener, worker, etc.), read `.ai/skills/add-new-app/SKILL.md` before making changes.
+When adding a new app to the monorepo, creating a new directory or package.json under `apps/`, or setting up any new runnable service (Next.js app, API server, webhook listener, worker, preview server, etc.), read `.ai/skills/add-new-app/SKILL.md` before making changes.
 
 When adding or using icons in app code (apps/*), read `.ai/skills/add-icon/SKILL.md` before making changes. Never import directly from lucide-react in app code.
 

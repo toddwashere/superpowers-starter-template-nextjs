@@ -1,5 +1,5 @@
 {
-  "name": "@workspace/email-preview",
+  "name": "@apps/email-preview",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@react-email/components": "^1.0.12",
+    "@react-email/ui": "*",
     "@workspace/email": "workspace:*",
     "react": "^19.0.0",
     "react-email": "*"
