@@ -1,16 +1,16 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import {
   IconForProfile,
-  IconForNotifications,
   IconForExpand,
   IconForSignOut,
 } from "@workspace/ui/components/icon-for";
 import { Sun, Moon, Monitor } from "lucide-react";
 import { authClient } from "@/features/auth/data/auth-client";
-import { signInPath } from "@workspace/routes";
+import { signInPath, accountPath } from "@workspace/routes";
 import {
   Avatar,
   AvatarFallback,
@@ -113,13 +113,11 @@ export function NavUser() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <IconForProfile />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <IconForNotifications />
-                Notifications
+              <DropdownMenuItem asChild>
+                <Link href={accountPath()}>
+                  <IconForProfile />
+                  Account
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
