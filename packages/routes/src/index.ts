@@ -45,3 +45,7 @@ export function orgMembersPath(orgSlug: string) {
 export function acceptInvitationPath(invitationId: string) {
   return `/accept-invitation/${invitationId}`;
 }
+
+export function accountPath() {
+  return "/account";
+}
