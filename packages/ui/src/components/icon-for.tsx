@@ -3,21 +3,28 @@
 import { forwardRef } from "react"
 import type { LucideProps } from "lucide-react"
 import {
+  AlertTriangle,
   BadgeCheck,
   Bell,
   Bold,
   Building2,
+  CheckCircle2,
   ChevronRight,
   ChevronsUpDown,
   CreditCard,
   Italic,
+  KeyRound,
   LayoutDashboard,
+  Link2,
   LogOut,
+  Mail,
+  Monitor,
   MoreHorizontal,
   Plus,
   Settings,
   Shield,
   Underline,
+  Unlink,
   UserMinus,
   UserPlus,
   Users,
@@ -157,3 +164,52 @@ export const IconForUnderline = forwardRef<SVGSVGElement, LucideProps>(
   )
 );
 IconForUnderline.displayName = "IconForUnderline";
+
+export const IconForEmail = forwardRef<SVGSVGElement, LucideProps>(
+  (props, ref) => (
+    <Mail ref={ref} {...props} className={cn("size-4", props.className)} />
+  )
+);
+IconForEmail.displayName = "IconForEmail";
+
+export const IconForPassword = forwardRef<SVGSVGElement, LucideProps>(
+  (props, ref) => (
+    <KeyRound ref={ref} {...props} className={cn("size-4", props.className)} />
+  )
+);
+IconForPassword.displayName = "IconForPassword";
+
+export const IconForVerified = forwardRef<SVGSVGElement, LucideProps>(
+  (props, ref) => (
+    <CheckCircle2 ref={ref} {...props} className={cn("size-4", props.className)} />
+  )
+);
+IconForVerified.displayName = "IconForVerified";
+
+export const IconForWarning = forwardRef<SVGSVGElement, LucideProps>(
+  (props, ref) => (
+    <AlertTriangle ref={ref} {...props} className={cn("size-4", props.className)} />
+  )
+);
+IconForWarning.displayName = "IconForWarning";
+
+export const IconForConnect = forwardRef<SVGSVGElement, LucideProps>(
+  (props, ref) => (
+    <Link2 ref={ref} {...props} className={cn("size-4", props.className)} />
+  )
+);
+IconForConnect.displayName = "IconForConnect";
+
+export const IconForDisconnect = forwardRef<SVGSVGElement, LucideProps>(
+  (props, ref) => (
+    <Unlink ref={ref} {...props} className={cn("size-4", props.className)} />
+  )
+);
+IconForDisconnect.displayName = "IconForDisconnect";
+
+export const IconForDevice = forwardRef<SVGSVGElement, LucideProps>(
+  (props, ref) => (
+    <Monitor ref={ref} {...props} className={cn("size-4", props.className)} />
+  )
+);
+IconForDevice.displayName = "IconForDevice";
