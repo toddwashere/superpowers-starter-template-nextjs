@@ -30,6 +30,7 @@ describe("Template render smoke tests", () => {
     expect(html.length).toBeGreaterThan(0);
     expect(text.length).toBeGreaterThan(0);
     expect(html).toContain("Jane");
+    expect(html).toContain("https://app.example.com/dashboard");
   });
 
   it("EmailChangeVerificationEmail renders to HTML and text", async () => {
@@ -42,6 +43,7 @@ describe("Template render smoke tests", () => {
     expect(html.length).toBeGreaterThan(0);
     expect(text.length).toBeGreaterThan(0);
     expect(html).toContain("Jane");
+    expect(html).toContain("https://app.example.com/verify?token=xyz");
   });
 
   it("PasswordResetEmail renders to HTML and text", async () => {
@@ -54,6 +56,7 @@ describe("Template render smoke tests", () => {
     expect(html.length).toBeGreaterThan(0);
     expect(text.length).toBeGreaterThan(0);
     expect(html).toContain("Jane");
+    expect(html).toContain("https://app.example.com/reset?token=qrs");
   });
 
   it("InvitationEmail renders to HTML and text", async () => {
@@ -67,5 +70,7 @@ describe("Template render smoke tests", () => {
     expect(html.length).toBeGreaterThan(0);
     expect(text.length).toBeGreaterThan(0);
     expect(html).toContain("Acme Inc");
+    expect(html).toContain("https://app.example.com/accept-invitation/inv_123");
+    expect(html).toContain("Bob");
   });
 });
