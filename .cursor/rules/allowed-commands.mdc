@@ -1,0 +1,41 @@
+---
+description: Shell command safety rules for AI agents
+alwaysApply: true
+---
+
+# Shell Command Safety
+
+## Safe to run without asking (auto-approve)
+
+These commands are safe to execute freely:
+
+- `pnpm type-check`, `pnpm lint`, `pnpm format:check`, `pnpm format`
+- `pnpm test`, `pnpm build`, `pnpm clean`
+- `pnpm install`
+- `turbo run <task>`
+- `npx tsc --noEmit`, `npx vitest`, `npx prisma generate`
+- `git status`, `git diff`, `git log`, `git branch`, `git show`
+- `git add`, `git commit`, `git stash`, `git checkout`
+- `ls`, `cat`, `head`, `tail`, `find`, `rg`, `grep`, `wc`, `echo`
+
+## Ask before running
+
+These require confirmation from the developer:
+
+- `git push` (any non-force push)
+- `git rebase`
+- `pnpm add` / `pnpm remove` (dependency changes)
+- `pnpm dev` (long-running server)
+- `prisma migrate dev` / `prisma db seed` (local DB mutations)
+- `prisma db push` (can silently drop columns/data)
+- `prisma db execute` (arbitrary SQL)
+- `curl`, `wget` (network requests)
+
+## Never run
+
+These are destructive and must never be executed:
+
+- `git push --force` or `git push --force-with-lease`
+- `git reset --hard`
+- `rm -rf`
+
