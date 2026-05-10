@@ -10,7 +10,7 @@ import {
 } from "@workspace/ui/components/icon-for";
 import { Sun, Moon, Monitor } from "lucide-react";
 import { authClient } from "@/features/auth/data/auth-client";
-import { signInPath, accountPath } from "@workspace/routes";
+import { getPathForSignIn, getPathForAccount } from "@workspace/routes";
 import {
   Avatar,
   AvatarFallback,
@@ -46,7 +46,7 @@ export function NavUser() {
 
   const handleSignOut = async () => {
     await authClient.signOut();
-    router.push(signInPath());
+    router.push(getPathForSignIn());
   };
 
   if (isPending) {
@@ -114,7 +114,7 @@ export function NavUser() {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem asChild>
-                <Link href={accountPath()}>
+                <Link href={getPathForAccount()}>
                   <IconForProfile />
                   Account
                 </Link>

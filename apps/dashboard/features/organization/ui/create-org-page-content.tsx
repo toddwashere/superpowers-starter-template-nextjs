@@ -23,7 +23,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@workspace/ui/components/form";
-import { orgPath } from "@workspace/routes";
+import { getPathForOrg } from "@workspace/routes";
 import {
   createOrgSchema,
   type CreateOrgInput,
@@ -70,7 +70,7 @@ export function CreateOrgPageContent() {
         setError(result.error.message ?? "Failed to create organization");
         return;
       }
-      router.push(orgPath(data.slug));
+      router.push(getPathForOrg(data.slug));
     } catch {
       setError("An unexpected error occurred");
     } finally {

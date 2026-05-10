@@ -15,7 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/card";
-import { signUpPath, forgotPasswordPath } from "@workspace/routes";
+import { getPathForSignUp, getPathForForgotPassword } from "@workspace/routes";
 
 export function SignInPageContent() {
   const router = useRouter();
@@ -67,7 +67,7 @@ export function SignInPageContent() {
             <div className="flex items-center justify-between">
               <Label htmlFor="password">Password</Label>
               <Link
-                href={forgotPasswordPath()}
+                href={getPathForForgotPassword()}
                 className="text-sm text-muted-foreground hover:text-primary"
               >
                 Forgot password?
@@ -90,7 +90,7 @@ export function SignInPageContent() {
           </Button>
           <p className="text-sm text-muted-foreground">
             Don&apos;t have an account?{" "}
-            <Link href={signUpPath()} className="text-primary hover:underline">
+            <Link href={getPathForSignUp()} className="text-primary hover:underline">
               Sign up
             </Link>
           </p>

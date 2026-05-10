@@ -13,7 +13,7 @@ import {
   CardTitle,
 } from "@workspace/ui/components/card";
 import { Skeleton } from "@workspace/ui/components/skeleton";
-import { orgPath, signInPath } from "@workspace/routes";
+import { getPathForOrg, getPathForSignIn } from "@workspace/routes";
 import { useQuery } from "@tanstack/react-query";
 
 interface AcceptInvitationPageContentProps {
@@ -101,7 +101,7 @@ export function AcceptInvitationPageContent({
             <Button
               onClick={() =>
                 router.push(
-                  `${signInPath()}?callbackUrl=/accept-invitation/${invitationId}`,
+                  `${getPathForSignIn()}?callbackUrl=/accept-invitation/${invitationId}`,
                 )
               }
             >
@@ -125,7 +125,7 @@ export function AcceptInvitationPageContent({
         return;
       }
       if (invitation.organizationSlug) {
-        router.push(orgPath(invitation.organizationSlug));
+        router.push(getPathForOrg(invitation.organizationSlug));
       } else {
         router.push("/");
       }

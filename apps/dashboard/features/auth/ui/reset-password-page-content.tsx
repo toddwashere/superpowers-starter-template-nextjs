@@ -15,7 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/card";
-import { signInPath } from "@workspace/routes";
+import { getPathForSignIn } from "@workspace/routes";
 
 export function ResetPasswordPageContent() {
   const router = useRouter();
@@ -52,7 +52,7 @@ export function ResetPasswordPageContent() {
         setError(result.error.message ?? "Failed to reset password");
         return;
       }
-      router.push(signInPath());
+      router.push(getPathForSignIn());
     } catch {
       setError("An unexpected error occurred");
     } finally {
@@ -70,7 +70,7 @@ export function ResetPasswordPageContent() {
           </CardDescription>
         </CardHeader>
         <CardFooter className="justify-center">
-          <Link href={signInPath()} className="text-sm text-primary hover:underline">
+          <Link href={getPathForSignIn()} className="text-sm text-primary hover:underline">
             Back to sign in
           </Link>
         </CardFooter>

@@ -15,7 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/card";
-import { signInPath } from "@workspace/routes";
+import { getPathForSignIn } from "@workspace/routes";
 
 export function SignUpPageContent() {
   const router = useRouter();
@@ -115,7 +115,7 @@ export function SignUpPageContent() {
           </Button>
           <p className="text-sm text-muted-foreground">
             Already have an account?{" "}
-            <Link href={signInPath()} className="text-primary hover:underline">
+            <Link href={getPathForSignIn()} className="text-primary hover:underline">
               Sign in
             </Link>
           </p>

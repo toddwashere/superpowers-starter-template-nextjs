@@ -16,7 +16,7 @@ import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { Label } from "@workspace/ui/components/label";
 import { isDeleteConfirmationValid } from "../lib/account-logic";
-import { signInPath } from "@workspace/routes";
+import { getPathForSignIn } from "@workspace/routes";
 
 export const DeleteAccountConfirmDialog = NiceModal.create(() => {
   const modal = useModal();
@@ -35,7 +35,7 @@ export const DeleteAccountConfirmDialog = NiceModal.create(() => {
         return;
       }
       await authClient.signOut();
-      router.push(signInPath());
+      router.push(getPathForSignIn());
     } catch {
       setIsLoading(false);
     }

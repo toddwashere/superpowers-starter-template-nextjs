@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/card";
-import { signInPath } from "@workspace/routes";
+import { getPathForSignIn } from "@workspace/routes";
 
 export function VerifyEmailPageContent() {
   return (
@@ -21,7 +21,7 @@ export function VerifyEmailPageContent() {
         </CardDescription>
       </CardHeader>
       <CardFooter className="justify-center">
-        <Link href={signInPath()} className="text-sm text-primary hover:underline">
+        <Link href={getPathForSignIn()} className="text-sm text-primary hover:underline">
           Back to sign in
         </Link>
       </CardFooter>

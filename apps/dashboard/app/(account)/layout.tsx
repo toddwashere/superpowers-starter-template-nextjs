@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { homePath } from "@workspace/routes";
+import { getPathForHome } from "@workspace/routes";
 
 export default function AccountLayout({
   children,
@@ -11,7 +11,7 @@ export default function AccountLayout({
       <header className="border-b">
         <div className="mx-auto flex h-16 max-w-2xl items-center gap-4 px-6">
           <Link
-            href={homePath()}
+            href={getPathForHome()}
             className="text-sm text-muted-foreground hover:text-foreground"
           >
             ← Back to dashboard

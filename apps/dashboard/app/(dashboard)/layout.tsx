@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { authClient } from "@/features/auth/data/auth-client";
-import { signInPath } from "@workspace/routes";
+import { getPathForSignIn } from "@workspace/routes";
 import {
   Avatar,
   AvatarFallback,
@@ -32,7 +32,7 @@ export default function DashboardLayout({
 
   const handleSignOut = async () => {
     await authClient.signOut();
-    router.push(signInPath());
+    router.push(getPathForSignIn());
   };
 
   return (

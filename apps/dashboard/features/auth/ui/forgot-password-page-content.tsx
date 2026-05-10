@@ -14,7 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/card";
-import { signInPath, resetPasswordPath } from "@workspace/routes";
+import { getPathForSignIn, getPathForResetPassword } from "@workspace/routes";
 
 export function ForgotPasswordPageContent() {
   const [email, setEmail] = useState("");
@@ -30,7 +30,7 @@ export function ForgotPasswordPageContent() {
     try {
       const result = await authClient.requestPasswordReset({
         email,
-        redirectTo: resetPasswordPath(),
+        redirectTo: getPathForResetPassword(),
       });
       if (result.error) {
         setError(result.error.message ?? "Failed to send reset email");
@@ -55,7 +55,7 @@ export function ForgotPasswordPageContent() {
           </CardDescription>
         </CardHeader>
         <CardFooter className="justify-center">
-          <Link href={signInPath()} className="text-sm text-primary hover:underline">
+          <Link href={getPathForSignIn()} className="text-sm text-primary hover:underline">
             Back to sign in
           </Link>
         </CardFooter>
@@ -91,7 +91,7 @@ export function ForgotPasswordPageContent() {
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? "Sending..." : "Send Reset Link"}
           </Button>
-          <Link href={signInPath()} className="text-sm text-muted-foreground hover:text-primary">
+          <Link href={getPathForSignIn()} className="text-sm text-muted-foreground hover:text-primary">
             Back to sign in
           </Link>
         </CardFooter>

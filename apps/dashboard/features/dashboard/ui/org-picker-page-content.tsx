@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { authClient } from "@workspace/auth/client";
-import { orgPath, createOrgPath } from "@workspace/routes";
+import { getPathForOrg, getPathForCreateOrg } from "@workspace/routes";
 import {
   Avatar,
   AvatarFallback,
@@ -22,7 +22,7 @@ export function OrgPickerPageContent() {
 
   const handleSelectOrg = async (orgId: string, slug: string) => {
     await authClient.organization.setActive({ organizationId: orgId });
-    router.push(orgPath(slug));
+    router.push(getPathForOrg(slug));
   };
 
   if (isPending) {
@@ -45,7 +45,7 @@ export function OrgPickerPageContent() {
         <p className="mt-2 text-muted-foreground">
           Create your first organization to get started.
         </p>
-        <Button className="mt-6" onClick={() => router.push(createOrgPath())}>
+        <Button className="mt-6" onClick={() => router.push(getPathForCreateOrg())}>
           <IconForAdd className="mr-2" />
           Create Organization
         </Button>
@@ -85,7 +85,7 @@ export function OrgPickerPageContent() {
       <Button
         variant="outline"
         className="w-full"
-        onClick={() => router.push(createOrgPath())}
+        onClick={() => router.push(getPathForCreateOrg())}
       >
         <IconForAdd className="mr-2" />
         Create Organization

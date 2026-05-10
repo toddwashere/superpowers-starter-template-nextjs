@@ -18,7 +18,7 @@ import {
   useSidebar,
 } from "@workspace/ui/components/sidebar";
 import { Skeleton } from "@workspace/ui/components/skeleton";
-import { createOrgPath, orgPath } from "@workspace/routes";
+import { getPathForCreateOrg, getPathForOrg } from "@workspace/routes";
 
 export function OrgSwitcher() {
   const router = useRouter();
@@ -36,7 +36,7 @@ export function OrgSwitcher() {
     await authClient.organization.setActive({
       organizationId: orgId,
     });
-    router.push(orgPath(slug));
+    router.push(getPathForOrg(slug));
   };
 
   if (isPending) {
@@ -98,7 +98,7 @@ export function OrgSwitcher() {
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="gap-2 p-2"
-              onSelect={() => router.push(createOrgPath())}
+              onSelect={() => router.push(getPathForCreateOrg())}
             >
               <div className="flex size-6 items-center justify-center rounded-md border bg-background">
                 <IconForAdd />
