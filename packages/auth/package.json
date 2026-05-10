@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@workspace/database": "workspace:*",
+    "@workspace/email": "workspace:*",
     "better-auth": "^1"
   },
   "peerDependencies": {
