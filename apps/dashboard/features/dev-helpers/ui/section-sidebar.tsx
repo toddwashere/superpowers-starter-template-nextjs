@@ -243,11 +243,8 @@ export function SectionSidebar() {
         A live interactive sidebar with mock data. Try collapsing, expanding
         sub-menus, switching orgs, and toggling themes.
       </p>
-      <div
-        className="mt-4 overflow-hidden rounded-lg border"
-        style={{ height: "600px" }}
-      >
-        <SidebarProvider>
+      <div className="relative mt-4 min-h-[600px] contain-layout overflow-hidden rounded-lg border">
+        <SidebarProvider className="!min-h-full">
           <MockAppSidebar />
           <SidebarInset>
             <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">

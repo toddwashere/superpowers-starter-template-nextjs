@@ -2,7 +2,7 @@
 
 This folder contains canonical project guidance for AI coding agents.
 
-Tool-specific folders such as `.cursor/` and `.claude/` should keep only lightweight references or wrappers when possible. The durable instructions should live here so all agents follow the same project conventions.
+Tool-specific folders such as `.cursor/` and `.claude/` should keep only lightweight references or wrappers when possible. The durable instructions should live here (`.ai/`) so all agents follow the same project conventions.
 
 ## Skills
 

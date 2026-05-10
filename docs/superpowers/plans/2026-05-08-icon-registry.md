@@ -4,7 +4,7 @@
 
 **Goal:** Create a centralized icon registry in `packages/ui`, migrate all app-level icons from direct `lucide-react` imports, and add an AI skill ensuring future icons go through the registry.
 
-**Architecture:** Single `icon-for.tsx` file in `packages/ui/src/components/` with `forwardRef` wrappers per icon. Each wrapper applies default `size-4` via `cn()` and passes through all `LucideProps`. A companion skill at `ai/skills/add-icon/SKILL.md` instructs agents to always add icons here first.
+**Architecture:** Single `icon-for.tsx` file in `packages/ui/src/components/` with `forwardRef` wrappers per icon. Each wrapper applies default `size-4` via `cn()` and passes through all `LucideProps`. A companion skill at `.ai/skills/add-icon/SKILL.md` instructs agents to always add icons here first.
 
 **Tech Stack:** React `forwardRef`, `lucide-react` (LucideProps), `cn` from `packages/ui/src/lib/utils`, Tailwind CSS classes.
 
@@ -517,11 +517,11 @@ git commit -m "refactor(dashboard): migrate UI component icons to icon registry"
 ### Task 4: Create the AI skill
 
 **Files:**
-- Create: `ai/skills/add-icon/SKILL.md`
+- Create: `.ai/skills/add-icon/SKILL.md`
 - Create: `.cursor/skills/add-icon/SKILL.md`
 - Create: `.claude/skills/add-icon/SKILL.md`
 
-- [ ] **Step 1: Create the canonical skill at `ai/skills/add-icon/SKILL.md`**
+- [ ] **Step 1: Create the canonical skill at `.ai/skills/add-icon/SKILL.md`**
 
 ```markdown
 ---
@@ -619,7 +619,7 @@ description: Add or use icons in app code through the centralized icon registry.
 
 # Add Icon
 
-Canonical instructions live at [`ai/skills/add-icon/SKILL.md`](../../../ai/skills/add-icon/SKILL.md).
+Canonical instructions live at [`.ai/skills/add-icon/SKILL.md`](../../../.ai/skills/add-icon/SKILL.md).
 
 Before adding or using icons in app code, read and follow the canonical skill.
 ```
@@ -634,7 +634,7 @@ description: Add or use icons in app code through the centralized icon registry.
 
 # Add Icon
 
-Canonical instructions live at [`ai/skills/add-icon/SKILL.md`](../../../ai/skills/add-icon/SKILL.md).
+Canonical instructions live at [`.ai/skills/add-icon/SKILL.md`](../../../.ai/skills/add-icon/SKILL.md).
 
 Before adding or using icons in app code, read and follow the canonical skill.
 ```
@@ -642,7 +642,7 @@ Before adding or using icons in app code, read and follow the canonical skill.
 - [ ] **Step 4: Commit**
 
 ```bash
-git add ai/skills/add-icon/SKILL.md .cursor/skills/add-icon/SKILL.md .claude/skills/add-icon/SKILL.md
+git add .ai/skills/add-icon/SKILL.md .cursor/skills/add-icon/SKILL.md .claude/skills/add-icon/SKILL.md
 git commit -m "feat: add icon registry skill for AI agents"
 ```
 
@@ -658,7 +658,7 @@ git commit -m "feat: add icon registry skill for AI agents"
 Add the following line to `.cursor/rules/shared-ai-guidance.mdc` alongside the existing skill references:
 
 ```
-When adding or using icons in app code (apps/*), read `ai/skills/add-icon/SKILL.md` before making changes. Never import directly from lucide-react in app code.
+When adding or using icons in app code (apps/*), read `.ai/skills/add-icon/SKILL.md` before making changes. Never import directly from lucide-react in app code.
 ```
 
 - [ ] **Step 2: Commit**

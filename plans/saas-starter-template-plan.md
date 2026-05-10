@@ -527,7 +527,7 @@ await enqueue("user.welcome-email", {
 
 - [ ] Set up monorepo structure with TurboRepo. only include `apps/dashboard`, `apps/www` and whatever packages are required such as `tooling` and `packages/common` for this phase.
 - [ ] Configure TypeScript, ESLint, Prettier
-- [ ] Implement basic Next.js apps (dashboard, www). Follow `ai/skills/add-new-page/SKILL.md` when creating pages, routes, feature folders, and navigation entries.
+- [ ] Implement basic Next.js apps (dashboard, www). Follow `.ai/skills/add-new-page/SKILL.md` when creating pages, routes, feature folders, and navigation entries.
 
 ### Phase 1.2: Styling and components → [detailed plan](./01-add-styles.md)
 

@@ -5,6 +5,6 @@ description: Add or change Prisma data models and repository files using this pr
 
 # Add Data Model To Database
 
-Canonical instructions live at [`ai/skills/add-data-model-to-database/SKILL.md`](../../../ai/skills/add-data-model-to-database/SKILL.md).
+Canonical instructions live at [`.ai/skills/add-data-model-to-database/SKILL.md`](../../../.ai/skills/add-data-model-to-database/SKILL.md).
 
 Before adding or changing persisted data models, read and follow the canonical skill.

@@ -12,9 +12,9 @@
 
 **Key reference files:**
 - `plans/01-add-auth.md` — Better Auth configuration choices
-- `ai/skills/add-data-model-to-database/SKILL.md` — Prisma schema conventions
-- `ai/skills/add-new-page/SKILL.md` — Page creation conventions
-- `ai/skills/add-new-app/SKILL.md` — Package naming conventions
+- `.ai/skills/add-data-model-to-database/SKILL.md` — Prisma schema conventions
+- `.ai/skills/add-new-page/SKILL.md` — Page creation conventions
+- `.ai/skills/add-new-app/SKILL.md` — Package naming conventions
 
 ---
 

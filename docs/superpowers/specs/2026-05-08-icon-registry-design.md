@@ -110,7 +110,7 @@ All `apps/dashboard` files that import icons from `"lucide-react"` will be updat
 
 ## Skill: `add-icon`
 
-**Canonical path:** `ai/skills/add-icon/SKILL.md`  
+**Canonical path:** `.ai/skills/add-icon/SKILL.md`  
 **Stubs:** `.cursor/skills/add-icon/SKILL.md` and `.claude/skills/add-icon/SKILL.md`
 
 ### Skill Content (summary)
@@ -137,7 +137,7 @@ Use when: adding icons to app code, creating new UI features that need icons, or
 | File | Change |
 |------|--------|
 | `packages/ui/src/components/icon-for.tsx` | New — icon registry with 16 icons |
-| `ai/skills/add-icon/SKILL.md` | New — canonical skill |
+| `.ai/skills/add-icon/SKILL.md` | New — canonical skill |
 | `.cursor/skills/add-icon/SKILL.md` | New — stub pointing to canonical |
 | `.claude/skills/add-icon/SKILL.md` | New — stub pointing to canonical |
 | 9 files in `apps/dashboard/` | Migrate imports from `lucide-react` to `icon-for` |
