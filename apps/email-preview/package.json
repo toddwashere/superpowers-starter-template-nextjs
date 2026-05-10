@@ -1,0 +1,22 @@
+{
+  "name": "@workspace/email-preview",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "email dev --port 4002",
+    "export": "email export",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@react-email/components": "^1.0.12",
+    "@workspace/email": "workspace:*",
+    "react": "^19.0.0",
+    "react-email": "*"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@workspace/tooling": "workspace:*",
+    "typescript": "^5.7"
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "extends": "@workspace/tooling/typescript/react-library.json",
+  "include": ["emails"]
+}
