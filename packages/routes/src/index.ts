@@ -11,5 +11,5 @@ export {
   getPathForOrgSettingsGeneral,
   getPathForOrgMembers,
   getPathForAcceptInvitation,
-  getPathForAccount,
+  getPathForAccountSettings,
 } from "./getPathFor";

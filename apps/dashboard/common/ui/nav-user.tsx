@@ -10,7 +10,7 @@ import {
 } from "@workspace/ui/components/icon-for";
 import { Sun, Moon, Monitor } from "lucide-react";
 import { authClient } from "@/features/auth/data/auth-client";
-import { getPathForSignIn, getPathForAccount } from "@workspace/routes";
+import { getPathForSignIn, getPathForAccountSettings } from "@workspace/routes";
 import {
   Avatar,
   AvatarFallback,
@@ -114,9 +114,9 @@ export function NavUser() {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem asChild>
-                <Link href={getPathForAccount()}>
+                <Link href={getPathForAccountSettings()}>
                   <IconForProfile />
-                  Account
+                  Account Settings
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>

@@ -46,6 +46,6 @@ export function getPathForAcceptInvitation(invitationId: string) {
   return `/accept-invitation/${invitationId}`;
 }
 
-export function getPathForAccount() {
+export function getPathForAccountSettings() {
   return "/account";
 }
