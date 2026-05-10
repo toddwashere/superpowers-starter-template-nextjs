@@ -11,7 +11,6 @@ import {
   CardTitle,
 } from "@workspace/ui/components/card";
 import { Badge } from "@workspace/ui/components/badge";
-import { IconForClose } from "@workspace/ui/components/icon-for";
 import { useQueryClient } from "@tanstack/react-query";
 
 interface Invitation {
@@ -37,7 +36,7 @@ export function PendingInvitations({
   const [cancellingId, setCancellingId] = useState<string | null>(null);
 
   const pendingInvitations = invitations.filter(
-    (inv) => inv.status === "pending",
+    (inv) => inv.status === "pending"
   );
 
   if (pendingInvitations.length === 0) {
@@ -47,9 +46,7 @@ export function PendingInvitations({
   const handleCancel = async (invitationId: string) => {
     setCancellingId(invitationId);
     try {
-      await authClient.organization.cancelInvitation({
-        invitationId,
-      });
+      await authClient.organization.cancelInvitation({ invitationId });
       await queryClient.invalidateQueries({
         queryKey: ["organization", orgSlug],
       });
@@ -75,12 +72,13 @@ export function PendingInvitations({
               className="flex items-center justify-between rounded-lg border p-3"
             >
               <div className="flex flex-col gap-1">
-                <span className="text-sm font-medium">
-                  {invitation.email}
-                </span>
+                <span className="text-sm font-medium">{invitation.email}</span>
                 <div className="flex items-center gap-2">
-                  <Badge variant="secondary" className="text-xs">
+                  <Badge variant="secondary" className="text-xs capitalize">
                     {invitation.role}
+                  </Badge>
+                  <Badge variant="outline" className="text-xs capitalize">
+                    {invitation.status}
                   </Badge>
                   <span className="text-xs text-muted-foreground">
                     Expires{" "}
@@ -95,8 +93,7 @@ export function PendingInvitations({
                   onClick={() => handleCancel(invitation.id)}
                   disabled={cancellingId === invitation.id}
                 >
-                  <IconForClose />
-                  <span className="sr-only">Cancel invitation</span>
+                  {cancellingId === invitation.id ? "Cancelling..." : "Cancel"}
                 </Button>
               )}
             </div>
