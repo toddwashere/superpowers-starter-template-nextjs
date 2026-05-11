@@ -1,0 +1,54 @@
+import { createServer } from "node:http";
+import type { IncomingMessage, ServerResponse } from "node:http";
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
+import { resolveMcpAuthContext, McpAuthError } from "./middleware/mcp-auth";
+import { writeJsonError } from "./lib/errors";
+import { registerTools } from "./tools/registry";
+
+async function readBody(req: IncomingMessage): Promise<unknown> {
+  if (req.method !== "POST") return undefined;
+  const chunks: Buffer[] = [];
+  for await (const chunk of req) chunks.push(chunk as Buffer);
+  const raw = Buffer.concat(chunks).toString();
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return undefined;
+  }
+}
+
+const server = createServer(async (req: IncomingMessage, res: ServerResponse) => {
+  if (!req.url?.startsWith("/mcp")) {
+    writeJsonError(res, 404, "NOT_FOUND", "Not found");
+    return;
+  }
+
+  let authContext;
+  try {
+    authContext = await resolveMcpAuthContext(req);
+  } catch (err) {
+    if (err instanceof McpAuthError) {
+      const status = err.code === "RATE_LIMITED" ? 429 : 401;
+      writeJsonError(res, status, err.code, err.message);
+    } else {
+      writeJsonError(res, 500, "INTERNAL_ERROR", "Internal server error");
+    }
+    return;
+  }
+
+  const body = await readBody(req);
+  const mcpServer = new McpServer({ name: "public-mcp", version: "1.0.0" });
+  const transport = new StreamableHTTPServerTransport({
+    sessionIdGenerator: undefined,
+  });
+
+  registerTools(mcpServer, authContext);
+  await mcpServer.connect(transport);
+  await transport.handleRequest(req, res, body);
+});
+
+const port = Number(process.env.PUBLIC_MCP_PORT ?? 4200);
+server.listen(port, () => {
+  console.log(`Public MCP server running at http://localhost:${port}/mcp`);
+});
