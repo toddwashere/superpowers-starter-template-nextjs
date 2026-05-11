@@ -1,7 +1,7 @@
 import type { AuthContext } from "../lib/context";
 
 type AccountInfo = {
-  kind: string;
+  kind: AuthContext["kind"];
   ownerType: "organization" | "user" | null;
   orgId: string | null;
   userId: string | null;

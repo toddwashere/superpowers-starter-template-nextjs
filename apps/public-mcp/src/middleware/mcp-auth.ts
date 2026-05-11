@@ -37,7 +37,7 @@ export async function resolveMcpAuthContext(
     } catch (err) {
       if (err instanceof ApiKeyError) {
         throw new McpAuthError(
-          err.code as "UNAUTHORIZED" | "RATE_LIMITED",
+          err.code,
           err.message,
         );
       }

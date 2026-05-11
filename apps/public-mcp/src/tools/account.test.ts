@@ -30,6 +30,7 @@ describe("accountInfoHandler", () => {
     const result = accountInfoHandler(userCtx);
     expect(result.userId).toBe("user_1");
     expect(result.orgId).toBe("org_2");
+    expect(result.ownerType).toBeNull();
   });
 
   it("includes permissions in the result", () => {

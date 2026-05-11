@@ -9,7 +9,8 @@ export const toolPermissions: Record<string, Record<string, string[]>> = {
 
 export function registerTools(server: McpServer, ctx: AuthContext): void {
   server.tool("account-info", "Returns the authenticated identity", {}, () => {
-    if (!hasPermission(ctx.permissions, toolPermissions["account-info"]!)) {
+    const required = toolPermissions["account-info"];
+    if (!required || !hasPermission(ctx.permissions, required)) {
       return {
         content: [{ type: "text", text: "Forbidden: missing account:read permission" }],
         isError: true,
