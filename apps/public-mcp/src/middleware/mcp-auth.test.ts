@@ -80,4 +80,25 @@ describe("resolveMcpAuthContext", () => {
       resolveMcpAuthContext(makeReq({ "x-api-key": "bad_key" })),
     ).rejects.toBeInstanceOf(McpAuthError);
   });
+
+  it("authenticates via Cookie header", async () => {
+    vi.mocked(auth.api.getSession).mockResolvedValue({
+      user: { id: "user_cookie" },
+      session: { activeOrganizationId: null },
+    } as never);
+
+    const ctx = await resolveMcpAuthContext(
+      makeReq({ cookie: "better-auth.session_token=abc" }),
+    );
+    expect(ctx.kind).toBe("session");
+    expect(ctx.userId).toBe("user_cookie");
+  });
+
+  it("throws McpAuthError when Cookie is present but session is invalid", async () => {
+    vi.mocked(auth.api.getSession).mockResolvedValue(null);
+
+    await expect(
+      resolveMcpAuthContext(makeReq({ cookie: "better-auth.session_token=bad" })),
+    ).rejects.toBeInstanceOf(McpAuthError);
+  });
 });
