@@ -14,7 +14,7 @@ export function hasPermission(
 ): boolean {
   for (const [resource, actions] of Object.entries(required)) {
     const granted = keyPermissions[resource] ?? [];
-    if (!actions.every((action) => granted.includes(action))) return false;
+    if (!actions?.every((action) => granted.includes(action))) return false;
   }
   return true;
 }

@@ -31,10 +31,15 @@ export async function verifyApiKey(key: string): Promise<ApiKeyContext> {
 
   let permissions: Record<string, string[]> = {};
   if (apiKey.permissions) {
-    try {
-      permissions = JSON.parse(apiKey.permissions) as Record<string, string[]>;
-    } catch {
-      permissions = {};
+    const raw = apiKey.permissions;
+    if (typeof raw === "string") {
+      try {
+        permissions = JSON.parse(raw) as Record<string, string[]>;
+      } catch {
+        permissions = {};
+      }
+    } else {
+      permissions = raw as Record<string, string[]>;
     }
   }
 

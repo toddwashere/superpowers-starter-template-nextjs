@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { organization, admin } from "better-auth/plugins";
+import { apiKey } from "@better-auth/api-key";
 import { prisma } from "@workspace/database";
 import { ac, permissions } from "./permissions";
 import { routeVerificationEmail } from "./email-routing";
@@ -70,6 +71,30 @@ export const auth = betterAuth({
       },
     }),
     admin(),
+    apiKey([
+      {
+        configId: "org-keys",
+        defaultPrefix: "sk_org_",
+        references: "organization",
+        enableMetadata: true,
+        rateLimit: {
+          enabled: true,
+          maxRequests: 1000,
+          timeWindow: 1000 * 60 * 60,
+        },
+      },
+      {
+        configId: "user-keys",
+        defaultPrefix: "sk_user_",
+        references: "user",
+        enableMetadata: true,
+        rateLimit: {
+          enabled: true,
+          maxRequests: 1000,
+          timeWindow: 1000 * 60 * 60,
+        },
+      },
+    ]),
   ],
 });
 
