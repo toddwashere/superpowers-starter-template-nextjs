@@ -3,6 +3,7 @@ import {
   IconForMembers,
   IconForBilling,
   IconForSecurity,
+  IconForKey,
 } from "@workspace/ui/components/icon-for";
 import type { NavConfig } from "@/types/nav";
 
@@ -28,6 +29,11 @@ export const orgSettingsNavConfig: NavConfig = {
       title: "Security",
       href: "/settings/security",
       icon: IconForSecurity,
+    },
+    {
+      title: "API Keys",
+      href: "/settings/api-keys",
+      icon: IconForKey,
     },
   ],
 };

@@ -7,6 +7,7 @@ import {
   BadgeCheck,
   Bell,
   Bold,
+  Bot,
   Building2,
   CheckCircle2,
   ChevronRight,
@@ -213,3 +214,17 @@ export const IconForDevice = forwardRef<SVGSVGElement, LucideProps>(
   )
 );
 IconForDevice.displayName = "IconForDevice";
+
+export const IconForKey = forwardRef<SVGSVGElement, LucideProps>(
+  (props, ref) => (
+    <KeyRound ref={ref} {...props} className={cn("size-4", props.className)} />
+  )
+);
+IconForKey.displayName = "IconForKey";
+
+export const IconForAi = forwardRef<SVGSVGElement, LucideProps>(
+  (props, ref) => (
+    <Bot ref={ref} {...props} className={cn("size-4", props.className)} />
+  )
+);
+IconForAi.displayName = "IconForAi";
