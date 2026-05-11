@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-const mockSend = vi.fn();
+const { mockSend } = vi.hoisted(() => ({ mockSend: vi.fn() }));
 
 vi.mock("resend", () => ({
   Resend: vi.fn(() => ({

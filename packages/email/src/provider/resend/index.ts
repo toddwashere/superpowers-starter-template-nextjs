@@ -3,10 +3,10 @@ import { keys } from "../../../keys";
 import { getResendFrom } from "./resend-options";
 import type { EmailPayload, EmailProvider } from "../types";
 
+const resend = new Resend(keys().RESEND_API_KEY);
+
 const provider: EmailProvider = {
   async sendEmail(payload: EmailPayload): Promise<{ id?: string }> {
-    const resend = new Resend(keys().RESEND_API_KEY);
-
     const { data, error } = await resend.emails.send({
       from: getResendFrom(),
       to: payload.recipient,
