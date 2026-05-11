@@ -68,3 +68,30 @@ export async function revokePersonalApiKeyAction(keyId: string) {
     headers: requestHeaders,
   });
 }
+
+export async function callMcpToolAsSessionAction(
+  toolName: string,
+  args: Record<string, unknown>,
+) {
+  await requireUser();
+  const requestHeaders = await headers();
+  const cookie = requestHeaders.get("cookie") ?? "";
+
+  const PUBLIC_MCP_URL = process.env.PUBLIC_MCP_URL ?? "http://localhost:4200";
+  const res = await fetch(`${PUBLIC_MCP_URL}/mcp`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: cookie,
+    },
+    body: JSON.stringify({
+      jsonrpc: "2.0",
+      id: Date.now(),
+      method: "tools/call",
+      params: { name: toolName, arguments: args },
+    }),
+  });
+
+  if (!res.ok) throw new Error(`MCP call failed: ${res.status}`);
+  return res.json() as Promise<unknown>;
+}
