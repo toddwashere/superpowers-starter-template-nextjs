@@ -21,4 +21,6 @@ When adding a modal, dialog, confirm dialog, alert dialog, drawer, or any overla
 
 When adding or editing LLM instruction files (rules, skills, conventions), read `.ai/conventions/ai-guidance-files.md` before making changes.
 
+When creating implementation plans or spec documents, read `.ai/conventions/critical-tests-in-plans.md` before making changes.
+
 Always use ESM `import`/`export` syntax. Never use `require()` or `module.exports`. This applies to all source code, config files, scripts, and generated code across the entire monorepo.
