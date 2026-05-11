@@ -17,6 +17,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@better-auth/api-key": "^1.6.10",
     "@workspace/database": "workspace:*",
     "@workspace/email": "workspace:*",
     "better-auth": "^1"

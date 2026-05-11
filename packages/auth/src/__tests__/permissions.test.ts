@@ -33,7 +33,9 @@ describe("permissions", () => {
 
     it("has all apiKey permissions", () => {
       expect(role.authorize({ apiKey: ["create"] }).success).toBe(true);
-      expect(role.authorize({ apiKey: ["revoke"] }).success).toBe(true);
+      expect(role.authorize({ apiKey: ["read"] }).success).toBe(true);
+      expect(role.authorize({ apiKey: ["update"] }).success).toBe(true);
+      expect(role.authorize({ apiKey: ["delete"] }).success).toBe(true);
     });
   });
 
@@ -62,7 +64,9 @@ describe("permissions", () => {
 
     it("has all apiKey permissions", () => {
       expect(role.authorize({ apiKey: ["create"] }).success).toBe(true);
-      expect(role.authorize({ apiKey: ["revoke"] }).success).toBe(true);
+      expect(role.authorize({ apiKey: ["read"] }).success).toBe(true);
+      expect(role.authorize({ apiKey: ["update"] }).success).toBe(true);
+      expect(role.authorize({ apiKey: ["delete"] }).success).toBe(true);
     });
   });
 
@@ -91,7 +95,9 @@ describe("permissions", () => {
 
     it("has no apiKey permissions", () => {
       expect(role.authorize({ apiKey: ["create"] }).success).toBe(false);
-      expect(role.authorize({ apiKey: ["revoke"] }).success).toBe(false);
+      expect(role.authorize({ apiKey: ["read"] }).success).toBe(false);
+      expect(role.authorize({ apiKey: ["update"] }).success).toBe(false);
+      expect(role.authorize({ apiKey: ["delete"] }).success).toBe(false);
     });
   });
 
