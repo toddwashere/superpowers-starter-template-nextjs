@@ -10,6 +10,24 @@
 
 ---
 
+## Critical Tests
+
+The highest-value tests for this feature — the ones that, if passing, give the most confidence the system is correct:
+
+| Test | File | Why it matters |
+|------|------|----------------|
+| `verifyApiKey` throws `ApiKeyError` for invalid/disabled key | `packages/auth/src/api-keys/verify.test.ts` | Every downstream consumer depends on this rejection |
+| `hasPermission` returns false when key lacks required action | `packages/auth/src/api-keys/permissions.test.ts` | Wrong permission logic grants unauthorized access |
+| Org-owned key returns `ownerType: "organization"` and correct `orgId` | `packages/auth/src/api-keys/verify.test.ts` | Key context is the foundation of all org-scoping |
+| `resolveMcpAuthContext` authenticates via `x-api-key` AND via cookie | `apps/public-mcp/src/middleware/mcp-auth.test.ts` | Both auth paths must work; cookie path is what the dashboard uses |
+| `resolveMcpAuthContext` throws `McpAuthError` when neither header present | `apps/public-mcp/src/middleware/mcp-auth.test.ts` | Missing auth must be rejected at the boundary |
+| `createOrgApiKeyAction` is rejected when caller lacks `apiKey:create` | `apps/dashboard/features/api-keys/data/api-key-actions.test.ts` | Prevents privilege escalation via server action |
+| `revokeApiKeyAction` is rejected when caller lacks `apiKey:delete` | `apps/dashboard/features/api-keys/data/api-key-actions.test.ts` | Prevents unauthorized key deletion |
+| Account route returns correct identity for org-owned key | `apps/public-api/src/routes/v1/account.test.ts` | Validates the full middleware → handler pipeline |
+| MCP `account-info` tool returns error when permissions insufficient | `apps/public-mcp/src/tools/account.test.ts` | Tool-level permission check must be enforced |
+
+---
+
 ## File Map
 
 ### Modified
