@@ -5,6 +5,7 @@ import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogFooter,
@@ -14,6 +15,7 @@ import { Input } from "@workspace/ui/components/input";
 import { Label } from "@workspace/ui/components/label";
 import { Checkbox } from "@workspace/ui/components/checkbox";
 import { Alert, AlertDescription } from "@workspace/ui/components/alert";
+import { toast } from "@workspace/ui/components/sonner";
 import { publicApiPermissions } from "@workspace/auth/api-keys";
 import { createOrgApiKeyAction } from "../data/api-key-actions";
 
@@ -23,6 +25,7 @@ export const ApiKeyCreateModal = NiceModal.create(() => {
   const [permissions, setPermissions] = useState<Record<string, string[]>>({});
   const [createdKey, setCreatedKey] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const resources = Object.keys(publicApiPermissions) as Array<
     keyof typeof publicApiPermissions
@@ -44,6 +47,7 @@ export const ApiKeyCreateModal = NiceModal.create(() => {
 
   async function handleCreate() {
     setLoading(true);
+    setError(null);
     try {
       const result = await createOrgApiKeyAction({
         name,
@@ -51,7 +55,23 @@ export const ApiKeyCreateModal = NiceModal.create(() => {
         permissions,
         expiresIn: null,
       });
-      setCreatedKey((result as { key?: string }).key ?? null);
+      const key = (result as { key?: string; error?: string }).key;
+      const resultError = (result as { key?: string; error?: string }).error;
+      if (resultError) {
+        setError(resultError);
+        toast.error(resultError);
+        return;
+      }
+      if (!key) {
+        setError("Failed to create API key. Please try again.");
+        toast.error("Failed to create API key. Please try again.");
+        return;
+      }
+      setCreatedKey(key);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Failed to create API key.";
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -62,6 +82,7 @@ export const ApiKeyCreateModal = NiceModal.create(() => {
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>Create API Key</DialogTitle>
+          <DialogDescription>API keys grant programmatic access to your organization.</DialogDescription>
         </DialogHeader>
 
         {createdKey ? (
@@ -117,6 +138,12 @@ export const ApiKeyCreateModal = NiceModal.create(() => {
                 })}
               </div>
             </div>
+
+            {error && (
+              <Alert variant="destructive">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
 
             <DialogFooter>
               <Button variant="outline" onClick={() => modal.hide()}>

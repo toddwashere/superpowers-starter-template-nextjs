@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import NiceModal from "@ebay/nice-modal-react";
 import { Button } from "@workspace/ui/components/button";
+import { toast } from "@workspace/ui/components/sonner";
 import { ApiKeyTable } from "./api-key-table";
 import { ApiKeyCreateModal } from "./api-key-create-modal";
 import { listOrgApiKeysAction, revokeApiKeyAction } from "../data/api-key-actions";
@@ -28,15 +29,24 @@ export function ApiKeysPageContent() {
     void load();
   }, [load]);
 
-  async function handleRevoke(keyId: string) {
-    await revokeApiKeyAction(keyId);
-    await load();
-  }
+  const handleRevoke = useCallback(async (keyId: string) => {
+    try {
+      await revokeApiKeyAction(keyId);
+      await load();
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Failed to revoke API key.";
+      toast.error(message);
+    }
+  }, [load]);
 
-  async function handleCreate() {
-    const created = await NiceModal.show(ApiKeyCreateModal);
-    if (created) await load();
-  }
+  const handleCreate = useCallback(async () => {
+    try {
+      const created = await NiceModal.show(ApiKeyCreateModal);
+      if (created) await load();
+    } catch {
+      // ignore modal dismissal
+    }
+  }, [load]);
 
   return (
     <div className="space-y-6">
