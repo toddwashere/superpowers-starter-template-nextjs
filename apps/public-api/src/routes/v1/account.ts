@@ -1,6 +1,8 @@
 import { createRoute, z, OpenAPIHono } from "@hono/zod-openapi";
 import type { AppEnv } from "../../lib/context";
 import { getApiKeyContext } from "../../lib/context";
+import { errorResponse } from "../../lib/errors";
+import { hasPermission } from "@workspace/auth/api-keys";
 
 const AccountResponseSchema = z.object({
   keyId: z.string(),
@@ -25,6 +27,9 @@ const accountRoute = createRoute({
 export function registerAccountRoute(app: OpenAPIHono<AppEnv>): void {
   app.openapi(accountRoute, (c) => {
     const ctx = getApiKeyContext(c);
+    if (!hasPermission(ctx.permissions, { account: ["read"] })) {
+      return errorResponse(c, 403, "FORBIDDEN", "Missing account:read permission") as never;
+    }
     return c.json({
       keyId: ctx.keyId,
       ownerType: ctx.ownerType,

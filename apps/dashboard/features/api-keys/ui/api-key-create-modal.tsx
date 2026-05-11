@@ -17,9 +17,9 @@ import { Checkbox } from "@workspace/ui/components/checkbox";
 import { Alert, AlertDescription } from "@workspace/ui/components/alert";
 import { toast } from "@workspace/ui/components/sonner";
 import { publicApiPermissions } from "@workspace/auth/api-keys";
-import { createOrgApiKeyAction } from "../data/api-key-actions";
+import { createOrgApiKeyAction, createPersonalApiKeyAction } from "../data/api-key-actions";
 
-export const ApiKeyCreateModal = NiceModal.create(() => {
+export const ApiKeyCreateModal = NiceModal.create(({ personalMode = false }: { personalMode?: boolean }) => {
   const modal = useModal();
   const [name, setName] = useState("");
   const [permissions, setPermissions] = useState<Record<string, string[]>>({});
@@ -49,12 +49,9 @@ export const ApiKeyCreateModal = NiceModal.create(() => {
     setLoading(true);
     setError(null);
     try {
-      const result = await createOrgApiKeyAction({
-        name,
-        configId: "org-keys",
-        permissions,
-        expiresIn: null,
-      });
+      const result = personalMode
+        ? await createPersonalApiKeyAction({ name, permissions, expiresIn: null })
+        : await createOrgApiKeyAction({ name, configId: "org-keys", permissions, expiresIn: null });
       const key = (result as { key?: string; error?: string }).key;
       const resultError = (result as { key?: string; error?: string }).error;
       if (resultError) {
@@ -81,8 +78,12 @@ export const ApiKeyCreateModal = NiceModal.create(() => {
     <Dialog open={modal.visible} onOpenChange={(open) => !open && modal.hide()}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Create API Key</DialogTitle>
-          <DialogDescription>API keys grant programmatic access to your organization.</DialogDescription>
+          <DialogTitle>{personalMode ? "Create Personal API Key" : "Create API Key"}</DialogTitle>
+          <DialogDescription>
+            {personalMode
+              ? "Personal keys are tied to your user account."
+              : "API keys grant programmatic access to your organization."}
+          </DialogDescription>
         </DialogHeader>
 
         {createdKey ? (

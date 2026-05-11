@@ -42,7 +42,7 @@ export function PersonalApiKeysSection() {
 
   const handleCreate = useCallback(async () => {
     try {
-      const created = await NiceModal.show(ApiKeyCreateModal);
+      const created = await NiceModal.show(ApiKeyCreateModal, { personalMode: true });
       if (created) await load();
     } catch {
       // modal dismissed
