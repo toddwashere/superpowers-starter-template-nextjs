@@ -12,7 +12,7 @@ export async function createOrgApiKeyAction(data: CreateApiKeyInput) {
     body: {
       configId: data.configId,
       name: data.name ?? undefined,
-      permissions: JSON.stringify(data.permissions),
+      permissions: data.permissions,
       expiresIn: data.expiresIn ?? undefined,
     },
     headers: requestHeaders,
@@ -44,7 +44,7 @@ export async function createPersonalApiKeyAction(data: Omit<CreateApiKeyInput, "
     body: {
       configId: "user-keys",
       name: data.name,
-      permissions: JSON.stringify(data.permissions),
+      permissions: data.permissions,
       expiresIn: data.expiresIn ?? undefined,
     },
     headers: requestHeaders,
