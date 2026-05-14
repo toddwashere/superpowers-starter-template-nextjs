@@ -53,21 +53,17 @@ export function UpdateMemberRoleDialog({
     setIsSubmitting(true);
     setError(null);
     try {
-      const result = await authClient.organization.updateMemberRole({
+      await authClient.organization.updateMemberRole({
         memberId,
         role: role as "owner" | "admin" | "member",
         organizationId,
       });
-      if (result.error) {
-        setError(result.error.message ?? "Failed to update role");
-        return;
-      }
       await queryClient.invalidateQueries({
         queryKey: ["members", orgSlug],
       });
       onOpenChange(false);
-    } catch {
-      setError("An unexpected error occurred");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to update role");
     } finally {
       setIsSubmitting(false);
     }

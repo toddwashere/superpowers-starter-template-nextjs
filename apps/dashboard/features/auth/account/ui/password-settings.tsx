@@ -20,7 +20,7 @@ export function PasswordSettings() {
     queryKey: ["accounts"],
     queryFn: async () => {
       const result = await authClient.listAccounts();
-      return result.data ?? [];
+      return result ?? [];
     },
   });
 

@@ -29,11 +29,7 @@ export const DeleteAccountConfirmDialog = NiceModal.create(() => {
   const handleConfirm = async () => {
     setIsLoading(true);
     try {
-      const result = await authClient.deleteUser();
-      if (result.error) {
-        setIsLoading(false);
-        return;
-      }
+      await authClient.deleteUser();
       await authClient.signOut();
       router.push(getPathForSignIn());
     } catch {

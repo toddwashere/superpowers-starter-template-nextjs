@@ -37,16 +37,14 @@ export const ChangePasswordButtonModal = NiceModal.create(() => {
     }
     setIsLoading(true);
     try {
-      const result = await authClient.changePassword({
+      await authClient.changePassword({
         currentPassword,
         newPassword,
       });
-      if (result.error) {
-        toast.error(result.error.message ?? "Failed to change password");
-        return;
-      }
       toast.success("Password changed");
       modal.hide();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to change password");
     } finally {
       setIsLoading(false);
     }

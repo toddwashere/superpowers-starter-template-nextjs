@@ -30,14 +30,10 @@ export function SignInPageContent() {
     setIsLoading(true);
 
     try {
-      const result = await authClient.signIn.email({ email, password });
-      if (result.error) {
-        setError(result.error.message ?? "Sign in failed");
-        return;
-      }
+      await authClient.signIn.email({ email, password });
       router.push("/");
-    } catch {
-      setError("An unexpected error occurred");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Sign in failed");
     } finally {
       setIsLoading(false);
     }

@@ -53,17 +53,13 @@ export function CreateOrgPageContent() {
     setIsSubmitting(true);
     setError(null);
     try {
-      const result = await authClient.organization.create({
+      await authClient.organization.create({
         name: data.name,
         slug: data.slug,
       });
-      if (result.error) {
-        setError(result.error.message ?? "Failed to create organization");
-        return;
-      }
       router.push(getPathForOrg(data.slug));
-    } catch {
-      setError("An unexpected error occurred");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to create organization");
     } finally {
       setIsSubmitting(false);
     }

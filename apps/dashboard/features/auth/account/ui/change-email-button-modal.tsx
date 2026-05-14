@@ -25,16 +25,14 @@ export const ChangeEmailButtonModal = NiceModal.create(() => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const result = await authClient.changeEmail({
+      await authClient.changeEmail({
         newEmail,
         callbackURL: "/account",
       });
-      if (result.error) {
-        toast.error(result.error.message ?? "Failed to send verification email");
-        return;
-      }
       toast.success(`Verification email sent to ${newEmail}`);
       modal.hide();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to send verification email");
     } finally {
       setIsLoading(false);
     }

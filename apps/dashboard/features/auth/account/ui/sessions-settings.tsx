@@ -26,28 +26,28 @@ export function SessionsSettings() {
     queryKey: ["sessions"],
     queryFn: async () => {
       const result = await authClient.listSessions();
-      return result.data ?? [];
+      return result ?? [];
     },
   });
 
   const handleRevoke = async (token: string) => {
-    const result = await authClient.revokeSession({ token });
-    if (result.error) {
-      toast.error(result.error.message ?? "Failed to revoke session");
-      return;
+    try {
+      await authClient.revokeSession({ token });
+      toast.success("Session revoked");
+      await queryClient.invalidateQueries({ queryKey: ["sessions"] });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to revoke session");
     }
-    toast.success("Session revoked");
-    await queryClient.invalidateQueries({ queryKey: ["sessions"] });
   };
 
   const handleRevokeAll = async () => {
-    const result = await authClient.revokeSessions();
-    if (result.error) {
-      toast.error(result.error.message ?? "Failed to revoke sessions");
-      return;
+    try {
+      await authClient.revokeSessions();
+      toast.success("All other sessions revoked");
+      await queryClient.invalidateQueries({ queryKey: ["sessions"] });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to revoke sessions");
     }
-    toast.success("All other sessions revoked");
-    await queryClient.invalidateQueries({ queryKey: ["sessions"] });
   };
 
   const sortedSessions = [...sessions].sort((a, b) => {

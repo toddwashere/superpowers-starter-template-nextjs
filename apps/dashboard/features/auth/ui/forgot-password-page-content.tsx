@@ -28,17 +28,13 @@ export function ForgotPasswordPageContent() {
     setIsLoading(true);
 
     try {
-      const result = await authClient.requestPasswordReset({
+      await authClient.requestPasswordReset({
         email,
         redirectTo: getPathForResetPassword(),
       });
-      if (result.error) {
-        setError(result.error.message ?? "Failed to send reset email");
-        return;
-      }
       setIsSuccess(true);
-    } catch {
-      setError("An unexpected error occurred");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to send reset email");
     } finally {
       setIsLoading(false);
     }

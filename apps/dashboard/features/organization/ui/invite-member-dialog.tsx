@@ -60,22 +60,18 @@ export function InviteMemberDialog({
     setIsSubmitting(true);
     setError(null);
     try {
-      const result = await authClient.organization.inviteMember({
+      await authClient.organization.inviteMember({
         organizationId,
         email: data.email,
         role: data.role,
       });
-      if (result.error) {
-        setError(result.error.message ?? "Failed to send invitation");
-        return;
-      }
       await queryClient.invalidateQueries({
         queryKey: ["organization", orgSlug],
       });
       form.reset();
       setOpen(false);
-    } catch {
-      setError("An unexpected error occurred");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to send invitation");
     } finally {
       setIsSubmitting(false);
     }

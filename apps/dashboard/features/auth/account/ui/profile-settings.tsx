@@ -45,12 +45,10 @@ export function ProfileSettings() {
   const handleSave = async () => {
     setIsLoading(true);
     try {
-      const result = await authClient.updateUser({ name, image: imageUrl });
-      if (result.error) {
-        toast.error(result.error.message ?? "Failed to update profile");
-        return;
-      }
+      await authClient.updateUser({ name, image: imageUrl });
       toast.success("Profile updated");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to update profile");
     } finally {
       setIsLoading(false);
     }

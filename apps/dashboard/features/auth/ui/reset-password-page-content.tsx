@@ -44,17 +44,13 @@ export function ResetPasswordPageContent() {
     setIsLoading(true);
 
     try {
-      const result = await authClient.resetPassword({
+      await authClient.resetPassword({
         newPassword: password,
         token,
       });
-      if (result.error) {
-        setError(result.error.message ?? "Failed to reset password");
-        return;
-      }
       router.push(getPathForSignIn());
-    } catch {
-      setError("An unexpected error occurred");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to reset password");
     } finally {
       setIsLoading(false);
     }

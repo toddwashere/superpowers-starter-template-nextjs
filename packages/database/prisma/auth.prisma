@@ -42,7 +42,7 @@ model Account {
   userId                String
   accessToken           String?
   refreshToken          String?
-  idToken              String?
+  idToken               String?
   accessTokenExpiresAt  DateTime?
   refreshTokenExpiresAt DateTime?
   scope                 String?
@@ -110,7 +110,8 @@ model Invitation {
   @@index([email])
 }
 
-model ApiKey {
+/// Better Auth Wants This Table Name to be lowercase "key"
+model Apikey {
   id                  String    @id @default(cuid())
   configId            String    @default("default")
   name                String?

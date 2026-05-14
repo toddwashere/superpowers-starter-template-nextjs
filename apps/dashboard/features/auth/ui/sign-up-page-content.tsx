@@ -38,14 +38,10 @@ export function SignUpPageContent() {
     setIsLoading(true);
 
     try {
-      const result = await authClient.signUp.email({ email, password, name });
-      if (result.error) {
-        setError(result.error.message ?? "Sign up failed");
-        return;
-      }
+      await authClient.signUp.email({ email, password, name });
       router.push("/");
-    } catch {
-      setError("An unexpected error occurred");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Sign up failed");
     } finally {
       setIsLoading(false);
     }

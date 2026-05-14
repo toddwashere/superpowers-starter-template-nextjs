@@ -39,7 +39,7 @@ export function ConnectedAccountsSettings() {
     queryKey: ["accounts"],
     queryFn: async () => {
       const result = await authClient.listAccounts();
-      return result.data ?? [];
+      return result ?? [];
     },
   });
 
@@ -57,13 +57,13 @@ export function ConnectedAccountsSettings() {
   };
 
   const handleUnlink = async (providerId: string) => {
-    const result = await authClient.unlinkAccount({ providerId });
-    if (result.error) {
-      toast.error(result.error.message ?? "Failed to unlink account");
-      return;
+    try {
+      await authClient.unlinkAccount({ providerId });
+      toast.success("Account unlinked");
+      await queryClient.invalidateQueries({ queryKey: ["accounts"] });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to unlink account");
     }
-    toast.success("Account unlinked");
-    await queryClient.invalidateQueries({ queryKey: ["accounts"] });
   };
 
   return (

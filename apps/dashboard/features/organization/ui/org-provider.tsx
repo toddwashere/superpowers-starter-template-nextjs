@@ -27,10 +27,12 @@ interface OrgInvitation {
   expiresAt: Date;
 }
 
+type FullOrganization = Awaited<
+  ReturnType<typeof authClient.organization.getFullOrganization>
+>;
+
 interface OrgContextValue {
-  organization: Awaited<
-    ReturnType<typeof authClient.organization.getFullOrganization>
-  >["data"] | null;
+  organization: FullOrganization | null;
   members: OrgMember[];
   invitations: OrgInvitation[];
   isLoading: boolean;
@@ -48,10 +50,9 @@ export function OrgProvider({
   const { data: orgData, isLoading: orgLoading } = useQuery({
     queryKey: ["organization", orgSlug],
     queryFn: async () => {
-      const result = await authClient.organization.getFullOrganization({
+      return authClient.organization.getFullOrganization({
         query: { organizationSlug: orgSlug },
       });
-      return result.data;
     },
   });
 
@@ -61,9 +62,7 @@ export function OrgProvider({
       const result = await authClient.organization.listMembers({
         query: { organizationId: orgData!.id },
       });
-      const data = result.data;
-      if (!data) return [];
-      return (data as { members: OrgMember[] }).members ?? [];
+      return (result as unknown as { members: OrgMember[] }).members ?? [];
     },
     enabled: !!orgData?.id,
   });

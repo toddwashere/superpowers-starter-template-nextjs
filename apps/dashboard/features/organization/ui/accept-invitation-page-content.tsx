@@ -33,10 +33,9 @@ export function AcceptInvitationPageContent({
   const { data: invitation, isLoading: invitationLoading } = useQuery({
     queryKey: ["invitation", invitationId],
     queryFn: async () => {
-      const result = await authClient.organization.getInvitation({
+      return authClient.organization.getInvitation({
         query: { id: invitationId },
       });
-      return result.data;
     },
   });
 
@@ -117,20 +116,16 @@ export function AcceptInvitationPageContent({
     setIsAccepting(true);
     setError(null);
     try {
-      const result = await authClient.organization.acceptInvitation({
+      await authClient.organization.acceptInvitation({
         invitationId,
       });
-      if (result.error) {
-        setError(result.error.message ?? "Failed to accept invitation");
-        return;
-      }
       if (invitation.organizationSlug) {
         router.push(getPathForOrg(invitation.organizationSlug));
       } else {
         router.push("/");
       }
-    } catch {
-      setError("An unexpected error occurred");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to accept invitation");
     } finally {
       setIsAccepting(false);
     }
@@ -140,16 +135,12 @@ export function AcceptInvitationPageContent({
     setIsDeclining(true);
     setError(null);
     try {
-      const result = await authClient.organization.rejectInvitation({
+      await authClient.organization.rejectInvitation({
         invitationId,
       });
-      if (result.error) {
-        setError(result.error.message ?? "Failed to decline invitation");
-        return;
-      }
       router.push("/");
-    } catch {
-      setError("An unexpected error occurred");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to decline invitation");
     } finally {
       setIsDeclining(false);
     }
