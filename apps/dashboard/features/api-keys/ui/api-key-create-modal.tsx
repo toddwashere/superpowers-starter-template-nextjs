@@ -16,7 +16,7 @@ import { Label } from "@workspace/ui/components/label";
 import { Checkbox } from "@workspace/ui/components/checkbox";
 import { Alert, AlertDescription } from "@workspace/ui/components/alert";
 import { toast } from "@workspace/ui/components/sonner";
-import { publicApiPermissions } from "@workspace/auth/api-keys";
+import { publicApiPermissions } from "@workspace/auth/api-keys/permissions";
 import { createOrgApiKeyAction, createPersonalApiKeyAction } from "../data/api-key-actions";
 
 export const ApiKeyCreateModal = NiceModal.create(({ personalMode = false }: { personalMode?: boolean }) => {

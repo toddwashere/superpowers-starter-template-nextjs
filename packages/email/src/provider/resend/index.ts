@@ -3,11 +3,21 @@ import { keys } from "../../../keys";
 import { getResendFrom } from "./resend-options";
 import type { EmailPayload, EmailProvider } from "../types";
 
-const resend = new Resend(keys().RESEND_API_KEY);
+let resend: Resend | null = null;
+
+function getResend(): Resend {
+  if (!resend) {
+    if (!keys().RESEND_API_KEY) {
+      throw new Error("RESEND_API_KEY is not set");
+    }
+    resend = new Resend(keys().RESEND_API_KEY);
+  }
+  return resend;
+}
 
 const provider: EmailProvider = {
   async sendEmail(payload: EmailPayload): Promise<{ id?: string }> {
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await getResend().emails.send({
       from: getResendFrom(),
       to: payload.recipient,
       subject: payload.subject,
