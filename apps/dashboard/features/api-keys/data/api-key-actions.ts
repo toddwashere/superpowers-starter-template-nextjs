@@ -1,29 +1,37 @@
 "use server";
 
 import { auth } from "@workspace/auth";
-import { requireOrgPermission, requireUser } from "@workspace/auth/guards";
+import {
+  requireOrgPermission,
+  requireOrgPermissionWithActiveOrg,
+  requireUser,
+} from "@workspace/auth/guards";
 import { headers } from "next/headers";
 import type { CreateApiKeyInput } from "./api-key-types";
 
 export async function createOrgApiKeyAction(data: CreateApiKeyInput) {
-  await requireOrgPermission({ apiKey: ["create"] });
-  const requestHeaders = await headers();
+  const { session: authSession, activeOrganizationId } =
+    await requireOrgPermissionWithActiveOrg({ apiKey: ["create"] });
+
   return auth.api.createApiKey({
     body: {
       configId: data.configId,
       name: data.name ?? undefined,
       permissions: data.permissions,
       expiresIn: data.expiresIn ?? undefined,
+      organizationId: activeOrganizationId,
+      userId: authSession.user.id,
     },
-    headers: requestHeaders,
   });
 }
 
 export async function listOrgApiKeysAction() {
-  await requireOrgPermission({ apiKey: ["read"] });
+  const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
+    apiKey: ["read"],
+  });
   const requestHeaders = await headers();
   return auth.api.listApiKeys({
-    query: { configId: "org-keys" },
+    query: { configId: "org-keys", organizationId: activeOrganizationId },
     headers: requestHeaders,
   });
 }
@@ -38,16 +46,16 @@ export async function listPersonalApiKeysAction() {
 }
 
 export async function createPersonalApiKeyAction(data: Omit<CreateApiKeyInput, "configId">) {
-  await requireUser();
-  const requestHeaders = await headers();
+  const authSession = await requireUser();
+
   return auth.api.createApiKey({
     body: {
       configId: "user-keys",
       name: data.name,
       permissions: data.permissions,
       expiresIn: data.expiresIn ?? undefined,
+      userId: authSession.user.id,
     },
-    headers: requestHeaders,
   });
 }
 

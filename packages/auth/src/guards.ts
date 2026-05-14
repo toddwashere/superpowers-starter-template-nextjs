@@ -36,3 +36,20 @@ export async function requireOrgPermission(
   }
   return session;
 }
+
+export async function requireOrgPermissionWithActiveOrg(
+  permissions: Record<string, string[]>,
+) {
+  const session = await requireOrgPermission(permissions);
+  const activeOrganizationId = (
+    session.session as { activeOrganizationId?: string | null }
+  ).activeOrganizationId;
+
+  if (!activeOrganizationId) {
+    throw new Error("No active organization selected", {
+      cause: { status: 400 },
+    });
+  }
+
+  return { session, activeOrganizationId };
+}

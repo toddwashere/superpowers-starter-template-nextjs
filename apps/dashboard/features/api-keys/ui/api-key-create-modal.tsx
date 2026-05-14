@@ -19,6 +19,16 @@ import { toast } from "@workspace/ui/components/sonner";
 import { publicApiPermissions } from "@workspace/auth/api-keys/permissions";
 import { createOrgApiKeyAction, createPersonalApiKeyAction } from "../data/api-key-actions";
 
+type ResolvableModal = {
+  resolve: (value: boolean) => void;
+  hide: () => void;
+};
+
+export function finishApiKeyCreateModal(modal: ResolvableModal) {
+  modal.resolve(true);
+  modal.hide();
+}
+
 export const ApiKeyCreateModal = NiceModal.create(({ personalMode = false }: { personalMode?: boolean }) => {
   const modal = useModal();
   const [name, setName] = useState("");
@@ -99,7 +109,11 @@ export const ApiKeyCreateModal = NiceModal.create(({ personalMode = false }: { p
             <Button className="w-full" onClick={() => navigator.clipboard.writeText(createdKey)}>
               Copy Key
             </Button>
-            <Button variant="outline" className="w-full" onClick={() => modal.resolve(true)}>
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => finishApiKeyCreateModal(modal)}
+            >
               Done
             </Button>
           </div>

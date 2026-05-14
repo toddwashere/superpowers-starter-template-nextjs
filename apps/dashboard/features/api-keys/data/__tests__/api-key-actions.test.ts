@@ -11,7 +11,11 @@ vi.mock("@workspace/auth", () => ({
 }));
 
 vi.mock("@workspace/auth/guards", () => ({
-  requireOrgPermission: vi.fn().mockResolvedValue({ session: { activeOrganizationId: "org_1" } }),
+  requireOrgPermission: vi.fn().mockResolvedValue({ user: { id: "user_1" }, session: { activeOrganizationId: "org_1" } }),
+  requireOrgPermissionWithActiveOrg: vi.fn().mockResolvedValue({
+    session: { user: { id: "user_1" }, session: { activeOrganizationId: "org_1" } },
+    activeOrganizationId: "org_1",
+  }),
   requireUser: vi.fn().mockResolvedValue({ user: { id: "user_1" }, session: { activeOrganizationId: "org_1" } }),
 }));
 
@@ -25,7 +29,7 @@ import { createOrgApiKeyAction, listOrgApiKeysAction, revokeApiKeyAction, create
 describe("createOrgApiKeyAction", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("calls auth.api.createApiKey with org-keys configId", async () => {
+  it("creates org keys from the server auth instance with owner context", async () => {
     vi.mocked(auth.api.createApiKey).mockResolvedValue({ key: "sk_org_abc123" } as unknown as Awaited<ReturnType<typeof auth.api.createApiKey>>);
     const result = await createOrgApiKeyAction({
       name: "My Integration",
@@ -35,8 +39,16 @@ describe("createOrgApiKeyAction", () => {
     });
     expect(auth.api.createApiKey).toHaveBeenCalledWith(
       expect.objectContaining({
-        body: expect.objectContaining({ configId: "org-keys" }),
+        body: expect.objectContaining({
+          configId: "org-keys",
+          organizationId: "org_1",
+          userId: "user_1",
+          permissions: { account: ["read"] },
+        }),
       }),
+    );
+    expect(auth.api.createApiKey).toHaveBeenCalledWith(
+      expect.not.objectContaining({ headers: expect.anything() }),
     );
     expect(result).toHaveProperty("key");
   });
@@ -45,9 +57,17 @@ describe("createOrgApiKeyAction", () => {
 describe("listOrgApiKeysAction", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("returns list of keys", async () => {
+  it("lists keys for the active organization", async () => {
     vi.mocked(auth.api.listApiKeys).mockResolvedValue([{ id: "key_1", name: "Test" }] as unknown as Awaited<ReturnType<typeof auth.api.listApiKeys>>);
     const keys = await listOrgApiKeysAction();
+    expect(auth.api.listApiKeys).toHaveBeenCalledWith(
+      expect.objectContaining({
+        query: expect.objectContaining({
+          configId: "org-keys",
+          organizationId: "org_1",
+        }),
+      }),
+    );
     expect(Array.isArray(keys)).toBe(true);
   });
 });
@@ -69,7 +89,7 @@ describe("revokeApiKeyAction", () => {
 describe("createPersonalApiKeyAction", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("calls auth.api.createApiKey with user-keys configId", async () => {
+  it("creates personal keys from the server auth instance with owner context", async () => {
     vi.mocked(auth.api.createApiKey).mockResolvedValue({ key: "sk_user_xyz" } as unknown as Awaited<ReturnType<typeof auth.api.createApiKey>>);
     const result = await createPersonalApiKeyAction({
       name: "My Personal Key",
@@ -78,8 +98,15 @@ describe("createPersonalApiKeyAction", () => {
     });
     expect(auth.api.createApiKey).toHaveBeenCalledWith(
       expect.objectContaining({
-        body: expect.objectContaining({ configId: "user-keys" }),
+        body: expect.objectContaining({
+          configId: "user-keys",
+          userId: "user_1",
+          permissions: { account: ["read"] },
+        }),
       }),
+    );
+    expect(auth.api.createApiKey).toHaveBeenCalledWith(
+      expect.not.objectContaining({ headers: expect.anything() }),
     );
     expect(result).toHaveProperty("key");
   });

@@ -13,7 +13,12 @@ vi.mock("../auth", () => ({
   },
 }));
 
-import { requireUser, requireSystemAdmin, requireOrgPermission } from "../guards";
+import {
+  requireUser,
+  requireSystemAdmin,
+  requireOrgPermission,
+  requireOrgPermissionWithActiveOrg,
+} from "../guards";
 import { auth } from "../auth";
 
 const mockGetSession = vi.mocked(auth.api.getSession);
@@ -134,5 +139,44 @@ describe("requireOrgPermission", () => {
     await expect(
       requireOrgPermission({ member: ["create"] }),
     ).rejects.toThrow("Unauthorized");
+  });
+});
+
+describe("requireOrgPermissionWithActiveOrg", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("returns session and active organization id when present", async () => {
+    const sessionWithActiveOrg = {
+      ...fakeSession,
+      session: {
+        ...fakeSession.session,
+        activeOrganizationId: "org_1",
+      },
+    };
+    mockGetSession.mockResolvedValue(sessionWithActiveOrg as never);
+    mockHasPermission.mockResolvedValue({ success: true } as never);
+
+    const result = await requireOrgPermissionWithActiveOrg({
+      apiKey: ["create"],
+    });
+
+    expect(result).toEqual({
+      session: sessionWithActiveOrg,
+      activeOrganizationId: "org_1",
+    });
+  });
+
+  it("throws 400 when no active organization is selected", async () => {
+    mockGetSession.mockResolvedValue(fakeSession as never);
+    mockHasPermission.mockResolvedValue({ success: true } as never);
+
+    await expect(
+      requireOrgPermissionWithActiveOrg({ apiKey: ["read"] }),
+    ).rejects.toThrow("No active organization selected");
+    await expect(
+      requireOrgPermissionWithActiveOrg({ apiKey: ["read"] }),
+    ).rejects.toThrow(expect.objectContaining({ cause: { status: 400 } }));
   });
 });
