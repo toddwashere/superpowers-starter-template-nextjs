@@ -10,4 +10,8 @@ Focus on:
 
 These are the tests that, if they pass, give the most confidence the feature works correctly. Avoid listing trivial happy-path assertions.
 
+Favor unit tests that can run quickly over other types of tests. 
+
+Avoid adding low value tests.
+
 This section should appear in both spec documents and implementation plans, before the task breakdown.
