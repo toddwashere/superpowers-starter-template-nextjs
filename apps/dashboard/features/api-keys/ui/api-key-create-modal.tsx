@@ -17,17 +17,8 @@ import { Checkbox } from "@workspace/ui/components/checkbox";
 import { Alert, AlertDescription } from "@workspace/ui/components/alert";
 import { toast } from "@workspace/ui/components/sonner";
 import { publicApiPermissions } from "@workspace/auth/api-keys/permissions";
+import { resolveAndHideModal } from "@/common/ui/nice-modal-helpers";
 import { createOrgApiKeyAction, createPersonalApiKeyAction } from "../data/api-key-actions";
-
-type ResolvableModal = {
-  resolve: (value: boolean) => void;
-  hide: () => void;
-};
-
-export function finishApiKeyCreateModal(modal: ResolvableModal) {
-  modal.resolve(true);
-  modal.hide();
-}
 
 export const ApiKeyCreateModal = NiceModal.create(({ personalMode = false }: { personalMode?: boolean }) => {
   const modal = useModal();
@@ -112,7 +103,7 @@ export const ApiKeyCreateModal = NiceModal.create(({ personalMode = false }: { p
             <Button
               variant="outline"
               className="w-full"
-              onClick={() => finishApiKeyCreateModal(modal)}
+              onClick={() => resolveAndHideModal(modal, true)}
             >
               Done
             </Button>
