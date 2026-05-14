@@ -28,16 +28,7 @@ import {
   createOrgSchema,
   type CreateOrgInput,
 } from "@/features/organization/data/org-types";
-
-function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .trim()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/[\s_]+/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
+import { slugify } from "@/features/organization/data/slugify";
 
 export function CreateOrgPageContent() {
   const router = useRouter();
