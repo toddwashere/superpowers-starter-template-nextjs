@@ -18,7 +18,7 @@ const authPaths = ["/sign-in", "/sign-up"];
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname.startsWith("/api/auth")) {
+  if (pathname.startsWith("/api/auth") || pathname.startsWith("/api/clear-session")) {
     return NextResponse.next();
   }
 

@@ -18,6 +18,11 @@ describe("middleware", () => {
     expect(res.status).not.toBe(307);
   });
 
+  it("passes through /api/clear-session so stale cookies can be cleared", () => {
+    const res = middleware(buildRequest("/api/clear-session"));
+    expect(res.status).not.toBe(307);
+  });
+
   it("redirects unauthenticated user on protected path to /sign-in", () => {
     const res = middleware(buildRequest("/create-org"));
     expect(res.status).toBe(307);
