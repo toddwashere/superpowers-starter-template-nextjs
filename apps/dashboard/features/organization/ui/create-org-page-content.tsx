@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -44,6 +44,8 @@ export function CreateOrgPageContent() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const slugTouched = useRef(false);
+
   const form = useForm<CreateOrgInput>({
     resolver: zodResolver(createOrgSchema),
     defaultValues: { name: "", slug: "" },
@@ -51,9 +53,7 @@ export function CreateOrgPageContent() {
 
   const onNameChange = (value: string) => {
     form.setValue("name", value);
-    const currentSlug = form.getValues("slug");
-    const expectedSlug = slugify(form.getValues("name"));
-    if (!currentSlug || currentSlug === expectedSlug || currentSlug === slugify(value)) {
+    if (!slugTouched.current) {
       form.setValue("slug", slugify(value), { shouldValidate: true });
     }
   };
@@ -114,7 +114,14 @@ export function CreateOrgPageContent() {
                   <FormItem>
                     <FormLabel>URL Slug</FormLabel>
                     <FormControl>
-                      <Input placeholder="acme-inc" {...field} />
+                      <Input
+                        placeholder="acme-inc"
+                        {...field}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          slugTouched.current = true;
+                        }}
+                      />
                     </FormControl>
                     <FormDescription>
                       This will be used in your organization's URL.
