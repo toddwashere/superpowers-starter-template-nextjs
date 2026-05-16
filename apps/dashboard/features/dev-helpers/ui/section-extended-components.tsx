@@ -285,6 +285,9 @@ export function SectionExtendedComponents() {
             endAdornment={<Badge variant="secondary">Verified</Badge>}
             defaultValue="admin@example.com"
             aria-label="Email with adornments"
+            autoComplete="off"
+            data-form-type="other"
+            data-lpignore="true"
           />
           <EmptyText>EmptyText keeps low-emphasis copy consistent.</EmptyText>
         </AnnotatedSection>

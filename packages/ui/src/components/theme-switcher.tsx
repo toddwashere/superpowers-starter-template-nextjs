@@ -31,7 +31,12 @@ const THEME_OPTIONS = [
 export function ThemeSwitcher(): React.JSX.Element {
   const { setTheme, theme } = useTheme()
   const id = React.useId()
+  const [isMounted, setIsMounted] = React.useState(false)
   const themeValue = theme || "system"
+
+  React.useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   const handleChangeTheme = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTheme(event.target.value)
@@ -47,7 +52,8 @@ export function ThemeSwitcher(): React.JSX.Element {
             id={`${id}-theme-switch-${value}`}
             name={`${id}-theme-switch`}
             value={value}
-            checked={themeValue === value}
+            checked={isMounted && themeValue === value}
+            disabled={!isMounted}
             onChange={handleChangeTheme}
           />
           <label
