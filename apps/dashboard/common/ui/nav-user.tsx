@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useTheme } from "next-themes";
 import {
   IconForProfile,
   IconForExpand,
@@ -32,6 +31,7 @@ import {
   useSidebar,
 } from "@workspace/ui/components/sidebar";
 import { Skeleton } from "@workspace/ui/components/skeleton";
+import { useTheme } from "@workspace/ui/components/theme-provider";
 
 export function NavUser() {
   const { isMobile } = useSidebar();

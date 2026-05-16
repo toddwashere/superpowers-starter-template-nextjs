@@ -2,8 +2,8 @@
 
 import * as React from "react"
 import { LaptopIcon, MoonIcon, SunIcon } from "lucide-react"
-import { useTheme } from "next-themes"
 
+import { useTheme, type Theme } from "#components/theme-provider"
 import {
   Tooltip,
   TooltipContent,
@@ -39,7 +39,7 @@ export function ThemeSwitcher(): React.JSX.Element {
   }, [])
 
   const handleChangeTheme = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTheme(event.target.value)
+    setTheme(event.target.value as Theme)
   }
 
   return (

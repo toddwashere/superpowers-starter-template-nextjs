@@ -1,6 +1,5 @@
 "use client";
 
-import { useTheme } from "next-themes";
 import { Sun, Moon, Monitor } from "lucide-react";
 import {
   IconForExpand,
@@ -42,6 +41,7 @@ import {
   AvatarImage,
 } from "@workspace/ui/components/avatar";
 import { Separator } from "@workspace/ui/components/separator";
+import { useTheme } from "@workspace/ui/components/theme-provider";
 import { ThemeToggle } from "@workspace/ui/components/theme-toggle";
 import { NavMain } from "@/common/ui/nav-main";
 import type { NavConfig } from "@/types/nav";
