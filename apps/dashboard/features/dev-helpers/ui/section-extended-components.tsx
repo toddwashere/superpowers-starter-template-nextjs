@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type ComponentProps, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ComponentProps, type ReactNode } from "react";
 import { AnnotatedLayout, AnnotatedSection } from "@workspace/ui/components/annotated";
 import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
@@ -18,7 +18,6 @@ import {
   IconForAdd,
   IconForBilling,
   IconForDashboard,
-  IconForEmail,
   IconForSettings,
 } from "@workspace/ui/components/icon-for";
 import { ImageDropzone } from "@workspace/ui/components/image-dropzone";
@@ -246,6 +245,7 @@ function useDemoTable(statusFilter: string[]) {
 }
 
 export function SectionExtendedComponents() {
+  const [isPasswordDemoMounted, setIsPasswordDemoMounted] = useState(false);
   const [searchValue, setSearchValue] = useState("design");
   const [comboBoxValue, setComboBoxValue] = useState<DemoOption | null>(
     demoOptions[0] ?? null
@@ -268,6 +268,10 @@ export function SectionExtendedComponents() {
   const [statusFilter, setStatusFilter] = useState<string[]>(["active"]);
   const [radioValue, setRadioValue] = useState("pro");
   const table = useDemoTable(statusFilter);
+
+  useEffect(() => {
+    setIsPasswordDemoMounted(true);
+  }, []);
 
   return (
     <TooltipProvider>
@@ -302,7 +306,9 @@ export function SectionExtendedComponents() {
             placeholder="Search components"
             alwaysShowClearButton
           />
-          <InputPassword placeholder="Password" defaultValue="super-secret" />
+          {isPasswordDemoMounted ? (
+            <InputPassword placeholder="Password" defaultValue="super-secret" />
+          ) : null}
           <InputCurrency
             aria-label="Monthly budget"
             defaultValue={199}
