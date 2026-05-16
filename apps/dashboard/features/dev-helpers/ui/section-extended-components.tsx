@@ -281,10 +281,10 @@ export function SectionExtendedComponents() {
           contentClassName="space-y-3"
         >
           <InputWithAdornments
-            startAdornment={<IconForEmail className="size-4" />}
+            startAdornment={<IconForSettings className="size-4" />}
             endAdornment={<Badge variant="secondary">Verified</Badge>}
-            defaultValue="admin@example.com"
-            aria-label="Email with adornments"
+            defaultValue="Workspace settings"
+            aria-label="Input with adornments"
             autoComplete="off"
             data-form-type="other"
             data-lpignore="true"
