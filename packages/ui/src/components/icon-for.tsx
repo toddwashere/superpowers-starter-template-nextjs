@@ -22,6 +22,7 @@ import {
   Monitor,
   MoreHorizontal,
   Plus,
+  Search,
   Settings,
   Shield,
   Underline,
@@ -228,3 +229,10 @@ export const IconForAi = forwardRef<SVGSVGElement, LucideProps>(
   )
 );
 IconForAi.displayName = "IconForAi";
+
+export const IconForSearch = forwardRef<SVGSVGElement, LucideProps>(
+  (props, ref) => (
+    <Search ref={ref} {...props} className={cn("size-4", props.className)} />
+  )
+);
+IconForSearch.displayName = "IconForSearch";
