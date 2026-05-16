@@ -145,23 +145,24 @@ describe("buildCommands - signed in with current org", () => {
 describe("orgSwitchProvider", () => {
   it("generates one command per organization", () => {
     const commands = orgSwitchProvider(makeContext({ user: testUser, organizations: testOrgs }));
+    const [first, second] = commands;
     expect(commands).toHaveLength(2);
-    expect(commands[0].id).toBe("org-switch:org-1");
-    expect(commands[1].id).toBe("org-switch:org-2");
+    expect(first?.id).toBe("org-switch:org-1");
+    expect(second?.id).toBe("org-switch:org-2");
   });
 
   it("run calls setActiveOrg then navigates to the org", async () => {
     const ctx = makeContext({ user: testUser, organizations: testOrgs });
-    const commands = orgSwitchProvider(ctx);
-    await commands[0].run(ctx);
+    const [first] = orgSwitchProvider(ctx);
+    await first!.run(ctx);
     expect(mockSetActiveOrg).toHaveBeenCalledWith("org-1");
     expect(mockRouter.push).toHaveBeenCalledWith("/acme-inc");
   });
 
   it("run navigates to the correct org for the second org", async () => {
     const ctx = makeContext({ user: testUser, organizations: testOrgs });
-    const commands = orgSwitchProvider(ctx);
-    await commands[1].run(ctx);
+    const [, second] = orgSwitchProvider(ctx);
+    await second!.run(ctx);
     expect(mockSetActiveOrg).toHaveBeenCalledWith("org-2");
     expect(mockRouter.push).toHaveBeenCalledWith("/beta-corp");
   });
