@@ -11,7 +11,6 @@ import { useParams, usePathname, useRouter } from "next/navigation";
 import { useTheme } from "@workspace/ui/components/theme-provider";
 import { toast } from "@workspace/ui/components/sonner";
 import { authClient } from "@workspace/auth/client";
-import { getPathForSignIn } from "@workspace/routes";
 import { buildCommands } from "./command-providers";
 import { CommandMenuDialog } from "./command-menu-dialog";
 import type { CommandContext, DashboardCommand } from "./command-types";
@@ -56,7 +55,6 @@ export function GlobalCommandMenu({ children }: { children: ReactNode }) {
     setTheme,
     signOut: async () => {
       await authClient.signOut();
-      router.push(getPathForSignIn());
     },
     setActiveOrg: async (orgId: string) => {
       await authClient.organization.setActive({
