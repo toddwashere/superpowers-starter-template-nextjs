@@ -3,8 +3,12 @@ import { auth } from "./auth";
 
 export async function getCurrentUser() {
   const requestHeaders = await headers();
-  const session = await auth.api.getSession({ headers: requestHeaders });
-  return session;
+  try {
+    const session = await auth.api.getSession({ headers: requestHeaders });
+    return session;
+  } catch {
+    return null;
+  }
 }
 
 export async function getCurrentOrg() {

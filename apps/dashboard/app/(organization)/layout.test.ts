@@ -14,14 +14,9 @@ vi.mock("@workspace/auth/session", () => ({
   getCurrentUser: () => mockGetCurrentUser(),
 }));
 
-vi.mock("@/features/dashboard/ui/dashboard-shell", () => ({
-  DashboardShell: ({ user, children }: { user: unknown; children: ReactNode }) =>
-    createElement("div", { "data-user": JSON.stringify(user) }, children),
-}));
+import OrganizationLayout from "./layout";
 
-import DashboardLayout from "./layout";
-
-describe("DashboardLayout session guard", () => {
+describe("OrganizationLayout session guard", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -30,31 +25,30 @@ describe("DashboardLayout session guard", () => {
     mockGetCurrentUser.mockResolvedValue(null);
 
     await expect(
-      DashboardLayout({ children: createElement("div") }),
+      OrganizationLayout({ children: createElement("div") }),
     ).rejects.toThrow("NEXT_REDIRECT");
 
     expect(mockRedirect).toHaveBeenCalledWith("/api/clear-session");
   });
 
-  it("redirects to clear-session (not /sign-in directly) to avoid redirect loops", async () => {
+  it("redirects to clear-session instead of /sign-in to avoid redirect loops", async () => {
     mockGetCurrentUser.mockResolvedValue(null);
 
     await expect(
-      DashboardLayout({ children: createElement("div") }),
+      OrganizationLayout({ children: createElement("div") }),
     ).rejects.toThrow("NEXT_REDIRECT");
 
     expect(mockRedirect).not.toHaveBeenCalledWith("/sign-in");
     expect(mockRedirect).toHaveBeenCalledWith("/api/clear-session");
   });
 
-  it("renders DashboardShell when session is valid", async () => {
-    const fakeUser = { name: "Test User", image: "https://example.com/pic.jpg" };
-    mockGetCurrentUser.mockResolvedValue({ user: fakeUser });
+  it("renders children when session is valid", async () => {
+    mockGetCurrentUser.mockResolvedValue({ user: { id: "user_1" } });
 
     const child = createElement("span", null, "hello");
-    const result = await DashboardLayout({ children: child });
+    const result = await OrganizationLayout({ children: child });
 
-    expect(result).toBeTruthy();
+    expect(result).toBe(child as ReactNode);
     expect(mockRedirect).not.toHaveBeenCalled();
   });
 });

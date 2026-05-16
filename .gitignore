@@ -4,6 +4,9 @@ node_modules/
 # turborepo
 .turbo/
 
+# worktrees
+.worktrees/
+
 # next.js
 .next/
 out/

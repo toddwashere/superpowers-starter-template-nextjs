@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { ScrollAnchor } from "@workspace/ui/components/scroll-anchor";
 import { ThemeToggle } from "@workspace/ui/components/theme-toggle";
 import { SectionColors } from "./section-colors";
 import { SectionTypography } from "./section-typography";
@@ -10,6 +11,7 @@ import { SectionActions } from "./section-actions";
 import { SectionLayout } from "./section-layout";
 import { SectionOverlays } from "./section-overlays";
 import { SectionData } from "./section-data";
+import { SectionExtendedComponents } from "./section-extended-components";
 
 const tocItems = [
   { id: "colors", label: "Colors & Tokens" },
@@ -20,6 +22,7 @@ const tocItems = [
   { id: "layout", label: "Layout & Feedback" },
   { id: "overlays", label: "Overlays & Nav" },
   { id: "data", label: "Data & Display" },
+  { id: "extended-components", label: "Extended Components" },
 ] as const;
 
 export function DevUiPageContent() {
@@ -83,30 +86,33 @@ export function DevUiPageContent() {
 
         <main className="min-w-0 flex-1 p-6 lg:p-10">
           <div className="mx-auto max-w-5xl space-y-16">
-            <section id="colors">
+            <ScrollAnchor id="colors">
               <SectionColors />
-            </section>
-            <section id="typography">
+            </ScrollAnchor>
+            <ScrollAnchor id="typography">
               <SectionTypography />
-            </section>
-            <section id="icons">
+            </ScrollAnchor>
+            <ScrollAnchor id="icons">
               <SectionIcons />
-            </section>
-            <section id="sidebar">
+            </ScrollAnchor>
+            <ScrollAnchor id="sidebar">
               <SectionSidebar />
-            </section>
-            <section id="actions">
+            </ScrollAnchor>
+            <ScrollAnchor id="actions">
               <SectionActions />
-            </section>
-            <section id="layout">
+            </ScrollAnchor>
+            <ScrollAnchor id="layout">
               <SectionLayout />
-            </section>
-            <section id="overlays">
+            </ScrollAnchor>
+            <ScrollAnchor id="overlays">
               <SectionOverlays />
-            </section>
-            <section id="data">
+            </ScrollAnchor>
+            <ScrollAnchor id="data">
               <SectionData />
-            </section>
+            </ScrollAnchor>
+            <ScrollAnchor id="extended-components">
+              <SectionExtendedComponents />
+            </ScrollAnchor>
           </div>
         </main>
       </div>
