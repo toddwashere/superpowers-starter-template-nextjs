@@ -10,6 +10,7 @@ import { SectionActions } from "./section-actions";
 import { SectionLayout } from "./section-layout";
 import { SectionOverlays } from "./section-overlays";
 import { SectionData } from "./section-data";
+import { SectionExtendedComponents } from "./section-extended-components";
 
 const tocItems = [
   { id: "colors", label: "Colors & Tokens" },
@@ -20,6 +21,7 @@ const tocItems = [
   { id: "layout", label: "Layout & Feedback" },
   { id: "overlays", label: "Overlays & Nav" },
   { id: "data", label: "Data & Display" },
+  { id: "extended-components", label: "Extended Components" },
 ] as const;
 
 export function DevUiPageContent() {
@@ -106,6 +108,9 @@ export function DevUiPageContent() {
             </section>
             <section id="data">
               <SectionData />
+            </section>
+            <section id="extended-components">
+              <SectionExtendedComponents />
             </section>
           </div>
         </main>
