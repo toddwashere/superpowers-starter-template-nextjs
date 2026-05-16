@@ -40,6 +40,7 @@ import { Spinner } from "@workspace/ui/components/spinner";
 import { TabsWithContent } from "@workspace/ui/components/tabs-with-content";
 import { TagInput, type TagType } from "@workspace/ui/components/tag-input";
 import { ThemeSwitcher } from "@workspace/ui/components/theme-switcher";
+import { TooltipProvider } from "@workspace/ui/components/tooltip";
 
 type DemoOption = {
   id: string;
@@ -269,8 +270,9 @@ export function SectionExtendedComponents() {
   const table = useDemoTable(statusFilter);
 
   return (
-    <div className="space-y-8">
-      <h2 className="text-2xl font-bold">Extended Components</h2>
+    <TooltipProvider>
+      <div className="space-y-8">
+        <h2 className="text-2xl font-bold">Extended Components</h2>
 
       <AnnotatedLayout className="rounded-lg border" spacing="small">
         <AnnotatedSection
@@ -487,6 +489,7 @@ export function SectionExtendedComponents() {
         <InfoButtonWithTooltip content="Extended components are reusable UI helpers beyond the baseline set." />
         <ThemeSwitcher />
       </div>
-    </div>
+      </div>
+    </TooltipProvider>
   );
 }
