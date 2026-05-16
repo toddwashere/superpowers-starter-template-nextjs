@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { ScrollAnchor } from "@workspace/ui/components/scroll-anchor";
 import { ThemeToggle } from "@workspace/ui/components/theme-toggle";
 import { SectionColors } from "./section-colors";
 import { SectionTypography } from "./section-typography";
@@ -85,33 +86,33 @@ export function DevUiPageContent() {
 
         <main className="min-w-0 flex-1 p-6 lg:p-10">
           <div className="mx-auto max-w-5xl space-y-16">
-            <section id="colors">
+            <ScrollAnchor id="colors">
               <SectionColors />
-            </section>
-            <section id="typography">
+            </ScrollAnchor>
+            <ScrollAnchor id="typography">
               <SectionTypography />
-            </section>
-            <section id="icons">
+            </ScrollAnchor>
+            <ScrollAnchor id="icons">
               <SectionIcons />
-            </section>
-            <section id="sidebar">
+            </ScrollAnchor>
+            <ScrollAnchor id="sidebar">
               <SectionSidebar />
-            </section>
-            <section id="actions">
+            </ScrollAnchor>
+            <ScrollAnchor id="actions">
               <SectionActions />
-            </section>
-            <section id="layout">
+            </ScrollAnchor>
+            <ScrollAnchor id="layout">
               <SectionLayout />
-            </section>
-            <section id="overlays">
+            </ScrollAnchor>
+            <ScrollAnchor id="overlays">
               <SectionOverlays />
-            </section>
-            <section id="data">
+            </ScrollAnchor>
+            <ScrollAnchor id="data">
               <SectionData />
-            </section>
-            <section id="extended-components">
+            </ScrollAnchor>
+            <ScrollAnchor id="extended-components">
               <SectionExtendedComponents />
-            </section>
+            </ScrollAnchor>
           </div>
         </main>
       </div>
