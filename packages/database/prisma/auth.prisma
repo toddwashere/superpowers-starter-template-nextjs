@@ -15,6 +15,11 @@ model User {
   accounts    Account[]
   members     Member[]
   invitations Invitation[]
+
+  oauthApplications  OauthApplication[]
+  oauthAccessTokens  OauthAccessToken[]
+  oauthRefreshTokens OauthRefreshToken[]
+  oauthConsents      OauthConsent[]
 }
 
 model Session {
