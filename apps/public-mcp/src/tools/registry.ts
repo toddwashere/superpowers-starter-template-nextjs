@@ -1,24 +1,32 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { AuthContext } from "../lib/context";
-import { hasPermission } from "@workspace/auth/api-keys";
-import { accountInfoHandler } from "./account";
-
-export const toolPermissions: Record<string, Record<string, string[]>> = {
-  "account-info": { account: ["read"] },
-};
+import { toolRegistry, hasAccess } from "@workspace/tool-calls";
+import { logToolCall } from "../lib/audit";
 
 export function registerTools(server: McpServer, ctx: AuthContext): void {
-  server.tool("account-info", "Returns the authenticated identity", {}, () => {
-    const required = toolPermissions["account-info"];
-    if (!required || !hasPermission(ctx.permissions, required)) {
-      return {
-        content: [{ type: "text", text: "Forbidden: missing account:read permission" }],
-        isError: true,
-      };
-    }
-    const result = accountInfoHandler(ctx);
-    return {
-      content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
-    };
-  });
+  for (const tool of toolRegistry) {
+    server.tool(tool.name, tool.description, {}, async () => {
+      if (!hasAccess(ctx, tool)) {
+        void logToolCall({ toolName: tool.name, ctx, success: false, errorCode: "FORBIDDEN" });
+        return {
+          content: [{ type: "text" as const, text: `Forbidden: missing required permission for ${tool.name}` }],
+          isError: true,
+        };
+      }
+      try {
+        const result = await tool.run(ctx);
+        void logToolCall({ toolName: tool.name, ctx, success: true });
+        return {
+          content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
+        };
+      } catch (err) {
+        void logToolCall({ toolName: tool.name, ctx, success: false, errorCode: "INTERNAL_ERROR" });
+        console.error(`[mcp] Tool ${tool.name} failed:`, err);
+        return {
+          content: [{ type: "text" as const, text: "Internal error" }],
+          isError: true,
+        };
+      }
+    });
+  }
 }

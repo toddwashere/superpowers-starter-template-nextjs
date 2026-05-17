@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
-import { accountInfoHandler } from "./account";
-import type { AuthContext } from "../lib/context";
+import { accountInfoTool } from "@workspace/tool-calls";
+import type { ToolCallContext } from "@workspace/tool-calls";
 
-const orgCtx: AuthContext = {
+const orgCtx: ToolCallContext = {
   kind: "api-key",
   keyId: "key_1",
   orgId: "org_1",
@@ -11,30 +11,51 @@ const orgCtx: AuthContext = {
   permissions: { account: ["read"] },
 };
 
-const userCtx: AuthContext = {
+const userCtx: ToolCallContext = {
   kind: "session",
   userId: "user_1",
   orgId: "org_2",
   permissions: { account: ["read"] },
 };
 
-describe("accountInfoHandler", () => {
-  it("returns org identity for api-key context", () => {
-    const result = accountInfoHandler(orgCtx);
+const oauthCtx: ToolCallContext = {
+  kind: "oauth",
+  userId: "user_3",
+  orgId: "org_3",
+  scopes: ["account:read"],
+  clientId: "client_1",
+};
+
+describe("accountInfoTool (via @workspace/tool-calls)", () => {
+  it("returns org identity for api-key context", async () => {
+    const result = await accountInfoTool.run(orgCtx);
+    expect(result.authKind).toBe("api-key");
     expect(result.ownerType).toBe("organization");
     expect(result.orgId).toBe("org_1");
     expect(result.userId).toBeNull();
   });
 
-  it("returns user identity for session context", () => {
-    const result = accountInfoHandler(userCtx);
+  it("returns user identity for session context", async () => {
+    const result = await accountInfoTool.run(userCtx);
+    expect(result.authKind).toBe("session");
     expect(result.userId).toBe("user_1");
     expect(result.orgId).toBe("org_2");
     expect(result.ownerType).toBeNull();
   });
 
-  it("includes permissions in the result", () => {
-    const result = accountInfoHandler(orgCtx);
-    expect(result.permissions).toEqual({ account: ["read"] });
+  it("returns oauth identity for oauth context", async () => {
+    const result = await accountInfoTool.run(oauthCtx);
+    expect(result.authKind).toBe("oauth");
+    expect(result.userId).toBe("user_3");
+    expect(result.orgId).toBe("org_3");
+    expect(result.clientId).toBe("client_1");
+    expect(result.scopes).toEqual(["account:read"]);
+  });
+
+  it("does not return clientId for non-oauth contexts", async () => {
+    const apiResult = await accountInfoTool.run(orgCtx);
+    const sessionResult = await accountInfoTool.run(userCtx);
+    expect(apiResult.clientId).toBeNull();
+    expect(sessionResult.clientId).toBeNull();
   });
 });
