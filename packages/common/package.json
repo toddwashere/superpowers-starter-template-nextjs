@@ -7,6 +7,7 @@
     ".": "./src/index.ts"
   },
   "devDependencies": {
+    "@types/node": "^22",
     "@workspace/tooling": "workspace:*",
     "typescript": "^5.7"
   }
