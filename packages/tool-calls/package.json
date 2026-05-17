@@ -10,6 +10,10 @@
     "type-check": "tsc --noEmit",
     "test": "vitest run"
   },
+  "dependencies": {
+    "@workspace/contacts": "workspace:*",
+    "zod": "^3"
+  },
   "devDependencies": {
     "@workspace/tooling": "workspace:*",
     "typescript": "^5.7",
