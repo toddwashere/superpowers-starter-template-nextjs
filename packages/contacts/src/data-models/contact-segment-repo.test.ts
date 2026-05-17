@@ -17,6 +17,8 @@ import {
   listContactSegmentsForOrg,
   getContactSegmentById,
   createContactSegment,
+  updateContactSegment,
+  deleteContactSegment,
 } from "./contact-segment-repo";
 
 beforeEach(() => vi.clearAllMocks());
@@ -55,5 +57,28 @@ describe("createContactSegment", () => {
     expect(call?.data.id).toMatch(/^cseg_/);
     expect(call?.data.filterVersion).toBe(1);
     expect(call?.data.organizationId).toBe("org_1");
+  });
+});
+
+describe("updateContactSegment", () => {
+  it("scopes update to organizationId and pins filterVersion when filters change", async () => {
+    vi.mocked(prisma.contactSegment.update).mockResolvedValue({} as never);
+    await updateContactSegment("cseg_1", "org_1", {
+      filters: { search: "test" },
+      filterVersion: 0 as never, // caller tries to set old version — should be ignored
+    });
+    const call = vi.mocked(prisma.contactSegment.update).mock.calls[0]?.[0];
+    expect(call?.where).toEqual({ id: "cseg_1", organizationId: "org_1" });
+    expect(call?.data.filterVersion).toBe(1); // pinned to CURRENT_FILTER_VERSION
+  });
+});
+
+describe("deleteContactSegment", () => {
+  it("scopes delete to organizationId", async () => {
+    vi.mocked(prisma.contactSegment.delete).mockResolvedValue({} as never);
+    await deleteContactSegment("cseg_1", "org_1");
+    expect(prisma.contactSegment.delete).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { id: "cseg_1", organizationId: "org_1" } }),
+    );
   });
 });

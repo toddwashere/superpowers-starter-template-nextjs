@@ -32,8 +32,15 @@ export async function deleteContactTag(tagId: string, organizationId: string) {
 export async function addTagToContact(
   contactId: string,
   tagId: string,
-  _organizationId: string,
+  organizationId: string,
 ) {
+  const tag = await prisma.contactTag.findFirst({
+    where: { id: tagId, organizationId },
+    select: { id: true },
+  });
+  if (!tag) {
+    throw new Error(`Tag ${tagId} not found in organization ${organizationId}`);
+  }
   return prisma.contactTagAssignment.upsert({
     where: { contactId_tagId: { contactId, tagId } },
     create: { contactId, tagId },

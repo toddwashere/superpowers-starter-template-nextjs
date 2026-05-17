@@ -37,11 +37,14 @@ export async function updateContactSegment(
   organizationId: string,
   data: UpdateContactSegmentInput,
 ) {
+  const { filters, filterVersion: _fv, ...rest } = data;
   return prisma.contactSegment.update({
     where: { id: segmentId, organizationId },
     data: {
-      ...data,
-      ...(data.filters ? { filters: data.filters as object } : {}),
+      ...rest,
+      ...(filters !== undefined
+        ? { filters: filters as object, filterVersion: CURRENT_FILTER_VERSION }
+        : {}),
     },
   });
 }
