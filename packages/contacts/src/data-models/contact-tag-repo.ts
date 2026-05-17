@@ -48,6 +48,12 @@ export async function addTagToContact(
   });
 }
 
-export async function removeTagFromContact(contactId: string, tagId: string): Promise<{ count: number }> {
-  return prisma.contactTagAssignment.deleteMany({ where: { contactId, tagId } });
+export async function removeTagFromContact(
+  contactId: string,
+  tagId: string,
+  organizationId: string,
+): Promise<{ count: number }> {
+  return prisma.contactTagAssignment.deleteMany({
+    where: { contactId, tagId, tag: { organizationId } },
+  });
 }

@@ -14,6 +14,76 @@ import {
   updateContactTask,
 } from "@workspace/contacts";
 
+// ─── Shared schemas for mutating tools ────────────────────────────────────────
+
+const ContactCreateSchema = z.object({
+  kind: z.enum(["person", "company"]),
+  displayName: z.string().min(1).max(255),
+  firstName: z.string().max(100).optional(),
+  lastName: z.string().max(100).optional(),
+  companyName: z.string().max(255).optional(),
+  primaryEmail: z.string().email().optional(),
+  primaryPhone: z.string().max(50).optional(),
+  website: z.string().url().optional(),
+  parentContactId: z.string().optional(),
+  stageId: z.string().optional(),
+  ownerId: z.string().optional(),
+  source: z.string().max(100).optional(),
+  status: z.enum(["active", "inactive"]).optional(),
+});
+
+const ContactUpdateSchema = z.object({
+  contactId: z.string(),
+  kind: z.enum(["person", "company"]).optional(),
+  displayName: z.string().min(1).max(255).optional(),
+  firstName: z.string().max(100).optional(),
+  lastName: z.string().max(100).optional(),
+  companyName: z.string().max(255).optional(),
+  primaryEmail: z.string().email().optional(),
+  primaryPhone: z.string().max(50).optional(),
+  website: z.string().url().optional(),
+  parentContactId: z.string().optional(),
+  stageId: z.string().optional(),
+  ownerId: z.string().optional(),
+  source: z.string().max(100).optional(),
+  status: z.enum(["active", "inactive"]).optional(),
+});
+
+const TagOperationSchema = z.object({
+  contactId: z.string(),
+  tagId: z.string(),
+});
+
+const CreateNoteSchema = z.object({
+  contactId: z.string(),
+  body: z.string().min(1),
+  type: z.enum(["note", "call", "email", "meeting", "sms", "other"]).optional(),
+  happenedAt: z.string().optional(),
+});
+
+const CreateTaskSchema = z.object({
+  contactId: z.string(),
+  title: z.string().min(1).max(255),
+  description: z.string().optional(),
+  statusId: z.string().optional(),
+  assigneeId: z.string().optional(),
+  priority: z.enum(["low", "normal", "high", "urgent"]).optional(),
+  dueAt: z.string().optional(),
+  sortOrder: z.number().int().optional(),
+});
+
+const UpdateTaskSchema = z.object({
+  taskId: z.string(),
+  title: z.string().min(1).max(255).optional(),
+  description: z.string().optional(),
+  statusId: z.string().optional(),
+  assigneeId: z.string().optional(),
+  priority: z.enum(["low", "normal", "high", "urgent"]).optional(),
+  dueAt: z.string().optional(),
+  completedAt: z.string().nullable().optional(),
+  sortOrder: z.number().int().optional(),
+});
+
 // ─── contacts-list ────────────────────────────────────────────────────────────
 
 export const contactsListTool: ToolDefinition = {
@@ -87,10 +157,12 @@ export const contactsCreateTool: ToolDefinition = {
     source: z.string().max(100).optional(),
     status: z.enum(["active", "inactive"]).optional(),
   },
-  run: async (ctx: ToolCallContext, input: Record<string, unknown>) => {
+  run: async (ctx: ToolCallContext, args: Record<string, unknown>) => {
     if (!ctx.orgId) return { error: "Organization context required" };
+    const result = ContactCreateSchema.safeParse(args);
+    if (!result.success) return { error: "Invalid input", issues: result.error.issues };
     try {
-      return await createContactWithValidation(ctx.orgId, input as Parameters<typeof createContactWithValidation>[1]);
+      return await createContactWithValidation(ctx.orgId, result.data);
     } catch (err) {
       return { error: err instanceof Error ? err.message : "Failed to create contact" };
     }
@@ -120,13 +192,14 @@ export const contactsUpdateTool: ToolDefinition = {
     source: z.string().max(100).optional(),
     status: z.enum(["active", "inactive"]).optional(),
   },
-  run: async (ctx: ToolCallContext, input: Record<string, unknown>) => {
+  run: async (ctx: ToolCallContext, args: Record<string, unknown>) => {
     if (!ctx.orgId) return { error: "Organization context required" };
-    const { contactId, ...data } = input;
-    if (!contactId) return { error: "contactId is required" };
+    const result = ContactUpdateSchema.safeParse(args);
+    if (!result.success) return { error: "Invalid input", issues: result.error.issues };
+    const { contactId, ...data } = result.data;
     try {
       return await updateContactWithValidation(
-        contactId as string,
+        contactId,
         ctx.orgId,
         data as Parameters<typeof updateContactWithValidation>[2],
       );
@@ -147,12 +220,11 @@ export const contactsAddTagTool: ToolDefinition = {
     contactId: z.string(),
     tagId: z.string(),
   },
-  run: async (ctx: ToolCallContext, input: Record<string, unknown>) => {
+  run: async (ctx: ToolCallContext, args: Record<string, unknown>) => {
     if (!ctx.orgId) return { error: "Organization context required" };
-    const contactId = input.contactId as string;
-    const tagId = input.tagId as string;
-    if (!contactId) return { error: "contactId is required" };
-    if (!tagId) return { error: "tagId is required" };
+    const result = TagOperationSchema.safeParse(args);
+    if (!result.success) return { error: "Invalid input", issues: result.error.issues };
+    const { contactId, tagId } = result.data;
     try {
       return await addTagToContact(contactId, tagId, ctx.orgId);
     } catch (err) {
@@ -172,14 +244,13 @@ export const contactsRemoveTagTool: ToolDefinition = {
     contactId: z.string(),
     tagId: z.string(),
   },
-  run: async (ctx: ToolCallContext, input: Record<string, unknown>) => {
+  run: async (ctx: ToolCallContext, args: Record<string, unknown>) => {
     if (!ctx.orgId) return { error: "Organization context required" };
-    const contactId = input.contactId as string;
-    const tagId = input.tagId as string;
-    if (!contactId) return { error: "contactId is required" };
-    if (!tagId) return { error: "tagId is required" };
+    const result = TagOperationSchema.safeParse(args);
+    if (!result.success) return { error: "Invalid input", issues: result.error.issues };
+    const { contactId, tagId } = result.data;
     try {
-      return await removeTagFromContact(contactId, tagId);
+      return await removeTagFromContact(contactId, tagId, ctx.orgId);
     } catch (err) {
       return { error: err instanceof Error ? err.message : "Failed to remove tag" };
     }
@@ -200,20 +271,21 @@ export const contactsCreateNoteTool: ToolDefinition = {
     type: z.enum(["note", "call", "email", "meeting", "sms", "other"]).optional(),
     happenedAt: z.string().optional(),
   },
-  run: async (ctx: ToolCallContext, input: Record<string, unknown>) => {
+  run: async (ctx: ToolCallContext, args: Record<string, unknown>) => {
     if (!ctx.orgId) return { error: "Organization context required" };
-    const contactId = input.contactId as string;
-    const body = input.body as string;
-    const type = (input.type as "note" | "call" | "email" | "meeting" | "sms" | "other") ?? "note";
-    if (!contactId) return { error: "contactId is required" };
-    if (!body) return { error: "body is required" };
-    const userId = ctx.kind === "oauth" ? ctx.userId : (ctx.userId ?? "");
+    const userId = ctx.kind === "oauth" ? ctx.userId : ctx.userId;
+    if (!userId) {
+      return { error: "User context required to create notes/tasks. This tool cannot be called with an org-only API key." };
+    }
+    const result = CreateNoteSchema.safeParse(args);
+    if (!result.success) return { error: "Invalid input", issues: result.error.issues };
+    const { contactId, body, type = "note", happenedAt } = result.data;
     try {
       return await createContactInteraction(contactId, ctx.orgId, userId, {
         contactId,
         body,
         type,
-        happenedAt: input.happenedAt ? new Date(input.happenedAt as string) : undefined,
+        happenedAt: happenedAt ? new Date(happenedAt) : undefined,
       });
     } catch (err) {
       return { error: err instanceof Error ? err.message : "Failed to create interaction" };
@@ -261,18 +333,23 @@ export const contactsCreateTaskTool: ToolDefinition = {
     dueAt: z.string().optional(),
     sortOrder: z.number().int().optional(),
   },
-  run: async (ctx: ToolCallContext, input: Record<string, unknown>) => {
+  run: async (ctx: ToolCallContext, args: Record<string, unknown>) => {
     if (!ctx.orgId) return { error: "Organization context required" };
-    const userId = ctx.kind === "oauth" ? ctx.userId : (ctx.userId ?? "");
-    const { dueAt, sortOrder, ...rest } = input;
+    const userId = ctx.kind === "oauth" ? ctx.userId : ctx.userId;
+    if (!userId) {
+      return { error: "User context required to create notes/tasks. This tool cannot be called with an org-only API key." };
+    }
+    const result = CreateTaskSchema.safeParse(args);
+    if (!result.success) return { error: "Invalid input", issues: result.error.issues };
+    const { dueAt, sortOrder, ...rest } = result.data;
     const data: Parameters<typeof createContactTask>[2] = {
-      contactId: rest.contactId as string,
-      title: rest.title as string,
-      description: rest.description as string | undefined,
-      statusId: rest.statusId as string | undefined,
-      assigneeId: rest.assigneeId as string | undefined,
-      priority: (rest.priority as "low" | "normal" | "high" | "urgent") ?? "normal",
-      dueAt: dueAt ? new Date(dueAt as string) : undefined,
+      contactId: rest.contactId,
+      title: rest.title,
+      description: rest.description,
+      statusId: rest.statusId,
+      assigneeId: rest.assigneeId,
+      priority: rest.priority ?? "normal",
+      dueAt: dueAt ? new Date(dueAt) : undefined,
       sortOrder: typeof sortOrder === "number" ? sortOrder : 0,
     };
     try {
@@ -301,22 +378,23 @@ export const contactsUpdateTaskTool: ToolDefinition = {
     completedAt: z.string().nullable().optional(),
     sortOrder: z.number().int().optional(),
   },
-  run: async (ctx: ToolCallContext, input: Record<string, unknown>) => {
+  run: async (ctx: ToolCallContext, args: Record<string, unknown>) => {
     if (!ctx.orgId) return { error: "Organization context required" };
-    const { taskId, dueAt, completedAt, ...rest } = input;
-    if (!taskId) return { error: "taskId is required" };
+    const result = UpdateTaskSchema.safeParse(args);
+    if (!result.success) return { error: "Invalid input", issues: result.error.issues };
+    const { taskId, dueAt, completedAt, ...rest } = result.data;
     const data: Parameters<typeof updateContactTask>[2] = {
-      title: rest.title as string | undefined,
-      description: rest.description as string | undefined,
-      statusId: rest.statusId as string | undefined,
-      assigneeId: rest.assigneeId as string | undefined,
-      priority: rest.priority as "low" | "normal" | "high" | "urgent" | undefined,
-      dueAt: dueAt ? new Date(dueAt as string) : undefined,
-      completedAt: completedAt === null ? null : completedAt ? new Date(completedAt as string) : undefined,
+      title: rest.title,
+      description: rest.description,
+      statusId: rest.statusId,
+      assigneeId: rest.assigneeId,
+      priority: rest.priority,
+      dueAt: dueAt ? new Date(dueAt) : undefined,
+      completedAt: completedAt === null ? null : completedAt ? new Date(completedAt) : undefined,
       sortOrder: typeof rest.sortOrder === "number" ? rest.sortOrder : undefined,
     };
     try {
-      return await updateContactTask(taskId as string, ctx.orgId, data);
+      return await updateContactTask(taskId, ctx.orgId, data);
     } catch (err) {
       return { error: err instanceof Error ? err.message : "Failed to update task" };
     }

@@ -77,11 +77,13 @@ describe("addTagToContact", () => {
 });
 
 describe("removeTagFromContact", () => {
-  it("deletes the assignment", async () => {
+  it("deletes the assignment scoped to the organization", async () => {
     vi.mocked(prisma.contactTagAssignment.deleteMany).mockResolvedValue({ count: 1 });
-    await removeTagFromContact("contact_abc", "ctag_xyz");
+    await removeTagFromContact("contact_abc", "ctag_xyz", "org_1");
     expect(prisma.contactTagAssignment.deleteMany).toHaveBeenCalledWith(
-      expect.objectContaining({ where: { contactId: "contact_abc", tagId: "ctag_xyz" } }),
+      expect.objectContaining({
+        where: { contactId: "contact_abc", tagId: "ctag_xyz", tag: { organizationId: "org_1" } },
+      }),
     );
   });
 });
