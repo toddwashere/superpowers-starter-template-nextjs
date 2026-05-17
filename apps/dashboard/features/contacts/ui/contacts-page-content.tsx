@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useTransition } from "react";
+import { useState, useEffect, useTransition, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
@@ -32,12 +32,18 @@ export function ContactsPageContent({ orgSlug }: { orgSlug: string }) {
   const router = useRouter();
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [search, setSearch] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const loadGenRef = useRef(0);
 
   function load(q: string) {
+    const gen = ++loadGenRef.current;
     startTransition(async () => {
       const result = await listContactsAction({ search: q || undefined });
-      if (result.success) setContacts(result.data);
+      if (result.success && gen === loadGenRef.current) {
+        setContacts(result.data);
+      }
     });
   }
 
@@ -46,12 +52,21 @@ export function ContactsPageContent({ orgSlug }: { orgSlug: string }) {
   }, []);
 
   function handleSearchChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setSearch(e.target.value);
-    load(e.target.value);
+    const value = e.target.value;
+    setSearch(value);
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+    searchTimerRef.current = setTimeout(() => {
+      load(value);
+    }, 300);
   }
 
   async function handleArchive(id: string) {
-    await archiveContactAction(id);
+    const result = await archiveContactAction(id);
+    if (!result.success) {
+      setError(result.error);
+      return;
+    }
+    setError(null);
     load(search);
   }
 
@@ -69,6 +84,9 @@ export function ContactsPageContent({ orgSlug }: { orgSlug: string }) {
 
   return (
     <div className="space-y-4">
+      {error && (
+        <p className="text-sm text-destructive">{error}</p>
+      )}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Contacts</h1>
         <div className="flex gap-2">
