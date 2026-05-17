@@ -63,6 +63,17 @@ describe("updateContactInteraction", () => {
       expect.objectContaining({ where: { id: "cint_1", organizationId: "org_1" } }),
     );
   });
+
+  it("strips contactId from update data", async () => {
+    vi.mocked(prisma.contactInteraction.update).mockResolvedValue({} as never);
+    await updateContactInteraction("cint_1", "org_1", {
+      contactId: "contact_other",
+      body: "Updated note",
+    });
+    const call = vi.mocked(prisma.contactInteraction.update).mock.calls[0]?.[0];
+    expect(call?.data).not.toHaveProperty("contactId");
+    expect(call?.data).toMatchObject({ body: "Updated note" });
+  });
 });
 
 describe("deleteContactInteraction", () => {

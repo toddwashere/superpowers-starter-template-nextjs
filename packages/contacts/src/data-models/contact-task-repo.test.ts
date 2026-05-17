@@ -2,6 +2,9 @@ import { vi, describe, it, expect, beforeEach } from "vitest";
 
 vi.mock("@workspace/database", () => ({
   prisma: {
+    contact: {
+      findFirst: vi.fn(),
+    },
     contactTask: {
       findMany: vi.fn(),
       findFirst: vi.fn(),
@@ -24,31 +27,28 @@ import {
 beforeEach(() => vi.clearAllMocks());
 
 describe("listContactTasksForOrg", () => {
-  it("scopes to organizationId and excludes archived", async () => {
+  it("scopes to organizationId, excludes archived, and caps at 200", async () => {
     vi.mocked(prisma.contactTask.findMany).mockResolvedValue([]);
     await listContactTasksForOrg("org_1");
-    expect(prisma.contactTask.findMany).toHaveBeenCalledWith(
-      expect.objectContaining({
-        where: expect.objectContaining({ organizationId: "org_1", archivedAt: null }),
-      }),
-    );
+    const call = vi.mocked(prisma.contactTask.findMany).mock.calls[0]?.[0];
+    expect(call?.where).toMatchObject({ organizationId: "org_1", archivedAt: null });
+    expect(call?.take).toBe(200);
   });
 });
 
 describe("listContactTasksForContact", () => {
-  it("scopes to both contactId and organizationId", async () => {
+  it("scopes to both contactId and organizationId, caps at 200", async () => {
     vi.mocked(prisma.contactTask.findMany).mockResolvedValue([]);
     await listContactTasksForContact("contact_abc", "org_1");
-    expect(prisma.contactTask.findMany).toHaveBeenCalledWith(
-      expect.objectContaining({
-        where: expect.objectContaining({ contactId: "contact_abc", organizationId: "org_1" }),
-      }),
-    );
+    const call = vi.mocked(prisma.contactTask.findMany).mock.calls[0]?.[0];
+    expect(call?.where).toMatchObject({ contactId: "contact_abc", organizationId: "org_1" });
+    expect(call?.take).toBe(200);
   });
 });
 
 describe("createContactTask", () => {
   it("generates a ctask_-prefixed ID and sets organizationId", async () => {
+    vi.mocked(prisma.contact.findFirst).mockResolvedValue({ id: "contact_abc" } as never);
     vi.mocked(prisma.contactTask.create).mockResolvedValue({} as never);
     await createContactTask("org_1", "user_1", {
       contactId: "contact_abc",
@@ -59,6 +59,19 @@ describe("createContactTask", () => {
     const call = vi.mocked(prisma.contactTask.create).mock.calls[0]?.[0];
     expect(call?.data.id).toMatch(/^ctask_/);
     expect(call?.data.organizationId).toBe("org_1");
+  });
+
+  it("throws if contact does not belong to the organization", async () => {
+    vi.mocked(prisma.contact.findFirst).mockResolvedValue(null);
+    await expect(
+      createContactTask("org_1", "user_1", {
+        contactId: "contact_other_org",
+        title: "Follow up",
+        priority: "normal",
+        sortOrder: 0,
+      }),
+    ).rejects.toThrow("not found in organization");
+    expect(prisma.contactTask.create).not.toHaveBeenCalled();
   });
 });
 

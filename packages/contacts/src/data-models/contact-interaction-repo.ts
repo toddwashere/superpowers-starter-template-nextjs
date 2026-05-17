@@ -38,9 +38,10 @@ export async function updateContactInteraction(
   organizationId: string,
   data: UpdateContactInteractionInput,
 ) {
+  const { contactId: _contactId, ...updateData } = data;
   return prisma.contactInteraction.update({
     where: { id: interactionId, organizationId },
-    data,
+    data: updateData,
   });
 }
 
