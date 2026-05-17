@@ -18,6 +18,7 @@ export const CreateContactSchema = z.object({
   stageId: z.string().optional(),
   ownerId: z.string().optional(),
   source: z.string().max(100).optional(),
+  status: ContactStatusSchema.optional(),
 });
 
 export const UpdateContactSchema = CreateContactSchema.partial();
@@ -26,10 +27,10 @@ export const ContactListFiltersSchema = z.object({
   search: z.string().optional(),
   kind: ContactKindSchema.optional(),
   stageId: z.string().optional(),
-  tagId: z.string().optional(),
+  tagIds: z.array(z.string()).optional(),
   includeArchived: z.boolean().default(false),
-  limit: z.number().int().min(1).max(100).default(20),
-  offset: z.number().int().min(0).default(0),
+  page: z.number().int().positive().default(1),
+  pageSize: z.number().int().positive().max(100).default(20),
 });
 
 export type CreateContactInput = z.infer<typeof CreateContactSchema>;

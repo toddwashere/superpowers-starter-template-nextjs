@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const TaskPrioritySchema = z.enum(["low", "medium", "high"]);
+export const TaskPrioritySchema = z.enum(["low", "normal", "high", "urgent"]);
 export type TaskPriority = z.infer<typeof TaskPrioritySchema>;
 
 export const CreateContactTaskSchema = z.object({
@@ -9,7 +9,7 @@ export const CreateContactTaskSchema = z.object({
   description: z.string().optional(),
   statusId: z.string().optional(),
   assigneeId: z.string().optional(),
-  priority: TaskPrioritySchema.default("medium"),
+  priority: TaskPrioritySchema.default("normal"),
   dueAt: z.coerce.date().optional(),
   sortOrder: z.number().int().default(0),
 });

@@ -17,6 +17,7 @@ export type ContactSegmentFilterV1 = z.infer<typeof ContactSegmentFilterSchemaV1
 export const CreateContactSegmentSchema = z.object({
   name: z.string().min(1).max(255),
   filters: ContactSegmentFilterSchemaV1,
+  filterVersion: z.literal(CURRENT_FILTER_VERSION),
   sortKey: z.string().default("displayName"),
   sortDirection: z.enum(["asc", "desc"]).default("asc"),
 });

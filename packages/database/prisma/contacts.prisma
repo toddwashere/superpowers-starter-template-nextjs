@@ -111,7 +111,7 @@ model ContactTask {
   description    String?
   statusId       String?
   assigneeId     String?
-  priority       String    @default("medium")
+  priority       String    @default("normal")
   dueAt          DateTime?
   completedAt    DateTime?
   sortOrder      Int       @default(0)
