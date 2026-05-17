@@ -45,6 +45,7 @@ export function ContactsSettingsPageContent({ orgSlug: _orgSlug }: { orgSlug: st
   const [newStatusName, setNewStatusName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [isMutating, setIsMutating] = useState(false);
 
   useEffect(() => {
     startTransition(async () => {
@@ -71,62 +72,95 @@ export function ContactsSettingsPageContent({ orgSlug: _orgSlug }: { orgSlug: st
   }
 
   async function handleAddStage() {
-    if (!newStageName.trim()) return;
-    const result = await createStageAction({
-      name: newStageName.trim(),
-      color: "#6366f1",
-      sortOrder: stages.length,
-      isDefault: false,
-    });
-    if (!result.success) { setError(result.error); return; }
-    setNewStageName("");
-    setError(null);
-    await reload();
+    if (!newStageName.trim() || isMutating) return;
+    setIsMutating(true);
+    try {
+      const result = await createStageAction({
+        name: newStageName.trim(),
+        color: "#6366f1",
+        sortOrder: stages.length,
+        isDefault: false,
+      });
+      if (!result.success) { setError(result.error); return; }
+      setNewStageName("");
+      setError(null);
+      await reload();
+    } finally {
+      setIsMutating(false);
+    }
   }
 
   async function handleDeleteStage(stageId: string) {
-    const result = await deleteStageAction(stageId);
-    if (!result.success) { setError(result.error); return; }
-    setError(null);
-    await reload();
+    if (isMutating) return;
+    setIsMutating(true);
+    try {
+      const result = await deleteStageAction(stageId);
+      if (!result.success) { setError(result.error); return; }
+      setError(null);
+      await reload();
+    } finally {
+      setIsMutating(false);
+    }
   }
 
   async function handleAddTag() {
-    if (!newTagName.trim()) return;
-    const result = await createTagAction({ name: newTagName.trim(), color: "#6366f1" });
-    if (!result.success) { setError(result.error); return; }
-    setNewTagName("");
-    setError(null);
-    await reload();
+    if (!newTagName.trim() || isMutating) return;
+    setIsMutating(true);
+    try {
+      const result = await createTagAction({ name: newTagName.trim(), color: "#6366f1" });
+      if (!result.success) { setError(result.error); return; }
+      setNewTagName("");
+      setError(null);
+      await reload();
+    } finally {
+      setIsMutating(false);
+    }
   }
 
   async function handleDeleteTag(tagId: string) {
-    const result = await deleteTagAction(tagId);
-    if (!result.success) { setError(result.error); return; }
-    setError(null);
-    await reload();
+    if (isMutating) return;
+    setIsMutating(true);
+    try {
+      const result = await deleteTagAction(tagId);
+      if (!result.success) { setError(result.error); return; }
+      setError(null);
+      await reload();
+    } finally {
+      setIsMutating(false);
+    }
   }
 
   async function handleAddStatus() {
-    if (!newStatusName.trim()) return;
-    const result = await createTaskStatusAction({
-      name: newStatusName.trim(),
-      color: "#6366f1",
-      sortOrder: statuses.length,
-      isDefault: false,
-      isTerminal: false,
-    });
-    if (!result.success) { setError(result.error); return; }
-    setNewStatusName("");
-    setError(null);
-    await reload();
+    if (!newStatusName.trim() || isMutating) return;
+    setIsMutating(true);
+    try {
+      const result = await createTaskStatusAction({
+        name: newStatusName.trim(),
+        color: "#6366f1",
+        sortOrder: statuses.length,
+        isDefault: false,
+        isTerminal: false,
+      });
+      if (!result.success) { setError(result.error); return; }
+      setNewStatusName("");
+      setError(null);
+      await reload();
+    } finally {
+      setIsMutating(false);
+    }
   }
 
   async function handleDeleteStatus(statusId: string) {
-    const result = await deleteTaskStatusAction(statusId);
-    if (!result.success) { setError(result.error); return; }
-    setError(null);
-    await reload();
+    if (isMutating) return;
+    setIsMutating(true);
+    try {
+      const result = await deleteTaskStatusAction(statusId);
+      if (!result.success) { setError(result.error); return; }
+      setError(null);
+      await reload();
+    } finally {
+      setIsMutating(false);
+    }
   }
 
   return (
@@ -148,6 +182,7 @@ export function ContactsSettingsPageContent({ orgSlug: _orgSlug }: { orgSlug: st
                   variant="ghost"
                   size="icon"
                   className="h-5 w-5 text-muted-foreground"
+                  disabled={isMutating}
                   onClick={() => handleDeleteStage(s.id)}
                 >
                   ×
@@ -164,7 +199,7 @@ export function ContactsSettingsPageContent({ orgSlug: _orgSlug }: { orgSlug: st
             className="max-w-xs"
             onKeyDown={(e) => { if (e.key === "Enter") void handleAddStage(); }}
           />
-          <Button variant="outline" onClick={handleAddStage} disabled={isPending || !newStageName.trim()}>
+          <Button variant="outline" onClick={handleAddStage} disabled={isPending || isMutating || !newStageName.trim()}>
             Add Stage
           </Button>
         </div>
@@ -183,6 +218,7 @@ export function ContactsSettingsPageContent({ orgSlug: _orgSlug }: { orgSlug: st
                 variant="ghost"
                 size="icon"
                 className="h-5 w-5 text-muted-foreground"
+                disabled={isMutating}
                 onClick={() => handleDeleteTag(t.id)}
               >
                 ×
@@ -198,7 +234,7 @@ export function ContactsSettingsPageContent({ orgSlug: _orgSlug }: { orgSlug: st
             className="max-w-xs"
             onKeyDown={(e) => { if (e.key === "Enter") void handleAddTag(); }}
           />
-          <Button variant="outline" onClick={handleAddTag} disabled={isPending || !newTagName.trim()}>
+          <Button variant="outline" onClick={handleAddTag} disabled={isPending || isMutating || !newTagName.trim()}>
             Add Tag
           </Button>
         </div>
@@ -220,6 +256,7 @@ export function ContactsSettingsPageContent({ orgSlug: _orgSlug }: { orgSlug: st
                   variant="ghost"
                   size="icon"
                   className="h-5 w-5 text-muted-foreground"
+                  disabled={isMutating}
                   onClick={() => handleDeleteStatus(s.id)}
                 >
                   ×
@@ -236,7 +273,7 @@ export function ContactsSettingsPageContent({ orgSlug: _orgSlug }: { orgSlug: st
             className="max-w-xs"
             onKeyDown={(e) => { if (e.key === "Enter") void handleAddStatus(); }}
           />
-          <Button variant="outline" onClick={handleAddStatus} disabled={isPending || !newStatusName.trim()}>
+          <Button variant="outline" onClick={handleAddStatus} disabled={isPending || isMutating || !newStatusName.trim()}>
             Add Status
           </Button>
         </div>

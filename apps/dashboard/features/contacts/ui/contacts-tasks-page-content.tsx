@@ -28,6 +28,7 @@ export function ContactsTasksPageContent({ orgSlug: _orgSlug }: { orgSlug: strin
   const [statuses, setStatuses] = useState<Status[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [completingId, setCompletingId] = useState<string | null>(null);
 
   useEffect(() => {
     let isCurrent = true;
@@ -44,20 +45,30 @@ export function ContactsTasksPageContent({ orgSlug: _orgSlug }: { orgSlug: strin
   }, []);
 
   async function handleComplete(taskId: string) {
+    if (completingId) return; // already completing one
     const terminal = statuses.find((s) => s.isTerminal);
-    const result = await updateTaskAction(taskId, {
-      statusId: terminal?.id,
-      completedAt: new Date(),
-    });
-    if (!result.success) {
-      setError(result.error);
+    if (!terminal) {
+      setError("No terminal status configured. Please add one in Contacts Settings.");
       return;
     }
-    setError(null);
-    startTransition(async () => {
-      const tResult = await listOrgTasksAction();
-      if (tResult.success) setTasks(tResult.data);
-    });
+    setCompletingId(taskId);
+    try {
+      const result = await updateTaskAction(taskId, {
+        statusId: terminal.id,
+        completedAt: new Date(),
+      });
+      if (!result.success) {
+        setError(result.error);
+        return;
+      }
+      setError(null);
+      startTransition(async () => {
+        const tResult = await listOrgTasksAction();
+        if (tResult.success) setTasks(tResult.data);
+      });
+    } finally {
+      setCompletingId(null);
+    }
   }
 
   return (
@@ -127,9 +138,10 @@ export function ContactsTasksPageContent({ orgSlug: _orgSlug }: { orgSlug: strin
                       <Button
                         size="sm"
                         variant="outline"
+                        disabled={completingId === task.id}
                         onClick={() => handleComplete(task.id)}
                       >
-                        Complete
+                        {completingId === task.id ? "Completing…" : "Complete"}
                       </Button>
                     )}
                   </TableCell>
