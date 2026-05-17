@@ -1,7 +1,8 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { organization, admin } from "better-auth/plugins";
+import { organization, admin, jwt } from "better-auth/plugins";
 import { apiKey } from "@better-auth/api-key";
+import { oauthProvider } from "@better-auth/oauth-provider";
 import { prisma } from "@workspace/database";
 import { ac, permissions } from "./permissions";
 import { routeVerificationEmail } from "./email-routing";
@@ -53,6 +54,16 @@ export const auth = betterAuth({
     }),
   },
   plugins: [
+    jwt(),
+    oauthProvider({
+      loginPage: "/sign-in",
+      consentPage: "/consent",
+      allowDynamicClientRegistration: true,
+      // Public MCP clients (Claude, Cursor) register without a pre-created client.
+      // Better Auth docs warn this behavior may change as MCP standards settle.
+      allowUnauthenticatedClientRegistration: true,
+      scopes: ["account:read", "offline_access"],
+    }),
     organization({
       ac,
       roles: {
