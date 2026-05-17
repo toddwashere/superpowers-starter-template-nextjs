@@ -8,7 +8,7 @@ export type AuthIdPrefix =
   | "jwks"
   | "org"
   | "mbr"
-  | "inv"
+  | "authinv"
   | "apikey"
   | "oauthapp"
   | "oauthat"
