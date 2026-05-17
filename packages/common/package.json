@@ -4,11 +4,21 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./create-id": "./src/create-id.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "devDependencies": {
     "@types/node": "^22",
     "@workspace/tooling": "workspace:*",
-    "typescript": "^5.7"
+    "typescript": "^5.7",
+    "vitest": "^4.1.6"
+  },
+  "dependencies": {
+    "@paralleldrive/cuid2": "^3.3.0"
   }
 }

@@ -8,9 +8,15 @@ import { ac, permissions } from "./permissions";
 import { routeVerificationEmail } from "./email-routing";
 import { sendPasswordResetEmail } from "@workspace/email/send-password-reset-email";
 import { sendInvitationEmail } from "@workspace/email/send-invitation-email";
+import { createBetterAuthId } from "./better-auth-id";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, { provider: "postgresql" }),
+  advanced: {
+    database: {
+      generateId: createBetterAuthId,
+    },
+  },
   experimental: { joins: true },
   emailAndPassword: {
     enabled: true,
