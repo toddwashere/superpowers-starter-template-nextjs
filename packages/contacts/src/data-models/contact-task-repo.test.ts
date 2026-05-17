@@ -18,6 +18,7 @@ import {
   createContactTask,
   updateContactTask,
   archiveContactTask,
+  getContactTaskById,
 } from "./contact-task-repo";
 
 beforeEach(() => vi.clearAllMocks());
@@ -66,6 +67,16 @@ describe("updateContactTask", () => {
     vi.mocked(prisma.contactTask.update).mockResolvedValue({} as never);
     await updateContactTask("ctask_1", "org_1", { title: "Updated" });
     expect(prisma.contactTask.update).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { id: "ctask_1", organizationId: "org_1" } }),
+    );
+  });
+});
+
+describe("getContactTaskById", () => {
+  it("scopes to organizationId", async () => {
+    vi.mocked(prisma.contactTask.findFirst).mockResolvedValue(null);
+    await getContactTaskById("ctask_1", "org_1");
+    expect(prisma.contactTask.findFirst).toHaveBeenCalledWith(
       expect.objectContaining({ where: { id: "ctask_1", organizationId: "org_1" } }),
     );
   });
