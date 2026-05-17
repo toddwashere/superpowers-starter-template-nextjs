@@ -1,4 +1,23 @@
-import { describe, it, expect } from "vitest";
+import { vi, describe, it, expect } from "vitest";
+
+vi.mock("@workspace/database", () => ({
+  prisma: {},
+  Prisma: {},
+}));
+
+vi.mock("@workspace/contacts", () => ({
+  listContactsForOrg: vi.fn(),
+  getContactById: vi.fn(),
+  createContactWithValidation: vi.fn(),
+  updateContactWithValidation: vi.fn(),
+  addTagToContact: vi.fn(),
+  removeTagFromContact: vi.fn(),
+  createContactInteraction: vi.fn(),
+  listContactTasksForOrg: vi.fn(),
+  createContactTask: vi.fn(),
+  updateContactTask: vi.fn(),
+}));
+
 import { accountInfoTool } from "@workspace/tool-calls";
 import type { ToolCallContext } from "@workspace/tool-calls";
 
