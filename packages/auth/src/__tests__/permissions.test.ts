@@ -123,11 +123,8 @@ describe("permissions", () => {
       expect(role.authorize({ contactSettings: ["create"] }).success).toBe(false);
       expect(role.authorize({ contactSettings: ["update"] }).success).toBe(false);
       expect(role.authorize({ contactSettings: ["delete"] }).success).toBe(false);
-      expect(role.authorize({ contactInteraction: ["read", "create"] }).success).toBe(true);
-      expect(role.authorize({ contactInteraction: ["update"] }).success).toBe(false);
-      expect(role.authorize({ contactInteraction: ["delete"] }).success).toBe(false);
-      expect(role.authorize({ contactTask: ["read", "create", "update"] }).success).toBe(true);
-      expect(role.authorize({ contactTask: ["delete"] }).success).toBe(false);
+      expect(role.authorize({ contactInteraction: ["read", "create", "update", "delete"] }).success).toBe(true);
+      expect(role.authorize({ contactTask: ["read", "create", "update", "delete"] }).success).toBe(true);
     });
   });
 

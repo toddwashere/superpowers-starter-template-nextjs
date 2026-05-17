@@ -1,14 +1,35 @@
 "use client";
 
-import { useState, useEffect, useTransition } from "react";
+import { useState, useEffect, useTransition, useCallback } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
+import NiceModal from "@ebay/nice-modal-react";
 import { Button } from "@workspace/ui/components/button";
 import { Badge } from "@workspace/ui/components/badge";
 import { Textarea } from "@workspace/ui/components/textarea";
 import { Separator } from "@workspace/ui/components/separator";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@workspace/ui/components/breadcrumb";
 import { getContactAction } from "../data/contact-actions";
-import { listInteractionsAction, createNoteAction } from "../data/interaction-actions";
-import { listContactTasksAction } from "../data/task-actions";
+import {
+  archiveInteractionAction,
+  createNoteAction,
+  listInteractionsAction,
+} from "../data/interaction-actions";
+import {
+  archiveTaskAction,
+  listContactTasksAction,
+  listTaskStatusesAction,
+} from "../data/task-actions";
+import { EditContactButtonModal } from "./edit-contact-button-modal";
+import { ContactTaskButtonModal } from "./contact-task-button-modal";
+import { EditNoteButtonModal } from "./edit-note-button-modal";
 
 type Contact = Extract<
   Awaited<ReturnType<typeof getContactAction>>,
@@ -25,6 +46,11 @@ type Task = Extract<
   { success: true }
 >["data"][number];
 
+type TaskStatus = Extract<
+  Awaited<ReturnType<typeof listTaskStatusesAction>>,
+  { success: true }
+>["data"][number];
+
 export function ContactDetailPageContent({
   orgSlug,
   contactId,
@@ -36,35 +62,53 @@ export function ContactDetailPageContent({
   const [contact, setContact] = useState<Contact | null>(null);
   const [interactions, setInteractions] = useState<Interaction[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [taskStatuses, setTaskStatuses] = useState<TaskStatus[]>([]);
   const [noteBody, setNoteBody] = useState("");
   const [noteError, setNoteError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const [isLoaded, setIsLoaded] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
+  const refreshInteractions = useCallback(async () => {
+    const result = await listInteractionsAction(contactId);
+    if (result.success) setInteractions(result.data);
+  }, [contactId]);
+
+  const refreshTasks = useCallback(async () => {
+    const result = await listContactTasksAction(contactId);
+    if (result.success) setTasks(result.data);
+  }, [contactId]);
+
+  const loadContact = useCallback(() => {
     let isCurrent = true;
     // Reset state so old data doesn't show while new fetch is in-flight
     setContact(null);
     setInteractions([]);
     setTasks([]);
+    setTaskStatuses([]);
     setIsLoaded(false);
 
     startTransition(async () => {
-      const [cResult, iResult, tResult] = await Promise.all([
+      const [cResult, iResult, tResult, sResult] = await Promise.all([
         getContactAction(contactId),
         listInteractionsAction(contactId),
         listContactTasksAction(contactId),
+        listTaskStatusesAction(),
       ]);
       if (!isCurrent) return; // discard stale response
       if (cResult.success) setContact(cResult.data);
       if (iResult.success) setInteractions(iResult.data);
       if (tResult.success) setTasks(tResult.data);
+      if (sResult.success) setTaskStatuses(sResult.data);
       setIsLoaded(true);
     });
 
-    return () => { isCurrent = false; };
+    return () => {
+      isCurrent = false;
+    };
   }, [contactId]);
+
+  useEffect(() => loadContact(), [loadContact]);
 
   async function handleAddNote() {
     if (!noteBody.trim() || isSubmitting) return;
@@ -77,12 +121,51 @@ export function ContactDetailPageContent({
       }
       setNoteBody("");
       setNoteError(null);
-      // Refresh interactions only
-      const iResult = await listInteractionsAction(contactId);
-      if (iResult.success) setInteractions(iResult.data);
+      await refreshInteractions();
     } finally {
       setIsSubmitting(false);
     }
+  }
+
+  async function handleEditContact() {
+    if (!contact) return;
+    const updated = await NiceModal.show(EditContactButtonModal, { contact });
+    if (updated) loadContact();
+  }
+
+  async function handleAddTask() {
+    const updated = await NiceModal.show(ContactTaskButtonModal, {
+      contactId,
+      statuses: taskStatuses,
+    });
+    if (updated) await refreshTasks();
+  }
+
+  async function handleEditTask(task: Task) {
+    const updated = await NiceModal.show(ContactTaskButtonModal, {
+      contactId,
+      task,
+      statuses: taskStatuses,
+    });
+    if (updated) await refreshTasks();
+  }
+
+  async function handleArchiveTask(taskId: string) {
+    const result = await archiveTaskAction(taskId);
+    if (result.success) await refreshTasks();
+  }
+
+  async function handleEditNote(interaction: Interaction) {
+    const updated = await NiceModal.show(EditNoteButtonModal, {
+      interactionId: interaction.id,
+      body: interaction.body,
+    });
+    if (updated) await refreshInteractions();
+  }
+
+  async function handleArchiveNote(interactionId: string) {
+    const result = await archiveInteractionAction(interactionId);
+    if (result.success) await refreshInteractions();
   }
 
   if (!isLoaded && isPending) {
@@ -98,9 +181,31 @@ export function ContactDetailPageContent({
   const openTasks = tasks.filter((t) => !t.completedAt);
 
   return (
-    <div className="space-y-6 max-w-3xl">
+    <div className="max-w-3xl space-y-6">
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link href={`/${orgSlug}/contacts`}>Contacts</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>{contact.displayName}</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+
       <div className="flex items-start justify-between">
         <div>
+          <Button
+            variant="outline"
+            size="sm"
+            className="mb-4"
+            onClick={() => router.push(`/${orgSlug}/contacts`)}
+          >
+            Back to Contacts
+          </Button>
           <h1 className="text-2xl font-bold">{contact.displayName}</h1>
           <div className="flex items-center gap-2 mt-1 flex-wrap">
             <Badge variant="outline">{contact.kind}</Badge>
@@ -119,18 +224,16 @@ export function ContactDetailPageContent({
             ))}
           </div>
         </div>
-        <Button variant="outline" onClick={() => router.back()}>
-          Back
+        <Button variant="outline" onClick={() => void handleEditContact()}>
+          Edit Contact
         </Button>
       </div>
 
       <div className="grid grid-cols-2 gap-4 text-sm">
-        {contact.primaryEmail && (
-          <div>
-            <span className="text-muted-foreground">Email: </span>
-            {contact.primaryEmail}
-          </div>
-        )}
+        <div>
+          <span className="text-muted-foreground">Email: </span>
+          {contact.primaryEmail ?? "No email"}
+        </div>
         {contact.primaryPhone && (
           <div>
             <span className="text-muted-foreground">Phone: </span>
@@ -183,24 +286,51 @@ export function ContactDetailPageContent({
       <Separator />
 
       <div>
-        <h2 className="font-semibold mb-2">
-          Open Tasks ({openTasks.length})
-        </h2>
+        <div className="mb-2 flex items-center justify-between">
+          <h2 className="font-semibold">Open Tasks ({openTasks.length})</h2>
+          <Button size="sm" onClick={() => void handleAddTask()}>
+            Add Task
+          </Button>
+        </div>
         {openTasks.length === 0 ? (
           <p className="text-sm text-muted-foreground">No open tasks.</p>
         ) : (
-          <ul className="space-y-1 text-sm">
+          <ul className="space-y-2 text-sm">
             {openTasks.map((task) => (
-              <li key={task.id} className="flex items-center gap-2">
-                <Badge variant="outline">
-                  {task.status?.name ?? "No status"}
-                </Badge>
-                {task.title}
-                {task.dueAt && (
-                  <span className="text-muted-foreground ml-auto">
-                    Due {new Date(task.dueAt).toLocaleDateString()}
-                  </span>
-                )}
+              <li
+                key={task.id}
+                className="flex items-center gap-2 rounded-md border p-2"
+              >
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline">
+                      {task.status?.name ?? "No status"}
+                    </Badge>
+                    <span className="font-medium">{task.title}</span>
+                  </div>
+                  {task.description && (
+                    <p className="mt-1 text-muted-foreground">{task.description}</p>
+                  )}
+                  {task.dueAt && (
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Due {new Date(task.dueAt).toLocaleDateString()}
+                    </p>
+                  )}
+                </div>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => void handleEditTask(task)}
+                >
+                  Edit
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => void handleArchiveTask(task.id)}
+                >
+                  Remove
+                </Button>
               </li>
             ))}
           </ul>
@@ -240,6 +370,22 @@ export function ContactDetailPageContent({
                 </span>
               </div>
               <p>{i.body}</p>
+              <div className="mt-2 flex gap-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => void handleEditNote(i)}
+                >
+                  Edit
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => void handleArchiveNote(i.id)}
+                >
+                  Remove
+                </Button>
+              </div>
             </div>
           ))}
           {interactions.length === 0 && (

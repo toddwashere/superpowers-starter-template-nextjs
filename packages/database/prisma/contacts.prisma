@@ -97,10 +97,12 @@ model ContactInteraction {
   createdById    String
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+  archivedAt     DateTime?
 
   contact Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
 
   @@index([contactId, happenedAt])
+  @@index([organizationId, archivedAt])
 }
 
 model ContactTask {

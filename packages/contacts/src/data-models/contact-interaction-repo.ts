@@ -8,7 +8,7 @@ export async function listContactInteractions(
   limit = 50,
 ) {
   return prisma.contactInteraction.findMany({
-    where: { contactId, organizationId },
+    where: { contactId, organizationId, archivedAt: null },
     orderBy: { happenedAt: "desc" },
     take: limit,
   });
@@ -45,6 +45,12 @@ export async function updateContactInteraction(
   });
 }
 
-export async function deleteContactInteraction(interactionId: string, organizationId: string) {
-  return prisma.contactInteraction.delete({ where: { id: interactionId, organizationId } });
+export async function archiveContactInteraction(
+  interactionId: string,
+  organizationId: string,
+) {
+  return prisma.contactInteraction.update({
+    where: { id: interactionId, organizationId },
+    data: { archivedAt: new Date() },
+  });
 }

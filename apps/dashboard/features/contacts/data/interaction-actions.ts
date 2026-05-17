@@ -1,7 +1,13 @@
 "use server";
 
 import { requireOrgPermissionWithActiveOrg } from "@workspace/auth/guards";
-import { createContactInteraction, listContactInteractions } from "@workspace/contacts";
+import {
+  archiveContactInteraction,
+  createContactInteraction,
+  listContactInteractions,
+  updateContactInteraction,
+} from "@workspace/contacts";
+import type { UpdateContactInteractionInput } from "@workspace/contacts";
 import type { ActionResult } from "./contact-types";
 
 export async function listInteractionsAction(
@@ -34,5 +40,34 @@ export async function createNoteAction(
     return { success: true, data: undefined };
   } catch (err) {
     return { success: false, error: err instanceof Error ? err.message : "Failed to create note" };
+  }
+}
+
+export async function updateInteractionAction(
+  interactionId: string,
+  data: UpdateContactInteractionInput,
+): Promise<ActionResult> {
+  try {
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
+      contactInteraction: ["update"],
+    });
+    await updateContactInteraction(interactionId, activeOrganizationId, data);
+    return { success: true, data: undefined };
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : "Failed to update interaction" };
+  }
+}
+
+export async function archiveInteractionAction(
+  interactionId: string,
+): Promise<ActionResult> {
+  try {
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
+      contactInteraction: ["delete"],
+    });
+    await archiveContactInteraction(interactionId, activeOrganizationId);
+    return { success: true, data: undefined };
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : "Failed to archive interaction" };
   }
 }

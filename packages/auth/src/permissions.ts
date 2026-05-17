@@ -45,7 +45,7 @@ export const permissions = {
     apiKey: [],
     contact: ["read", "create", "update"],
     contactSettings: ["read"],
-    contactInteraction: ["read", "create"],
-    contactTask: ["read", "create", "update"],
+    contactInteraction: ["read", "create", "update", "delete"],
+    contactTask: ["read", "create", "update", "delete"],
   }),
 };

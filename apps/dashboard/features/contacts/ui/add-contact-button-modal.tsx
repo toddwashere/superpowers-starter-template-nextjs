@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import {
   Dialog,
@@ -23,32 +23,45 @@ import {
 import { Alert, AlertDescription } from "@workspace/ui/components/alert";
 import { resolveAndHideModal } from "@/common/ui/nice-modal-helpers";
 import { createContactAction } from "../data/contact-actions";
+import type { CreateContactInput } from "@workspace/contacts";
 import type { AddContactResult } from "./add-contact-flow";
+import {
+  contactFormStateToInput,
+  createEmptyContactFormState,
+  type ContactFormState,
+} from "./contact-form-state";
 
 export const AddContactButtonModal = NiceModal.create(() => {
   const modal = useModal();
-  const [kind, setKind] = useState<"person" | "company">("person");
-  const [displayName, setDisplayName] = useState("");
-  const [primaryEmail, setPrimaryEmail] = useState("");
-  const [primaryPhone, setPrimaryPhone] = useState("");
+  const [form, setForm] = useState<ContactFormState>(() =>
+    createEmptyContactFormState(),
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  function resetForm() {
+    setForm(createEmptyContactFormState());
+    setError(null);
+    setIsSubmitting(false);
+  }
+
+  useEffect(() => {
+    if (modal.visible) resetForm();
+  }, [modal.visible]);
+
   async function handleCreate() {
-    if (!displayName.trim() || isSubmitting) return;
+    if (!form.displayName.trim() || isSubmitting) return;
     setIsSubmitting(true);
     setError(null);
     try {
-      const result = await createContactAction({
-        kind,
-        displayName: displayName.trim(),
-        primaryEmail: primaryEmail.trim() || undefined,
-        primaryPhone: primaryPhone.trim() || undefined,
-      });
+      const result = await createContactAction(
+        contactFormStateToInput(form) as CreateContactInput,
+      );
       if (!result.success) {
         setError(result.error);
         return;
       }
+      resetForm();
       resolveAndHideModal<AddContactResult>(modal, result.data);
     } finally {
       setIsSubmitting(false);
@@ -56,7 +69,15 @@ export const AddContactButtonModal = NiceModal.create(() => {
   }
 
   return (
-    <Dialog open={modal.visible} onOpenChange={(open) => !open && modal.hide()}>
+    <Dialog
+      open={modal.visible}
+      onOpenChange={(open) => {
+        if (!open) {
+          resetForm();
+          modal.hide();
+        }
+      }}
+    >
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>Add New Contact</DialogTitle>
@@ -69,8 +90,13 @@ export const AddContactButtonModal = NiceModal.create(() => {
           <div className="space-y-1.5">
             <Label htmlFor="contact-kind">Kind</Label>
             <Select
-              value={kind}
-              onValueChange={(value) => setKind(value as "person" | "company")}
+              value={form.kind}
+              onValueChange={(value) =>
+                setForm((current) => ({
+                  ...current,
+                  kind: value as "person" | "company",
+                }))
+              }
             >
               <SelectTrigger id="contact-kind" className="w-full">
                 <SelectValue />
@@ -86,9 +112,14 @@ export const AddContactButtonModal = NiceModal.create(() => {
             <Label htmlFor="contact-name">Name</Label>
             <Input
               id="contact-name"
-              value={displayName}
-              onChange={(event) => setDisplayName(event.target.value)}
-              placeholder={kind === "person" ? "Jane Doe" : "Acme Inc"}
+              value={form.displayName}
+              onChange={(event) =>
+                setForm((current) => ({
+                  ...current,
+                  displayName: event.target.value,
+                }))
+              }
+              placeholder={form.kind === "person" ? "Jane Doe" : "Acme Inc"}
             />
           </div>
 
@@ -97,8 +128,13 @@ export const AddContactButtonModal = NiceModal.create(() => {
             <Input
               id="contact-email"
               type="email"
-              value={primaryEmail}
-              onChange={(event) => setPrimaryEmail(event.target.value)}
+              value={form.primaryEmail}
+              onChange={(event) =>
+                setForm((current) => ({
+                  ...current,
+                  primaryEmail: event.target.value,
+                }))
+              }
               placeholder="jane@example.com"
             />
           </div>
@@ -107,8 +143,13 @@ export const AddContactButtonModal = NiceModal.create(() => {
             <Label htmlFor="contact-phone">Phone</Label>
             <Input
               id="contact-phone"
-              value={primaryPhone}
-              onChange={(event) => setPrimaryPhone(event.target.value)}
+              value={form.primaryPhone}
+              onChange={(event) =>
+                setForm((current) => ({
+                  ...current,
+                  primaryPhone: event.target.value,
+                }))
+              }
               placeholder="(555) 123-4567"
             />
           </div>
@@ -121,12 +162,18 @@ export const AddContactButtonModal = NiceModal.create(() => {
         )}
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => modal.hide()}>
+          <Button
+            variant="outline"
+            onClick={() => {
+              resetForm();
+              modal.hide();
+            }}
+          >
             Cancel
           </Button>
           <Button
             onClick={handleCreate}
-            disabled={!displayName.trim() || isSubmitting}
+            disabled={!form.displayName.trim() || isSubmitting}
           >
             {isSubmitting ? "Creating..." : "Create Contact"}
           </Button>

@@ -6,7 +6,6 @@ vi.mock("@workspace/database", () => ({
       findMany: vi.fn(),
       create: vi.fn(),
       update: vi.fn(),
-      delete: vi.fn(),
     },
   },
 }));
@@ -16,7 +15,7 @@ import {
   listContactInteractions,
   createContactInteraction,
   updateContactInteraction,
-  deleteContactInteraction,
+  archiveContactInteraction,
 } from "./contact-interaction-repo";
 
 beforeEach(() => vi.clearAllMocks());
@@ -27,7 +26,11 @@ describe("listContactInteractions", () => {
     await listContactInteractions("contact_abc", "org_1");
     expect(prisma.contactInteraction.findMany).toHaveBeenCalledWith(
       expect.objectContaining({
-        where: { contactId: "contact_abc", organizationId: "org_1" },
+        where: {
+          contactId: "contact_abc",
+          organizationId: "org_1",
+          archivedAt: null,
+        },
       }),
     );
   });
@@ -76,12 +79,15 @@ describe("updateContactInteraction", () => {
   });
 });
 
-describe("deleteContactInteraction", () => {
-  it("scopes delete to organizationId", async () => {
-    vi.mocked(prisma.contactInteraction.delete).mockResolvedValue({} as never);
-    await deleteContactInteraction("cint_1", "org_1");
-    expect(prisma.contactInteraction.delete).toHaveBeenCalledWith(
-      expect.objectContaining({ where: { id: "cint_1", organizationId: "org_1" } }),
+describe("archiveContactInteraction", () => {
+  it("soft deletes by setting archivedAt and scoping to organizationId", async () => {
+    vi.mocked(prisma.contactInteraction.update).mockResolvedValue({} as never);
+    await archiveContactInteraction("cint_1", "org_1");
+    expect(prisma.contactInteraction.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { id: "cint_1", organizationId: "org_1" },
+        data: { archivedAt: expect.any(Date) },
+      }),
     );
   });
 });

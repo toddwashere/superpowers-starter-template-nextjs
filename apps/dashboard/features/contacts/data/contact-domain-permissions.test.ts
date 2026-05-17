@@ -1,6 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { requireOrgPermissionWithActiveOrg } from "@workspace/auth/guards";
-import { createNoteAction, listInteractionsAction } from "./interaction-actions";
+import {
+  archiveInteractionAction,
+  createNoteAction,
+  listInteractionsAction,
+  updateInteractionAction,
+} from "./interaction-actions";
 import {
   archiveTaskAction,
   createTaskAction,
@@ -41,6 +46,8 @@ vi.mock("@workspace/auth/guards", () => ({
 
 vi.mock("@workspace/contacts", () => ({
   createContactInteraction: vi.fn().mockResolvedValue({ id: "interaction_1" }),
+  updateContactInteraction: vi.fn().mockResolvedValue({ id: "interaction_1" }),
+  archiveContactInteraction: vi.fn().mockResolvedValue({ id: "interaction_1" }),
   listContactInteractions: vi.fn().mockResolvedValue([]),
   listContactTasksForOrg: vi.fn().mockResolvedValue([]),
   listContactTasksForContact: vi.fn().mockResolvedValue([]),
@@ -75,12 +82,20 @@ describe("contact domain action permissions", () => {
   it("requires interaction permissions for notes and interactions", async () => {
     await listInteractionsAction("contact_1");
     await createNoteAction("contact_1", "Followed up");
+    await updateInteractionAction("interaction_1", { body: "Updated note" });
+    await archiveInteractionAction("interaction_1");
 
     expect(requireOrgPermissionWithActiveOrg).toHaveBeenNthCalledWith(1, {
       contactInteraction: ["read"],
     });
     expect(requireOrgPermissionWithActiveOrg).toHaveBeenNthCalledWith(2, {
       contactInteraction: ["create"],
+    });
+    expect(requireOrgPermissionWithActiveOrg).toHaveBeenNthCalledWith(3, {
+      contactInteraction: ["update"],
+    });
+    expect(requireOrgPermissionWithActiveOrg).toHaveBeenNthCalledWith(4, {
+      contactInteraction: ["delete"],
     });
   });
 
