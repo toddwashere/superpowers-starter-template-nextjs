@@ -18,4 +18,4 @@ export * from "./data-models/contact-task-status-repo";
 // Services — uncomment as each task lands
 export * from "./services/contact-service";
 export * from "./services/segment-service";
-// export * from "./services/csv-service";
+export * from "./services/csv-service";
