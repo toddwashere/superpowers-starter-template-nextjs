@@ -16,22 +16,44 @@ import type {
   CreateContactTaskInput,
   UpdateContactTaskInput,
   CreateContactTaskStatusInput,
+  UpdateContactTaskStatusInput,
 } from "@workspace/contacts";
 import type { ActionResult } from "./contact-types";
 
-export async function listTaskStatusesAction() {
-  const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
-  return listContactTaskStatusesForOrg(activeOrganizationId);
+export async function listTaskStatusesAction(): Promise<
+  ActionResult<Awaited<ReturnType<typeof listContactTaskStatusesForOrg>>>
+> {
+  try {
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const data = await listContactTaskStatusesForOrg(activeOrganizationId);
+    return { success: true, data };
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : "Failed to load task statuses" };
+  }
 }
 
-export async function listOrgTasksAction(filters: { statusId?: string; assigneeId?: string } = {}) {
-  const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
-  return listContactTasksForOrg(activeOrganizationId, filters);
+export async function listOrgTasksAction(
+  filters: { statusId?: string; assigneeId?: string } = {},
+): Promise<ActionResult<Awaited<ReturnType<typeof listContactTasksForOrg>>>> {
+  try {
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const data = await listContactTasksForOrg(activeOrganizationId, filters);
+    return { success: true, data };
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : "Failed to load tasks" };
+  }
 }
 
-export async function listContactTasksAction(contactId: string) {
-  const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
-  return listContactTasksForContact(contactId, activeOrganizationId);
+export async function listContactTasksAction(
+  contactId: string,
+): Promise<ActionResult<Awaited<ReturnType<typeof listContactTasksForContact>>>> {
+  try {
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const data = await listContactTasksForContact(contactId, activeOrganizationId);
+    return { success: true, data };
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : "Failed to load contact tasks" };
+  }
 }
 
 export async function createTaskAction(data: CreateContactTaskInput): Promise<ActionResult> {
@@ -76,7 +98,7 @@ export async function createTaskStatusAction(data: CreateContactTaskStatusInput)
 
 export async function updateTaskStatusAction(
   statusId: string,
-  data: CreateContactTaskStatusInput,
+  data: UpdateContactTaskStatusInput,
 ): Promise<ActionResult> {
   try {
     const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});

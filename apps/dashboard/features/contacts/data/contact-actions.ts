@@ -11,14 +11,28 @@ import {
 import type { ContactListFilters, CreateContactInput, UpdateContactInput } from "@workspace/contacts";
 import type { ActionResult } from "./contact-types";
 
-export async function listContactsAction(filters: Partial<ContactListFilters> = {}) {
-  const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
-  return listContactsForOrg(activeOrganizationId, filters);
+export async function listContactsAction(
+  filters: Partial<ContactListFilters> = {},
+): Promise<ActionResult<Awaited<ReturnType<typeof listContactsForOrg>>>> {
+  try {
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const data = await listContactsForOrg(activeOrganizationId, filters);
+    return { success: true, data };
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : "Failed to load contacts" };
+  }
 }
 
-export async function getContactAction(contactId: string) {
-  const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
-  return getContactById(contactId, activeOrganizationId);
+export async function getContactAction(
+  contactId: string,
+): Promise<ActionResult<Awaited<ReturnType<typeof getContactById>>>> {
+  try {
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const data = await getContactById(contactId, activeOrganizationId);
+    return { success: true, data };
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : "Failed to load contact" };
+  }
 }
 
 export async function createContactAction(

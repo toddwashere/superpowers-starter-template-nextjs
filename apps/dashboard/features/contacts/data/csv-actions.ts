@@ -21,26 +21,34 @@ export async function previewCsvImportAction(
   }
 }
 
-export async function commitCsvImportAction(csvText: string): Promise<ActionResult<{ imported: number }>> {
+export async function commitCsvImportAction(
+  csvText: string,
+): Promise<ActionResult<{ imported: number; skipped: number }>> {
   try {
     const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
     const { valid } = parseContactsCsv(csvText);
+    // Best-effort: import each row independently so one failure doesn't block the rest.
     let imported = 0;
+    let skipped = 0;
     for (const row of valid) {
-      await createContactWithValidation(activeOrganizationId, {
-        kind: row.kind,
-        displayName: row.displayName,
-        firstName: row.firstName,
-        lastName: row.lastName,
-        companyName: row.companyName,
-        primaryEmail: row.primaryEmail,
-        primaryPhone: row.primaryPhone,
-        website: row.website,
-        source: row.source,
-      });
-      imported++;
+      try {
+        await createContactWithValidation(activeOrganizationId, {
+          kind: row.kind,
+          displayName: row.displayName,
+          firstName: row.firstName,
+          lastName: row.lastName,
+          companyName: row.companyName,
+          primaryEmail: row.primaryEmail,
+          primaryPhone: row.primaryPhone,
+          website: row.website,
+          source: row.source,
+        });
+        imported++;
+      } catch {
+        skipped++;
+      }
     }
-    return { success: true, data: { imported } };
+    return { success: true, data: { imported, skipped } };
   } catch (err) {
     return { success: false, error: err instanceof Error ? err.message : "Import failed" };
   }

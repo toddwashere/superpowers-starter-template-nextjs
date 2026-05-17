@@ -9,12 +9,17 @@ import {
   addTagToContact,
   removeTagFromContact,
 } from "@workspace/contacts";
-import type { CreateContactTagInput } from "@workspace/contacts";
+import type { CreateContactTagInput, UpdateContactTagInput } from "@workspace/contacts";
 import type { ActionResult } from "./contact-types";
 
-export async function listTagsAction() {
-  const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
-  return listContactTagsForOrg(activeOrganizationId);
+export async function listTagsAction(): Promise<ActionResult<Awaited<ReturnType<typeof listContactTagsForOrg>>>> {
+  try {
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const data = await listContactTagsForOrg(activeOrganizationId);
+    return { success: true, data };
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : "Failed to load tags" };
+  }
 }
 
 export async function createTagAction(data: CreateContactTagInput): Promise<ActionResult> {
@@ -24,6 +29,16 @@ export async function createTagAction(data: CreateContactTagInput): Promise<Acti
     return { success: true, data: undefined };
   } catch (err) {
     return { success: false, error: err instanceof Error ? err.message : "Failed to create tag" };
+  }
+}
+
+export async function updateTagAction(tagId: string, data: UpdateContactTagInput): Promise<ActionResult> {
+  try {
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    await updateContactTag(tagId, activeOrganizationId, data);
+    return { success: true, data: undefined };
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : "Failed to update tag" };
   }
 }
 

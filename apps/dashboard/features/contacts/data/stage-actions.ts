@@ -10,9 +10,14 @@ import {
 import type { CreateContactStageInput, UpdateContactStageInput } from "@workspace/contacts";
 import type { ActionResult } from "./contact-types";
 
-export async function listStagesAction() {
-  const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
-  return listContactStagesForOrg(activeOrganizationId);
+export async function listStagesAction(): Promise<ActionResult<Awaited<ReturnType<typeof listContactStagesForOrg>>>> {
+  try {
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const data = await listContactStagesForOrg(activeOrganizationId);
+    return { success: true, data };
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : "Failed to load stages" };
+  }
 }
 
 export async function createStageAction(data: CreateContactStageInput): Promise<ActionResult> {

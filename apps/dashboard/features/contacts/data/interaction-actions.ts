@@ -4,9 +4,16 @@ import { requireOrgPermissionWithActiveOrg } from "@workspace/auth/guards";
 import { createContactInteraction, listContactInteractions } from "@workspace/contacts";
 import type { ActionResult } from "./contact-types";
 
-export async function listInteractionsAction(contactId: string) {
-  const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
-  return listContactInteractions(contactId, activeOrganizationId);
+export async function listInteractionsAction(
+  contactId: string,
+): Promise<ActionResult<Awaited<ReturnType<typeof listContactInteractions>>>> {
+  try {
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const data = await listContactInteractions(contactId, activeOrganizationId);
+    return { success: true, data };
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : "Failed to load interactions" };
+  }
 }
 
 export async function createNoteAction(
