@@ -11,9 +11,9 @@ export * from "./data-models/contact-repo";
 export * from "./data-models/contact-stage-repo";
 export * from "./data-models/contact-tag-repo";
 export * from "./data-models/contact-segment-repo";
-// export * from "./data-models/contact-interaction-repo";
-// export * from "./data-models/contact-task-repo";
-// export * from "./data-models/contact-task-status-repo";
+export * from "./data-models/contact-interaction-repo";
+export * from "./data-models/contact-task-repo";
+export * from "./data-models/contact-task-status-repo";
 
 // Services — uncomment as each task lands
 // export * from "./services/contact-service";
