@@ -117,6 +117,15 @@ export function orgNavProvider(context: CommandContext): DashboardCommand[] {
       run: (ctx) => ctx.router.push(`${getPathForOrg(orgSlug)}/ai`),
     },
     {
+      id: "contacts:add-contact",
+      title: "Add New Contact",
+      group: "Contacts",
+      scope: "organization",
+      kind: "client-action",
+      keywords: ["contacts", "new contact", "create contact", "add person", "add company"],
+      run: (ctx) => ctx.showAddContactModal(),
+    },
+    {
       id: "org:settings",
       title: "Organization Settings",
       group: "Navigation",

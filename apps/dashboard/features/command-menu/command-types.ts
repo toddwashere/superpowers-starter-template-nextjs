@@ -13,10 +13,17 @@ export type CommandContext = {
   setTheme: (theme: "light" | "dark" | "system") => void;
   signOut: () => Promise<void>;
   setActiveOrg: (orgId: string) => Promise<void>;
+  showAddContactModal: () => Promise<void>;
   searchQuery: string;
 };
 
-export type CommandGroup = "Navigation" | "Organizations" | "Account" | "Theme" | "Actions";
+export type CommandGroup =
+  | "Navigation"
+  | "Organizations"
+  | "Contacts"
+  | "Account"
+  | "Theme"
+  | "Actions";
 export type CommandScope = "public" | "auth" | "user" | "organization";
 export type CommandKind =
   | "navigation"

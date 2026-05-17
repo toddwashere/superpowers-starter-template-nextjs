@@ -1,17 +1,16 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import {
-  authNavProvider,
-  userProvider,
   orgNavProvider,
   orgSwitchProvider,
   buildCommands,
-} from "../command-providers";
-import type { CommandContext } from "../command-types";
+} from "./command-providers";
+import type { CommandContext } from "./command-types";
 
 const mockRouter = { push: vi.fn() };
 const mockSetTheme = vi.fn();
 const mockSignOut = vi.fn();
 const mockSetActiveOrg = vi.fn();
+const mockShowAddContactModal = vi.fn();
 
 function makeContext(overrides: Partial<CommandContext> = {}): CommandContext {
   return {
@@ -23,6 +22,7 @@ function makeContext(overrides: Partial<CommandContext> = {}): CommandContext {
     setTheme: mockSetTheme,
     signOut: mockSignOut,
     setActiveOrg: mockSetActiveOrg,
+    showAddContactModal: mockShowAddContactModal,
     searchQuery: "",
     ...overrides,
   };
@@ -37,8 +37,6 @@ const testOrgs = [
 beforeEach(() => {
   vi.clearAllMocks();
 });
-
-// ── Signed-out ────────────────────────────────────────────────────────────────
 
 describe("buildCommands - signed out", () => {
   it("returns auth navigation commands (sign-in, sign-up, forgot-password)", () => {
@@ -70,8 +68,6 @@ describe("buildCommands - signed out", () => {
     expect(ids.some((id) => id.startsWith("org-switch:"))).toBe(false);
   });
 });
-
-// ── Signed in, no current org ─────────────────────────────────────────────────
 
 describe("buildCommands - signed in without current org", () => {
   const ctx = makeContext({ user: testUser, organizations: testOrgs });
@@ -107,10 +103,9 @@ describe("buildCommands - signed in without current org", () => {
     expect(ids).not.toContain("org:members");
     expect(ids).not.toContain("org:billing");
     expect(ids).not.toContain("org:api-keys");
+    expect(ids).not.toContain("contacts:add-contact");
   });
 });
-
-// ── Signed in, with current org ───────────────────────────────────────────────
 
 describe("buildCommands - signed in with current org", () => {
   const ctx = makeContext({ user: testUser, organizations: testOrgs, orgSlug: "acme-inc" });
@@ -138,9 +133,20 @@ describe("buildCommands - signed in with current org", () => {
     const ids = commands.map((c) => c.id);
     expect(ids).not.toContain("nav:sign-in");
   });
-});
 
-// ── Org-switch provider ───────────────────────────────────────────────────────
+  it("returns add contact command", () => {
+    const commands = buildCommands(ctx);
+    const command = commands.find((c) => c.id === "contacts:add-contact");
+    expect(command?.title).toBe("Add New Contact");
+  });
+
+  it("add contact command launches the modal callback", async () => {
+    const commands = buildCommands(ctx);
+    const command = commands.find((c) => c.id === "contacts:add-contact");
+    await command!.run(ctx);
+    expect(mockShowAddContactModal).toHaveBeenCalledOnce();
+  });
+});
 
 describe("orgSwitchProvider", () => {
   it("generates one command per organization", () => {
@@ -177,8 +183,6 @@ describe("orgSwitchProvider", () => {
     expect(commands).toHaveLength(0);
   });
 });
-
-// ── orgNavProvider ────────────────────────────────────────────────────────────
 
 describe("orgNavProvider", () => {
   it("returns empty array when orgSlug is absent", () => {
@@ -226,8 +230,6 @@ describe("orgNavProvider", () => {
     expect(mockRouter.push).toHaveBeenCalledWith("/acme-inc/settings/api-keys");
   });
 });
-
-// ── Command ID uniqueness ─────────────────────────────────────────────────────
 
 describe("command ID uniqueness", () => {
   it("IDs are unique in signed-out context", () => {

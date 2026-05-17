@@ -13,6 +13,7 @@ import type { DashboardCommand } from "./command-types";
 const GROUPS = [
   "Navigation",
   "Organizations",
+  "Contacts",
   "Account",
   "Theme",
   "Actions",

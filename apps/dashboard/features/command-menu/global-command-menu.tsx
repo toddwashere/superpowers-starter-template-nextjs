@@ -7,6 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import NiceModal from "@ebay/nice-modal-react";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { useTheme } from "@workspace/ui/components/theme-provider";
 import { toast } from "@workspace/ui/components/sonner";
@@ -14,6 +15,11 @@ import { authClient } from "@workspace/auth/client";
 import { buildCommands } from "./command-providers";
 import { CommandMenuDialog } from "./command-menu-dialog";
 import type { CommandContext, DashboardCommand } from "./command-types";
+import { AddContactButtonModal } from "@/features/contacts/ui/add-contact-button-modal";
+import {
+  openAddContactFlow,
+  type AddContactResult,
+} from "@/features/contacts/ui/add-contact-flow";
 
 type CommandMenuContextValue = { open: () => void };
 
@@ -30,6 +36,7 @@ export function GlobalCommandMenu({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const params = useParams<{ "org-slug"?: string }>();
+  const orgSlug = params["org-slug"];
   const { setTheme } = useTheme();
   const { data: session } = authClient.useSession();
   const { data: orgsData } = authClient.useListOrganizations();
@@ -48,7 +55,7 @@ export function GlobalCommandMenu({ children }: { children: ReactNode }) {
 
   const context: CommandContext = {
     pathname,
-    orgSlug: params["org-slug"],
+    orgSlug,
     user: session?.user ?? null,
     organizations: orgsData ?? [],
     router,
@@ -59,6 +66,17 @@ export function GlobalCommandMenu({ children }: { children: ReactNode }) {
     setActiveOrg: async (orgId: string) => {
       await authClient.organization.setActive({
         organizationId: orgId,
+      });
+    },
+    showAddContactModal: async () => {
+      if (!orgSlug) return;
+      await openAddContactFlow({
+        orgSlug,
+        router,
+        showAddContactModal: () =>
+          NiceModal.show(AddContactButtonModal) as Promise<
+            AddContactResult | undefined
+          >,
       });
     },
     searchQuery: "",

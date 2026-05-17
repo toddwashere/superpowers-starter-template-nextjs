@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useTransition, useRef } from "react";
 import { useRouter } from "next/navigation";
+import NiceModal from "@ebay/nice-modal-react";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { Badge } from "@workspace/ui/components/badge";
@@ -22,6 +23,8 @@ import {
 import { IconForAdd, IconForMore } from "@workspace/ui/components/icon-for";
 import { listContactsAction, archiveContactAction } from "../data/contact-actions";
 import { exportContactsCsvAction } from "../data/csv-actions";
+import { AddContactButtonModal } from "./add-contact-button-modal";
+import { openAddContactFlow, type AddContactResult } from "./add-contact-flow";
 import { CsvImportDialog } from "./csv-import-dialog";
 
 type Contact = NonNullable<
@@ -82,6 +85,17 @@ export function ContactsPageContent({ orgSlug }: { orgSlug: string }) {
     URL.revokeObjectURL(url);
   }
 
+  async function handleAddContact() {
+    await openAddContactFlow({
+      orgSlug,
+      router,
+      showAddContactModal: () =>
+        NiceModal.show(AddContactButtonModal) as Promise<
+          AddContactResult | undefined
+        >,
+    });
+  }
+
   return (
     <div className="space-y-4">
       {error && (
@@ -94,7 +108,7 @@ export function ContactsPageContent({ orgSlug }: { orgSlug: string }) {
           <Button variant="outline" onClick={handleExport}>
             Export CSV
           </Button>
-          <Button onClick={() => router.push(`/${orgSlug}/contacts/new`)}>
+          <Button onClick={() => void handleAddContact()}>
             <IconForAdd className="mr-2" />
             New Contact
           </Button>
