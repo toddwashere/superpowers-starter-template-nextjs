@@ -13,7 +13,9 @@ export async function previewCsvImportAction(
   csvText: string,
 ): Promise<ActionResult<Awaited<ReturnType<typeof parseContactsCsv>>>> {
   try {
-    await requireOrgPermissionWithActiveOrg({});
+    await requireOrgPermissionWithActiveOrg({
+      contact: ["import"],
+    });
     const result = parseContactsCsv(csvText);
     return { success: true, data: result };
   } catch (err) {
@@ -25,7 +27,9 @@ export async function commitCsvImportAction(
   csvText: string,
 ): Promise<ActionResult<{ imported: number; skipped: number }>> {
   try {
-    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
+      contact: ["import"],
+    });
     const { valid } = parseContactsCsv(csvText);
     // Best-effort: import each row independently so one failure doesn't block the rest.
     let imported = 0;
@@ -56,7 +60,9 @@ export async function commitCsvImportAction(
 
 export async function exportContactsCsvAction(): Promise<ActionResult<string>> {
   try {
-    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
+      contact: ["export"],
+    });
     const contacts = await listContactsForOrg(activeOrganizationId, { pageSize: 5000 });
     const csv = exportContactsToCsv(
       contacts.map((c) => ({

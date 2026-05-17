@@ -14,7 +14,9 @@ import type { ActionResult } from "./contact-types";
 
 export async function listTagsAction(): Promise<ActionResult<Awaited<ReturnType<typeof listContactTagsForOrg>>>> {
   try {
-    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
+      contactSettings: ["read"],
+    });
     const data = await listContactTagsForOrg(activeOrganizationId);
     return { success: true, data };
   } catch (err) {
@@ -24,7 +26,9 @@ export async function listTagsAction(): Promise<ActionResult<Awaited<ReturnType<
 
 export async function createTagAction(data: CreateContactTagInput): Promise<ActionResult> {
   try {
-    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
+      contactSettings: ["create"],
+    });
     await createContactTag(activeOrganizationId, data);
     return { success: true, data: undefined };
   } catch (err) {
@@ -34,7 +38,9 @@ export async function createTagAction(data: CreateContactTagInput): Promise<Acti
 
 export async function updateTagAction(tagId: string, data: UpdateContactTagInput): Promise<ActionResult> {
   try {
-    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
+      contactSettings: ["update"],
+    });
     await updateContactTag(tagId, activeOrganizationId, data);
     return { success: true, data: undefined };
   } catch (err) {
@@ -44,7 +50,9 @@ export async function updateTagAction(tagId: string, data: UpdateContactTagInput
 
 export async function deleteTagAction(tagId: string): Promise<ActionResult> {
   try {
-    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
+      contactSettings: ["delete"],
+    });
     await deleteContactTag(tagId, activeOrganizationId);
     return { success: true, data: undefined };
   } catch (err) {
@@ -54,7 +62,9 @@ export async function deleteTagAction(tagId: string): Promise<ActionResult> {
 
 export async function addTagToContactAction(contactId: string, tagId: string): Promise<ActionResult> {
   try {
-    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
+      contact: ["update"],
+    });
     await addTagToContact(contactId, tagId, activeOrganizationId);
     return { success: true, data: undefined };
   } catch (err) {
@@ -64,7 +74,9 @@ export async function addTagToContactAction(contactId: string, tagId: string): P
 
 export async function removeTagFromContactAction(contactId: string, tagId: string): Promise<ActionResult> {
   try {
-    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
+      contact: ["update"],
+    });
     await removeTagFromContact(contactId, tagId, activeOrganizationId);
     return { success: true, data: undefined };
   } catch (err) {

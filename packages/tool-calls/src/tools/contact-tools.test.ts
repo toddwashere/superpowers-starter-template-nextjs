@@ -27,7 +27,7 @@ const orgCtx = {
   orgId: "org_1",
   userId: "user_1",
   ownerType: "organization" as const,
-  permissions: { contacts: ["read"] },
+  permissions: { contact: ["read"] },
 };
 
 const noOrgCtx = { ...orgCtx, orgId: null };
@@ -36,7 +36,7 @@ beforeEach(() => vi.clearAllMocks());
 
 describe("contactsListTool", () => {
   it("requires contacts:read permission", () => {
-    expect(contactsListTool.requiredPermissions).toEqual({ contacts: ["read"] });
+    expect(contactsListTool.requiredPermissions).toEqual({ contact: ["read"] });
   });
 
   it("returns error when no org context", async () => {
@@ -83,5 +83,21 @@ describe("contactTools array", () => {
   it("has unique tool names", () => {
     const names = contactTools.map((t) => t.name);
     expect(new Set(names).size).toBe(names.length);
+  });
+
+  it("uses singular contact domain permission resource names", () => {
+    expect(contactTools.map((tool) => tool.requiredPermissions)).toEqual([
+      { contact: ["read"] },
+      { contact: ["read"] },
+      { contact: ["create"] },
+      { contact: ["update"] },
+      { contact: ["update"] },
+      { contact: ["update"] },
+      { contactInteraction: ["create"] },
+      { contactTask: ["read"] },
+      { contactTask: ["create"] },
+      { contactTask: ["update"] },
+      { contact: ["read"] },
+    ]);
   });
 });

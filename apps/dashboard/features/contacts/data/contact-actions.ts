@@ -15,7 +15,9 @@ export async function listContactsAction(
   filters: Partial<ContactListFilters> = {},
 ): Promise<ActionResult<Awaited<ReturnType<typeof listContactsForOrg>>>> {
   try {
-    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
+      contact: ["read"],
+    });
     const data = await listContactsForOrg(activeOrganizationId, filters);
     return { success: true, data };
   } catch (err) {
@@ -27,7 +29,9 @@ export async function getContactAction(
   contactId: string,
 ): Promise<ActionResult<Awaited<ReturnType<typeof getContactById>>>> {
   try {
-    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
+      contact: ["read"],
+    });
     const data = await getContactById(contactId, activeOrganizationId);
     return { success: true, data };
   } catch (err) {
@@ -39,7 +43,9 @@ export async function createContactAction(
   data: CreateContactInput,
 ): Promise<ActionResult<{ id: string }>> {
   try {
-    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
+      contact: ["create"],
+    });
     const contact = await createContactWithValidation(activeOrganizationId, data);
     return { success: true, data: { id: contact.id } };
   } catch (err) {
@@ -52,7 +58,9 @@ export async function updateContactAction(
   data: UpdateContactInput,
 ): Promise<ActionResult> {
   try {
-    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
+      contact: ["update"],
+    });
     await updateContactWithValidation(contactId, activeOrganizationId, data);
     return { success: true, data: undefined };
   } catch (err) {
@@ -62,7 +70,9 @@ export async function updateContactAction(
 
 export async function archiveContactAction(contactId: string): Promise<ActionResult> {
   try {
-    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
+      contact: ["delete"],
+    });
     await archiveContact(contactId, activeOrganizationId);
     return { success: true, data: undefined };
   } catch (err) {

@@ -8,7 +8,9 @@ export async function listInteractionsAction(
   contactId: string,
 ): Promise<ActionResult<Awaited<ReturnType<typeof listContactInteractions>>>> {
   try {
-    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
+      contactInteraction: ["read"],
+    });
     const data = await listContactInteractions(contactId, activeOrganizationId);
     return { success: true, data };
   } catch (err) {
@@ -21,7 +23,9 @@ export async function createNoteAction(
   body: string,
 ): Promise<ActionResult> {
   try {
-    const { session, activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const { session, activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
+      contactInteraction: ["create"],
+    });
     await createContactInteraction(contactId, activeOrganizationId, session.user.id, {
       contactId,
       body,

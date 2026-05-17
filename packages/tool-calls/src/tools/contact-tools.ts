@@ -90,8 +90,8 @@ export const contactsListTool: ToolDefinition = {
   name: "contacts-list",
   description:
     "List contacts in the organization. Supports filtering by kind, stageId, tagIds, search, and pagination via page/pageSize.",
-  requiredScopes: ["contacts:read"],
-  requiredPermissions: { contacts: ["read"] },
+  requiredScopes: ["contact:read"],
+  requiredPermissions: { contact: ["read"] },
   inputShape: {
     search: z.string().optional(),
     kind: z.enum(["person", "company"]).optional(),
@@ -121,8 +121,8 @@ export const contactsListTool: ToolDefinition = {
 export const contactsGetTool: ToolDefinition = {
   name: "contacts-get",
   description: "Retrieve a single contact by ID.",
-  requiredScopes: ["contacts:read"],
-  requiredPermissions: { contacts: ["read"] },
+  requiredScopes: ["contact:read"],
+  requiredPermissions: { contact: ["read"] },
   inputShape: {
     contactId: z.string(),
   },
@@ -140,8 +140,8 @@ export const contactsGetTool: ToolDefinition = {
 export const contactsCreateTool: ToolDefinition = {
   name: "contacts-create",
   description: "Create a new contact in the organization.",
-  requiredScopes: ["contacts:create"],
-  requiredPermissions: { contacts: ["create"] },
+  requiredScopes: ["contact:create"],
+  requiredPermissions: { contact: ["create"] },
   inputShape: {
     kind: z.enum(["person", "company"]),
     displayName: z.string().min(1).max(255),
@@ -174,8 +174,8 @@ export const contactsCreateTool: ToolDefinition = {
 export const contactsUpdateTool: ToolDefinition = {
   name: "contacts-update",
   description: "Update an existing contact.",
-  requiredScopes: ["contacts:update"],
-  requiredPermissions: { contacts: ["update"] },
+  requiredScopes: ["contact:update"],
+  requiredPermissions: { contact: ["update"] },
   inputShape: {
     contactId: z.string(),
     kind: z.enum(["person", "company"]).optional(),
@@ -214,8 +214,8 @@ export const contactsUpdateTool: ToolDefinition = {
 export const contactsAddTagTool: ToolDefinition = {
   name: "contacts-add-tag",
   description: "Add a tag to a contact.",
-  requiredScopes: ["contacts:update"],
-  requiredPermissions: { contacts: ["update"] },
+  requiredScopes: ["contact:update"],
+  requiredPermissions: { contact: ["update"] },
   inputShape: {
     contactId: z.string(),
     tagId: z.string(),
@@ -238,8 +238,8 @@ export const contactsAddTagTool: ToolDefinition = {
 export const contactsRemoveTagTool: ToolDefinition = {
   name: "contacts-remove-tag",
   description: "Remove a tag from a contact.",
-  requiredScopes: ["contacts:update"],
-  requiredPermissions: { contacts: ["update"] },
+  requiredScopes: ["contact:update"],
+  requiredPermissions: { contact: ["update"] },
   inputShape: {
     contactId: z.string(),
     tagId: z.string(),
@@ -263,8 +263,8 @@ export const contactsCreateNoteTool: ToolDefinition = {
   name: "contacts-create-note",
   description:
     "Create an interaction (note, call, email, meeting, sms, or other) on a contact.",
-  requiredScopes: ["contactInteractions:create"],
-  requiredPermissions: { contactInteractions: ["create"] },
+  requiredScopes: ["contactInteraction:create"],
+  requiredPermissions: { contactInteraction: ["create"] },
   inputShape: {
     contactId: z.string(),
     body: z.string().min(1),
@@ -298,8 +298,8 @@ export const contactsCreateNoteTool: ToolDefinition = {
 export const contactsTasksListTool: ToolDefinition = {
   name: "contacts-tasks-list",
   description: "List contact tasks for the organization, optionally filtered by statusId or assigneeId.",
-  requiredScopes: ["contactTasks:read"],
-  requiredPermissions: { contactTasks: ["read"] },
+  requiredScopes: ["contactTask:read"],
+  requiredPermissions: { contactTask: ["read"] },
   inputShape: {
     statusId: z.string().optional(),
     assigneeId: z.string().optional(),
@@ -321,8 +321,8 @@ export const contactsTasksListTool: ToolDefinition = {
 export const contactsCreateTaskTool: ToolDefinition = {
   name: "contacts-create-task",
   description: "Create a task associated with a contact.",
-  requiredScopes: ["contactTasks:create"],
-  requiredPermissions: { contactTasks: ["create"] },
+  requiredScopes: ["contactTask:create"],
+  requiredPermissions: { contactTask: ["create"] },
   inputShape: {
     contactId: z.string(),
     title: z.string().min(1).max(255),
@@ -365,8 +365,8 @@ export const contactsCreateTaskTool: ToolDefinition = {
 export const contactsUpdateTaskTool: ToolDefinition = {
   name: "contacts-update-task",
   description: "Update an existing contact task.",
-  requiredScopes: ["contactTasks:update"],
-  requiredPermissions: { contactTasks: ["update"] },
+  requiredScopes: ["contactTask:update"],
+  requiredPermissions: { contactTask: ["update"] },
   inputShape: {
     taskId: z.string(),
     title: z.string().min(1).max(255).optional(),
@@ -406,8 +406,8 @@ export const contactsUpdateTaskTool: ToolDefinition = {
 export const contactsDocumentationTool: ToolDefinition = {
   name: "contacts-documentation",
   description: "Returns documentation about the contacts module — available tools, data model fields, and usage guidance.",
-  requiredScopes: ["contacts:read"],
-  requiredPermissions: { contacts: ["read"] },
+  requiredScopes: ["contact:read"],
+  requiredPermissions: { contact: ["read"] },
   inputShape: {},
   run: async (_ctx: ToolCallContext, _input: Record<string, unknown>) => {
     return `
@@ -468,13 +468,13 @@ Set \`completedAt\` to null to reopen, or an ISO date string to mark complete.
 Returns this documentation string.
 
 ## Permissions Required
-- contacts:read — list and get contacts
-- contacts:create — create contacts
-- contacts:update — update contacts, add/remove tags
-- contactInteractions:create — create notes/interactions
-- contactTasks:read — list tasks
-- contactTasks:create — create tasks
-- contactTasks:update — update tasks
+- contact:read — list and get contacts
+- contact:create — create contacts
+- contact:update — update contacts, add/remove tags
+- contactInteraction:create — create notes/interactions
+- contactTask:read — list tasks
+- contactTask:create — create tasks
+- contactTask:update — update tasks
 `.trim();
   },
 };

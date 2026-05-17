@@ -12,7 +12,9 @@ import type { ActionResult } from "./contact-types";
 
 export async function listStagesAction(): Promise<ActionResult<Awaited<ReturnType<typeof listContactStagesForOrg>>>> {
   try {
-    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
+      contactSettings: ["read"],
+    });
     const data = await listContactStagesForOrg(activeOrganizationId);
     return { success: true, data };
   } catch (err) {
@@ -22,7 +24,9 @@ export async function listStagesAction(): Promise<ActionResult<Awaited<ReturnTyp
 
 export async function createStageAction(data: CreateContactStageInput): Promise<ActionResult> {
   try {
-    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
+      contactSettings: ["create"],
+    });
     await createContactStage(activeOrganizationId, data);
     return { success: true, data: undefined };
   } catch (err) {
@@ -32,7 +36,9 @@ export async function createStageAction(data: CreateContactStageInput): Promise<
 
 export async function updateStageAction(stageId: string, data: UpdateContactStageInput): Promise<ActionResult> {
   try {
-    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
+      contactSettings: ["update"],
+    });
     await updateContactStage(stageId, activeOrganizationId, data);
     return { success: true, data: undefined };
   } catch (err) {
@@ -42,7 +48,9 @@ export async function updateStageAction(stageId: string, data: UpdateContactStag
 
 export async function deleteStageAction(stageId: string): Promise<ActionResult> {
   try {
-    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
+      contactSettings: ["delete"],
+    });
     await deleteContactStage(stageId, activeOrganizationId);
     return { success: true, data: undefined };
   } catch (err) {

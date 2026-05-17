@@ -5,6 +5,12 @@ describe("publicApiPermissions", () => {
   it("defines account resource with read action", () => {
     expect(publicApiPermissions.account).toContain("read");
   });
+
+  it("defines contact tool resources with supported actions", () => {
+    expect(publicApiPermissions.contact).toEqual(["read", "create", "update"]);
+    expect(publicApiPermissions.contactInteraction).toEqual(["create"]);
+    expect(publicApiPermissions.contactTask).toEqual(["read", "create", "update"]);
+  });
 });
 
 describe("hasPermission", () => {

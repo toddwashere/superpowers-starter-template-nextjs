@@ -24,7 +24,9 @@ export async function listTaskStatusesAction(): Promise<
   ActionResult<Awaited<ReturnType<typeof listContactTaskStatusesForOrg>>>
 > {
   try {
-    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
+      contactSettings: ["read"],
+    });
     const data = await listContactTaskStatusesForOrg(activeOrganizationId);
     return { success: true, data };
   } catch (err) {
@@ -36,7 +38,9 @@ export async function listOrgTasksAction(
   filters: { statusId?: string; assigneeId?: string } = {},
 ): Promise<ActionResult<Awaited<ReturnType<typeof listContactTasksForOrg>>>> {
   try {
-    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
+      contactTask: ["read"],
+    });
     const data = await listContactTasksForOrg(activeOrganizationId, filters);
     return { success: true, data };
   } catch (err) {
@@ -48,7 +52,9 @@ export async function listContactTasksAction(
   contactId: string,
 ): Promise<ActionResult<Awaited<ReturnType<typeof listContactTasksForContact>>>> {
   try {
-    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
+      contactTask: ["read"],
+    });
     const data = await listContactTasksForContact(contactId, activeOrganizationId);
     return { success: true, data };
   } catch (err) {
@@ -58,7 +64,9 @@ export async function listContactTasksAction(
 
 export async function createTaskAction(data: CreateContactTaskInput): Promise<ActionResult> {
   try {
-    const { session, activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const { session, activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
+      contactTask: ["create"],
+    });
     await createContactTask(activeOrganizationId, session.user.id, data);
     return { success: true, data: undefined };
   } catch (err) {
@@ -68,7 +76,9 @@ export async function createTaskAction(data: CreateContactTaskInput): Promise<Ac
 
 export async function updateTaskAction(taskId: string, data: UpdateContactTaskInput): Promise<ActionResult> {
   try {
-    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
+      contactTask: ["update"],
+    });
     await updateContactTask(taskId, activeOrganizationId, data);
     return { success: true, data: undefined };
   } catch (err) {
@@ -78,7 +88,9 @@ export async function updateTaskAction(taskId: string, data: UpdateContactTaskIn
 
 export async function archiveTaskAction(taskId: string): Promise<ActionResult> {
   try {
-    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
+      contactTask: ["delete"],
+    });
     await archiveContactTask(taskId, activeOrganizationId);
     return { success: true, data: undefined };
   } catch (err) {
@@ -88,7 +100,9 @@ export async function archiveTaskAction(taskId: string): Promise<ActionResult> {
 
 export async function createTaskStatusAction(data: CreateContactTaskStatusInput): Promise<ActionResult> {
   try {
-    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
+      contactSettings: ["create"],
+    });
     await createContactTaskStatus(activeOrganizationId, data);
     return { success: true, data: undefined };
   } catch (err) {
@@ -101,7 +115,9 @@ export async function updateTaskStatusAction(
   data: UpdateContactTaskStatusInput,
 ): Promise<ActionResult> {
   try {
-    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
+      contactSettings: ["update"],
+    });
     await updateContactTaskStatus(statusId, activeOrganizationId, data);
     return { success: true, data: undefined };
   } catch (err) {
@@ -111,7 +127,9 @@ export async function updateTaskStatusAction(
 
 export async function deleteTaskStatusAction(statusId: string): Promise<ActionResult> {
   try {
-    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({});
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
+      contactSettings: ["delete"],
+    });
     await deleteContactTaskStatus(statusId, activeOrganizationId);
     return { success: true, data: undefined };
   } catch (err) {

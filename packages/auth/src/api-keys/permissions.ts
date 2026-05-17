@@ -1,7 +1,8 @@
 export const publicApiPermissions = {
   account: ["read"],
-  // Add new resources here as features are built:
-  // contacts: ["read", "write"],
+  contact: ["read", "create", "update"],
+  contactInteraction: ["create"],
+  contactTask: ["read", "create", "update"],
 } as const;
 
 export type PublicApiResource = keyof typeof publicApiPermissions;

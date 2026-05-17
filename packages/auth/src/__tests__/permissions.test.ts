@@ -37,6 +37,13 @@ describe("permissions", () => {
       expect(role.authorize({ apiKey: ["update"] }).success).toBe(true);
       expect(role.authorize({ apiKey: ["delete"] }).success).toBe(true);
     });
+
+    it("has all contacts domain permissions", () => {
+      expect(role.authorize({ contact: ["read", "create", "update", "delete", "import", "export"] }).success).toBe(true);
+      expect(role.authorize({ contactSettings: ["read", "create", "update", "delete"] }).success).toBe(true);
+      expect(role.authorize({ contactInteraction: ["read", "create", "update", "delete"] }).success).toBe(true);
+      expect(role.authorize({ contactTask: ["read", "create", "update", "delete"] }).success).toBe(true);
+    });
   });
 
   describe("admin role", () => {
@@ -68,6 +75,13 @@ describe("permissions", () => {
       expect(role.authorize({ apiKey: ["update"] }).success).toBe(true);
       expect(role.authorize({ apiKey: ["delete"] }).success).toBe(true);
     });
+
+    it("has all contacts domain permissions", () => {
+      expect(role.authorize({ contact: ["read", "create", "update", "delete", "import", "export"] }).success).toBe(true);
+      expect(role.authorize({ contactSettings: ["read", "create", "update", "delete"] }).success).toBe(true);
+      expect(role.authorize({ contactInteraction: ["read", "create", "update", "delete"] }).success).toBe(true);
+      expect(role.authorize({ contactTask: ["read", "create", "update", "delete"] }).success).toBe(true);
+    });
   });
 
   describe("member role", () => {
@@ -98,6 +112,22 @@ describe("permissions", () => {
       expect(role.authorize({ apiKey: ["read"] }).success).toBe(false);
       expect(role.authorize({ apiKey: ["update"] }).success).toBe(false);
       expect(role.authorize({ apiKey: ["delete"] }).success).toBe(false);
+    });
+
+    it("can work with contacts but cannot manage destructive or settings operations", () => {
+      expect(role.authorize({ contact: ["read", "create", "update"] }).success).toBe(true);
+      expect(role.authorize({ contact: ["delete"] }).success).toBe(false);
+      expect(role.authorize({ contact: ["import"] }).success).toBe(false);
+      expect(role.authorize({ contact: ["export"] }).success).toBe(false);
+      expect(role.authorize({ contactSettings: ["read"] }).success).toBe(true);
+      expect(role.authorize({ contactSettings: ["create"] }).success).toBe(false);
+      expect(role.authorize({ contactSettings: ["update"] }).success).toBe(false);
+      expect(role.authorize({ contactSettings: ["delete"] }).success).toBe(false);
+      expect(role.authorize({ contactInteraction: ["read", "create"] }).success).toBe(true);
+      expect(role.authorize({ contactInteraction: ["update"] }).success).toBe(false);
+      expect(role.authorize({ contactInteraction: ["delete"] }).success).toBe(false);
+      expect(role.authorize({ contactTask: ["read", "create", "update"] }).success).toBe(true);
+      expect(role.authorize({ contactTask: ["delete"] }).success).toBe(false);
     });
   });
 

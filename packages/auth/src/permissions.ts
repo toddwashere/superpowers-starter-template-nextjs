@@ -6,6 +6,10 @@ const statement = {
   invitation: ["create", "cancel"],
   billing: ["manage"],
   apiKey: ["create", "read", "update", "delete"],
+  contact: ["read", "create", "update", "delete", "import", "export"],
+  contactSettings: ["read", "create", "update", "delete"],
+  contactInteraction: ["read", "create", "update", "delete"],
+  contactTask: ["read", "create", "update", "delete"],
 } as const;
 
 export const ac = createAccessControl(statement);
@@ -17,6 +21,10 @@ export const permissions = {
     invitation: ["create", "cancel"],
     billing: ["manage"],
     apiKey: ["create", "read", "update", "delete"],
+    contact: ["read", "create", "update", "delete", "import", "export"],
+    contactSettings: ["read", "create", "update", "delete"],
+    contactInteraction: ["read", "create", "update", "delete"],
+    contactTask: ["read", "create", "update", "delete"],
   }),
   admin: ac.newRole({
     organization: ["update"],
@@ -24,6 +32,10 @@ export const permissions = {
     invitation: ["create", "cancel"],
     billing: ["manage"],
     apiKey: ["create", "read", "update", "delete"],
+    contact: ["read", "create", "update", "delete", "import", "export"],
+    contactSettings: ["read", "create", "update", "delete"],
+    contactInteraction: ["read", "create", "update", "delete"],
+    contactTask: ["read", "create", "update", "delete"],
   }),
   member: ac.newRole({
     organization: [],
@@ -31,5 +43,9 @@ export const permissions = {
     invitation: [],
     billing: [],
     apiKey: [],
+    contact: ["read", "create", "update"],
+    contactSettings: ["read"],
+    contactInteraction: ["read", "create"],
+    contactTask: ["read", "create", "update"],
   }),
 };
