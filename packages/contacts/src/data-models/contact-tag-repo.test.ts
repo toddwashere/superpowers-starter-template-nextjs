@@ -30,7 +30,10 @@ describe("listContactTagsForOrg", () => {
     vi.mocked(prisma.contactTag.findMany).mockResolvedValue([]);
     await listContactTagsForOrg("org_1");
     expect(prisma.contactTag.findMany).toHaveBeenCalledWith(
-      expect.objectContaining({ where: { organizationId: "org_1" } }),
+      expect.objectContaining({
+        where: { organizationId: "org_1" },
+        orderBy: { name: "asc" },
+      }),
     );
   });
 });
