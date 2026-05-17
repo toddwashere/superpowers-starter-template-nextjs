@@ -1,0 +1,145 @@
+// packages/database/prisma/contacts.prisma
+
+model Contact {
+  id              String    @id
+  organizationId  String
+  kind            String    // "person" | "company"
+  displayName     String
+  firstName       String?
+  lastName        String?
+  companyName     String?
+  primaryEmail    String?
+  primaryPhone    String?
+  website         String?
+  parentContactId String?
+  stageId         String?
+  ownerId         String?
+  source          String?
+  status          String    @default("active")
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  archivedAt      DateTime?
+
+  stage        ContactStage?         @relation(fields: [stageId], references: [id])
+  parent       Contact?              @relation("ContactHierarchy", fields: [parentContactId], references: [id])
+  children     Contact[]             @relation("ContactHierarchy")
+  tags         ContactTagAssignment[]
+  interactions ContactInteraction[]
+  tasks        ContactTask[]
+
+  @@index([organizationId, displayName])
+  @@index([organizationId, kind])
+  @@index([organizationId, stageId])
+  @@index([organizationId, ownerId])
+  @@index([organizationId, archivedAt])
+  @@index([parentContactId])
+}
+
+model ContactStage {
+  id             String    @id
+  organizationId String
+  name           String
+  color          String    @default("#6366f1")
+  sortOrder      Int       @default(0)
+  isDefault      Boolean   @default(false)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  contacts Contact[]
+
+  @@unique([organizationId, name])
+}
+
+model ContactTag {
+  id             String    @id
+  organizationId String
+  name           String
+  color          String    @default("#6366f1")
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  assignments ContactTagAssignment[]
+
+  @@unique([organizationId, name])
+}
+
+model ContactTagAssignment {
+  contactId String
+  tagId     String
+  createdAt DateTime @default(now())
+
+  contact Contact    @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  tag     ContactTag @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([contactId, tagId])
+}
+
+model ContactSegment {
+  id             String   @id
+  organizationId String
+  name           String
+  filters        Json
+  filterVersion  Int      @default(1)
+  sortKey        String   @default("displayName")
+  sortDirection  String   @default("asc")
+  createdById    String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model ContactInteraction {
+  id             String   @id
+  organizationId String
+  contactId      String
+  type           String   @default("note")
+  body           String
+  happenedAt     DateTime @default(now())
+  createdById    String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  contact Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  @@index([contactId, happenedAt])
+}
+
+model ContactTask {
+  id             String    @id
+  organizationId String
+  contactId      String
+  title          String
+  description    String?
+  statusId       String?
+  assigneeId     String?
+  priority       String    @default("medium")
+  dueAt          DateTime?
+  completedAt    DateTime?
+  sortOrder      Int       @default(0)
+  createdById    String
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  archivedAt     DateTime?
+
+  contact Contact            @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  status  ContactTaskStatus? @relation(fields: [statusId], references: [id])
+
+  @@index([organizationId, statusId])
+  @@index([organizationId, assigneeId])
+  @@index([organizationId, dueAt])
+}
+
+model ContactTaskStatus {
+  id             String   @id
+  organizationId String
+  name           String
+  color          String   @default("#6366f1")
+  sortOrder      Int      @default(0)
+  isDefault      Boolean  @default(false)
+  isTerminal     Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  tasks ContactTask[]
+
+  @@unique([organizationId, name])
+}
