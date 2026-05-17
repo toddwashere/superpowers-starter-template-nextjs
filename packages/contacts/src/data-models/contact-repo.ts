@@ -21,6 +21,8 @@ export async function listContactsForOrg(
     organizationId,
     ...(kind ? { kind } : {}),
     ...(stageId ? { stageId } : {}),
+    // OR semantics: contact matches if it has ANY of the listed tags.
+    // Segment filters use AND semantics instead — see segment-service.ts.
     ...(tagIds?.length ? { tags: { some: { tagId: { in: tagIds } } } } : {}),
     ...(!includeArchived ? { archivedAt: null } : {}),
     ...(search

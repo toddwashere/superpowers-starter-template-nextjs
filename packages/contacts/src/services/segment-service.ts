@@ -35,6 +35,9 @@ export function buildContactWhereFromSegment(
       { primaryEmail: { contains: filters.search, mode: "insensitive" } },
     ];
   }
+  // AND semantics: contact must have ALL listed tags.
+  // Note: listContactsForOrg uses OR (any tag) — this deliberate difference makes
+  // segment filters more precise than the general list filter.
   if (filters.tagIds && filters.tagIds.length > 0) {
     where.AND = filters.tagIds.map((tagId) => ({
       tags: { some: { tagId } },

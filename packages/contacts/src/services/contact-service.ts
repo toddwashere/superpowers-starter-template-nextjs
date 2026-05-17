@@ -32,9 +32,14 @@ export async function updateContactWithValidation(
     if (!parent) throw new Error("Parent contact not found in this organization");
 
     // Walk the parent's ancestry to detect cycles
+    const MAX_DEPTH = 50;
+    let depth = 0;
     const visited = new Set<string>();
     let current: string | null = parent.parentContactId ?? null;
     while (current) {
+      if (++depth > MAX_DEPTH) {
+        throw new Error("Parent chain too deep — possible data corruption");
+      }
       if (visited.has(current)) break;
       visited.add(current);
       if (current === contactId) {
