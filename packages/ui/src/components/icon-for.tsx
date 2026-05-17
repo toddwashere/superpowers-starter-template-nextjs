@@ -236,3 +236,10 @@ export const IconForSearch = forwardRef<SVGSVGElement, LucideProps>(
   )
 );
 IconForSearch.displayName = "IconForSearch";
+
+export const IconForContacts = forwardRef<SVGSVGElement, LucideProps>(
+  (props, ref) => (
+    <Users ref={ref} {...props} className={cn("size-4", props.className)} />
+  )
+);
+IconForContacts.displayName = "IconForContacts";

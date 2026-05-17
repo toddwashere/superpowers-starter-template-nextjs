@@ -2,6 +2,7 @@ import {
   IconForDashboard,
   IconForSettings,
   IconForAi,
+  IconForContacts,
 } from "@workspace/ui/components/icon-for";
 import type { NavConfig } from "@/types/nav";
 
@@ -12,6 +13,11 @@ export const orgNavConfig: NavConfig = {
       title: "Dashboard",
       href: "/",
       icon: IconForDashboard,
+    },
+    {
+      title: "Contacts",
+      href: "/contacts",
+      icon: IconForContacts,
     },
     {
       title: "AI Assistant",
