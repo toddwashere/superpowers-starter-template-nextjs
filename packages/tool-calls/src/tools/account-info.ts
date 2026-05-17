@@ -16,7 +16,7 @@ export const accountInfoTool: ToolDefinition<AccountInfoOutput> = {
   description: "Returns the authenticated identity and authorization context",
   requiredScopes: ["account:read"],
   requiredPermissions: { account: ["read"] },
-  run: async (ctx: ToolCallContext): Promise<AccountInfoOutput> => {
+  run: async (ctx: ToolCallContext, _input: Record<string, unknown>): Promise<AccountInfoOutput> => {
     if (ctx.kind === "oauth") {
       return {
         authKind: "oauth",

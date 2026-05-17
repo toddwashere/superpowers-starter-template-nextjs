@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
-import { toolRegistry } from "../registry";
-import { hasAccess } from "../access";
-import { accountInfoTool } from "../tools/account-info";
+import { toolRegistry } from "./registry";
+import { hasAccess } from "./access";
+import { accountInfoTool } from "./tools/account-info";
 
 const oauthWithScope = {
   kind: "oauth" as const,
