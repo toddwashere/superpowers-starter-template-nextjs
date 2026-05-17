@@ -1,0 +1,25 @@
+{
+  "name": "@workspace/contacts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@workspace/common": "workspace:*",
+    "@workspace/database": "workspace:*",
+    "papaparse": "^5",
+    "zod": "^3"
+  },
+  "devDependencies": {
+    "@types/papaparse": "^5",
+    "@workspace/tooling": "workspace:*",
+    "typescript": "^5.7",
+    "vitest": "^3"
+  }
+}
