@@ -84,7 +84,7 @@ export function CsvImportDialog({ onImported }: { onImported: () => void }) {
                     Errors ({preview.errors.length}):
                   </p>
                   <ul className="list-disc pl-4 text-destructive">
-                    {preview.errors.slice(0, 5).map((e, i) => (
+                    {preview.errors.slice(0, 5).map((e: { row: number; field: string; message: string }, i: number) => (
                       <li key={i}>
                         Row {e.row}: {e.field} — {e.message}
                       </li>

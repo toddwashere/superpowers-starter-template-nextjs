@@ -164,7 +164,7 @@ export function ContactDetailPageContent({
             Related ({contact.children.length})
           </h2>
           <div className="flex flex-wrap gap-2">
-            {contact.children.map((child) => (
+            {contact.children.map((child: { id: string; displayName: string; kind: string }) => (
               <Badge
                 key={child.id}
                 variant="outline"
