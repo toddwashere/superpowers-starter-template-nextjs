@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { accountInfoTool } from "../tools/account-info";
+import { accountInfoTool } from "./account-info";
 
 const oauthCtx = {
   kind: "oauth" as const,
@@ -39,7 +39,7 @@ describe("accountInfoTool", () => {
   });
 
   it("returns oauth identity fields", async () => {
-    const result = await accountInfoTool.run(oauthCtx);
+    const result = await accountInfoTool.run(oauthCtx, {});
     expect(result.authKind).toBe("oauth");
     expect(result.userId).toBe("user_1");
     expect(result.orgId).toBe("org_1");
@@ -49,7 +49,7 @@ describe("accountInfoTool", () => {
   });
 
   it("returns api-key identity fields", async () => {
-    const result = await accountInfoTool.run(apiKeyCtx);
+    const result = await accountInfoTool.run(apiKeyCtx, {});
     expect(result.authKind).toBe("api-key");
     expect(result.ownerType).toBe("organization");
     expect(result.orgId).toBe("org_1");
@@ -59,7 +59,7 @@ describe("accountInfoTool", () => {
   });
 
   it("returns session identity fields", async () => {
-    const result = await accountInfoTool.run(sessionCtx);
+    const result = await accountInfoTool.run(sessionCtx, {});
     expect(result.authKind).toBe("session");
     expect(result.userId).toBe("user_2");
     expect(result.orgId).toBeNull();
@@ -68,8 +68,8 @@ describe("accountInfoTool", () => {
   });
 
   it("does not return clientId for non-oauth contexts", async () => {
-    const apiResult = await accountInfoTool.run(apiKeyCtx);
-    const sessionResult = await accountInfoTool.run(sessionCtx);
+    const apiResult = await accountInfoTool.run(apiKeyCtx, {});
+    const sessionResult = await accountInfoTool.run(sessionCtx, {});
     expect(apiResult.clientId).toBeNull();
     expect(sessionResult.clientId).toBeNull();
   });

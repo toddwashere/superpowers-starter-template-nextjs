@@ -1,5 +1,5 @@
 {
-  "name": "@workspace/tool-calls",
+  "name": "@workspace/contacts",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -11,10 +11,14 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@workspace/contacts": "workspace:*",
+    "@workspace/common": "workspace:*",
+    "@workspace/database": "workspace:*",
+    "papaparse": "^5",
     "zod": "^3"
   },
   "devDependencies": {
+    "@types/node": "^22",
+    "@types/papaparse": "^5",
     "@workspace/tooling": "workspace:*",
     "typescript": "^5.7",
     "vitest": "^3"
