@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./create-id": "./src/create-id.ts"
   },
   "scripts": {
     "type-check": "tsc --noEmit",

@@ -21,6 +21,7 @@
   "dependencies": {
     "@better-auth/api-key": "^1.6.10",
     "@better-auth/oauth-provider": "^1.6.11",
+    "@workspace/common": "workspace:^",
     "@workspace/database": "workspace:*",
     "@workspace/email": "workspace:*",
     "better-auth": "^1.6.10"
