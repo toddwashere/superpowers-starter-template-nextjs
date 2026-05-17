@@ -16,7 +16,9 @@ import {
   listContactsForOrg,
   getContactById,
   createContact,
+  updateContact,
   archiveContact,
+  unarchiveContact,
 } from "./contact-repo";
 
 const mockContact = {
@@ -126,6 +128,32 @@ describe("archiveContact", () => {
       expect.objectContaining({
         where: { id: "contact_abc", organizationId: "org_1" },
         data: expect.objectContaining({ archivedAt: expect.any(Date) }),
+      }),
+    );
+  });
+});
+
+describe("updateContact", () => {
+  it("scopes update to organizationId", async () => {
+    vi.mocked(prisma.contact.update).mockResolvedValue(mockContact as never);
+    await updateContact("contact_abc", "org_1", { displayName: "Jane Smith" });
+    expect(prisma.contact.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { id: "contact_abc", organizationId: "org_1" },
+        data: { displayName: "Jane Smith" },
+      }),
+    );
+  });
+});
+
+describe("unarchiveContact", () => {
+  it("sets archivedAt to null and requires organizationId", async () => {
+    vi.mocked(prisma.contact.update).mockResolvedValue({ ...mockContact, archivedAt: null } as never);
+    await unarchiveContact("contact_abc", "org_1");
+    expect(prisma.contact.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { id: "contact_abc", organizationId: "org_1" },
+        data: { archivedAt: null },
       }),
     );
   });

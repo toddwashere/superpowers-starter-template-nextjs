@@ -1,4 +1,5 @@
 import { prisma } from "@workspace/database";
+import type { Prisma } from "@workspace/database";
 import { createId } from "@workspace/common";
 import type { CreateContactInput, UpdateContactInput, ContactListFilters } from "../schemas/contact-schemas";
 
@@ -16,7 +17,7 @@ export async function listContactsForOrg(
     pageSize = 20,
   } = filters;
 
-  const where = {
+  const where: Prisma.ContactWhereInput = {
     organizationId,
     ...(kind ? { kind } : {}),
     ...(stageId ? { stageId } : {}),
@@ -63,7 +64,7 @@ export async function getContactById(contactId: string, organizationId: string) 
 
 export async function createContact(
   organizationId: string,
-  data: Partial<CreateContactInput> & Pick<CreateContactInput, "kind" | "displayName">,
+  data: CreateContactInput,
 ) {
   return prisma.contact.create({
     data: {
