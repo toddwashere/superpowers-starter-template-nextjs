@@ -40,36 +40,49 @@ export function ContactDetailPageContent({
   const [noteError, setNoteError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function load() {
+  useEffect(() => {
+    let isCurrent = true;
+    // Reset state so old data doesn't show while new fetch is in-flight
+    setContact(null);
+    setInteractions([]);
+    setTasks([]);
+    setIsLoaded(false);
+
     startTransition(async () => {
       const [cResult, iResult, tResult] = await Promise.all([
         getContactAction(contactId),
         listInteractionsAction(contactId),
         listContactTasksAction(contactId),
       ]);
+      if (!isCurrent) return; // discard stale response
       if (cResult.success) setContact(cResult.data);
       if (iResult.success) setInteractions(iResult.data);
       if (tResult.success) setTasks(tResult.data);
       setIsLoaded(true);
     });
-  }
 
-  useEffect(() => {
-    load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => { isCurrent = false; };
   }, [contactId]);
 
   async function handleAddNote() {
-    if (!noteBody.trim()) return;
-    const result = await createNoteAction(contactId, noteBody.trim());
-    if (!result.success) {
-      setNoteError(result.error);
-      return;
+    if (!noteBody.trim() || isSubmitting) return;
+    setIsSubmitting(true);
+    try {
+      const result = await createNoteAction(contactId, noteBody.trim());
+      if (!result.success) {
+        setNoteError(result.error);
+        return;
+      }
+      setNoteBody("");
+      setNoteError(null);
+      // Refresh interactions only
+      const iResult = await listInteractionsAction(contactId);
+      if (iResult.success) setInteractions(iResult.data);
+    } finally {
+      setIsSubmitting(false);
     }
-    setNoteBody("");
-    setNoteError(null);
-    load();
   }
 
   if (!isLoaded && isPending) {
@@ -211,9 +224,9 @@ export function ContactDetailPageContent({
           <Button
             size="sm"
             onClick={handleAddNote}
-            disabled={!noteBody.trim() || isPending}
+            disabled={!noteBody.trim() || isPending || isSubmitting}
           >
-            Add Note
+            {isSubmitting ? "Saving…" : "Add Note"}
           </Button>
         </div>
 
