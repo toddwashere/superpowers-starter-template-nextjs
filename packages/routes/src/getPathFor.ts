@@ -49,3 +49,7 @@ export function getPathForAcceptInvitation(invitationId: string) {
 export function getPathForAccountSettings() {
   return "/account";
 }
+
+export function getPathForConsent() {
+  return "/consent";
+}
