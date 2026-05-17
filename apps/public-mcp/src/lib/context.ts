@@ -14,4 +14,12 @@ export type SessionAuthContext = {
   permissions: Record<string, string[]>;
 };
 
-export type AuthContext = ApiKeyAuthContext | SessionAuthContext;
+export type OAuthAuthContext = {
+  kind: "oauth";
+  userId: string;
+  orgId: string | null;
+  scopes: string[];
+  clientId: string | null;
+};
+
+export type AuthContext = ApiKeyAuthContext | SessionAuthContext | OAuthAuthContext;
