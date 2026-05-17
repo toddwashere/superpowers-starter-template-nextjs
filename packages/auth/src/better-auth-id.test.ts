@@ -26,6 +26,7 @@ describe("createBetterAuthId", () => {
   it("falls back to an unprefixed ID for unknown models", () => {
     const id = createBetterAuthId({ model: "unknownPluginModel" });
     expect(id).toEqual(expect.any(String));
+    expect(id.length).toBeGreaterThan(10);
     expect(id).not.toContain("_");
   });
 });
