@@ -12,6 +12,7 @@
     "clean": "rm -rf dist .turbo"
   },
   "dependencies": {
+    "@better-auth/oauth-provider": "^1.6.11",
     "@modelcontextprotocol/sdk": "^1",
     "@workspace/auth": "workspace:*",
     "@workspace/database": "workspace:*",
