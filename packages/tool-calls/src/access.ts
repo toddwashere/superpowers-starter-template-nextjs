@@ -15,5 +15,8 @@ export function hasAccess(ctx: ToolCallContext, tool: ToolDefinition): boolean {
   if (ctx.kind === "oauth") {
     return tool.requiredScopes.every((scope) => ctx.scopes.includes(scope));
   }
-  return hasPermission(ctx.permissions, tool.requiredPermissions);
+  if (ctx.kind === "api-key" || ctx.kind === "session") {
+    return hasPermission(ctx.permissions, tool.requiredPermissions);
+  }
+  return false;
 }

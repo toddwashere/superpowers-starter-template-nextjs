@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { toolRegistry } from "../registry";
 import { hasAccess } from "../access";
+import { accountInfoTool } from "../tools/account-info";
 
 const oauthWithScope = {
   kind: "oauth" as const,
@@ -36,6 +37,20 @@ const apiKeyMissingPerm = {
   permissions: {},
 };
 
+const sessionCtx = {
+  kind: "session" as const,
+  userId: "u2",
+  orgId: null,
+  permissions: { account: ["read"] },
+};
+
+const sessionMissingPerm = {
+  kind: "session" as const,
+  userId: "u2",
+  orgId: null,
+  permissions: {},
+};
+
 describe("toolRegistry", () => {
   it("contains account-info tool", () => {
     const found = toolRegistry.find((t) => t.name === "account-info");
@@ -49,21 +64,27 @@ describe("toolRegistry", () => {
 });
 
 describe("hasAccess", () => {
-  const [accountInfoTool] = toolRegistry;
-
   it("grants access to oauth with correct scopes", () => {
-    expect(accountInfoTool && hasAccess(oauthWithScope, accountInfoTool)).toBe(true);
+    expect(hasAccess(oauthWithScope, accountInfoTool)).toBe(true);
   });
 
   it("denies access to oauth missing required scope", () => {
-    expect(accountInfoTool && hasAccess(oauthMissingScope, accountInfoTool)).toBe(false);
+    expect(hasAccess(oauthMissingScope, accountInfoTool)).toBe(false);
   });
 
   it("grants access to api-key with correct permissions", () => {
-    expect(accountInfoTool && hasAccess(apiKeyCtx, accountInfoTool)).toBe(true);
+    expect(hasAccess(apiKeyCtx, accountInfoTool)).toBe(true);
   });
 
   it("denies access to api-key missing required permissions", () => {
-    expect(accountInfoTool && hasAccess(apiKeyMissingPerm, accountInfoTool)).toBe(false);
+    expect(hasAccess(apiKeyMissingPerm, accountInfoTool)).toBe(false);
+  });
+
+  it("grants access to session with correct permissions", () => {
+    expect(hasAccess(sessionCtx, accountInfoTool)).toBe(true);
+  });
+
+  it("denies access to session missing required permissions", () => {
+    expect(hasAccess(sessionMissingPerm, accountInfoTool)).toBe(false);
   });
 });
