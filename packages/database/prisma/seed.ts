@@ -116,6 +116,43 @@ async function main() {
   });
   console.log("Added regular user as member of", org.name);
 
+  // Default contact stages for the demo org
+  const defaultStages = [
+    { name: "New", color: "#6366f1", sortOrder: 0, isDefault: true },
+    { name: "Active", color: "#22c55e", sortOrder: 1, isDefault: false },
+    { name: "Nurturing", color: "#f59e0b", sortOrder: 2, isDefault: false },
+    { name: "Customer", color: "#3b82f6", sortOrder: 3, isDefault: false },
+    { name: "Partner", color: "#8b5cf6", sortOrder: 4, isDefault: false },
+    { name: "Inactive", color: "#94a3b8", sortOrder: 5, isDefault: false },
+  ];
+
+  for (const stage of defaultStages) {
+    const stageId = `cstage_${stage.name.toLowerCase()}`;
+    await prisma.contactStage.upsert({
+      where: { organizationId_name: { organizationId: org.id, name: stage.name } },
+      update: {},
+      create: { id: stageId, organizationId: org.id, ...stage },
+    });
+    console.log(`Upserted stage: ${stage.name}`);
+  }
+
+  // Default contact task statuses for the demo org
+  const defaultTaskStatuses = [
+    { name: "To Do", color: "#94a3b8", sortOrder: 0, isDefault: true, isTerminal: false },
+    { name: "In Progress", color: "#3b82f6", sortOrder: 1, isDefault: false, isTerminal: false },
+    { name: "Done", color: "#22c55e", sortOrder: 2, isDefault: false, isTerminal: true },
+  ];
+
+  for (const status of defaultTaskStatuses) {
+    const statusId = `ctstatus_${status.name.toLowerCase().replace(/ /g, "_")}`;
+    await prisma.contactTaskStatus.upsert({
+      where: { organizationId_name: { organizationId: org.id, name: status.name } },
+      update: {},
+      create: { id: statusId, organizationId: org.id, ...status },
+    });
+    console.log(`Upserted task status: ${status.name}`);
+  }
+
   console.log("\nSeeding complete!");
   console.log("\nCredentials:");
   console.log("  Admin: admin@example.com / password123");
