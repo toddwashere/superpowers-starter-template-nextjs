@@ -72,6 +72,18 @@ model Verification {
   @@index([identifier])
 }
 
+model Jwks {
+  id         String    @id @default(cuid())
+  publicKey  String
+  privateKey String
+  createdAt  DateTime  @default(now())
+  expiresAt  DateTime?
+  alg        String?
+  crv        String?
+
+  @@map("jwks")
+}
+
 model Organization {
   id        String   @id @default(cuid())
   name      String
