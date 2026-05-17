@@ -273,7 +273,7 @@ export const contactsCreateNoteTool: ToolDefinition = {
   },
   run: async (ctx: ToolCallContext, args: Record<string, unknown>) => {
     if (!ctx.orgId) return { error: "Organization context required" };
-    const userId = ctx.kind === "oauth" ? ctx.userId : ctx.userId;
+    const userId = ctx.userId;
     if (!userId) {
       return { error: "User context required to create notes/tasks. This tool cannot be called with an org-only API key." };
     }
@@ -335,7 +335,7 @@ export const contactsCreateTaskTool: ToolDefinition = {
   },
   run: async (ctx: ToolCallContext, args: Record<string, unknown>) => {
     if (!ctx.orgId) return { error: "Organization context required" };
-    const userId = ctx.kind === "oauth" ? ctx.userId : ctx.userId;
+    const userId = ctx.userId;
     if (!userId) {
       return { error: "User context required to create notes/tasks. This tool cannot be called with an org-only API key." };
     }
