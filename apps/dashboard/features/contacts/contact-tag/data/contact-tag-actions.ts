@@ -10,9 +10,11 @@ import {
   removeTagFromContact,
 } from "@workspace/contacts";
 import type { CreateContactTagInput, UpdateContactTagInput } from "@workspace/contacts";
-import type { ActionResult } from "./contact-types";
+import type { ActionResult } from "@/common/data/action-result";
 
-export async function listTagsAction(): Promise<ActionResult<Awaited<ReturnType<typeof listContactTagsForOrg>>>> {
+export async function listContactTagsAction(): Promise<
+  ActionResult<Awaited<ReturnType<typeof listContactTagsForOrg>>>
+> {
   try {
     const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
       contactSettings: ["read"],
@@ -24,7 +26,7 @@ export async function listTagsAction(): Promise<ActionResult<Awaited<ReturnType<
   }
 }
 
-export async function createTagAction(data: CreateContactTagInput): Promise<ActionResult> {
+export async function createContactTagAction(data: CreateContactTagInput): Promise<ActionResult> {
   try {
     const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
       contactSettings: ["create"],
@@ -36,7 +38,10 @@ export async function createTagAction(data: CreateContactTagInput): Promise<Acti
   }
 }
 
-export async function updateTagAction(tagId: string, data: UpdateContactTagInput): Promise<ActionResult> {
+export async function updateContactTagAction(
+  tagId: string,
+  data: UpdateContactTagInput,
+): Promise<ActionResult> {
   try {
     const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
       contactSettings: ["update"],
@@ -48,7 +53,7 @@ export async function updateTagAction(tagId: string, data: UpdateContactTagInput
   }
 }
 
-export async function deleteTagAction(tagId: string): Promise<ActionResult> {
+export async function deleteContactTagAction(tagId: string): Promise<ActionResult> {
   try {
     const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
       contactSettings: ["delete"],
@@ -72,7 +77,10 @@ export async function addTagToContactAction(contactId: string, tagId: string): P
   }
 }
 
-export async function removeTagFromContactAction(contactId: string, tagId: string): Promise<ActionResult> {
+export async function removeTagFromContactAction(
+  contactId: string,
+  tagId: string,
+): Promise<ActionResult> {
   try {
     const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
       contact: ["update"],

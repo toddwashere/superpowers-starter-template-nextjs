@@ -1,41 +1,41 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { requireOrgPermissionWithActiveOrg } from "@workspace/auth/guards";
 import {
-  archiveInteractionAction,
-  createNoteAction,
-  listInteractionsAction,
-  updateInteractionAction,
-} from "./interaction-actions";
+  archiveContactInteractionAction,
+  createContactNoteAction,
+  listContactInteractionsAction,
+  updateContactInteractionAction,
+} from "../../contact-interaction/data/contact-interaction-actions";
 import {
-  archiveTaskAction,
-  createTaskAction,
-  createTaskStatusAction,
-  deleteTaskStatusAction,
+  archiveContactTaskAction,
+  createContactTaskAction,
+  createContactTaskStatusAction,
+  deleteContactTaskStatusAction,
   listContactTasksAction,
-  listOrgTasksAction,
-  listTaskStatusesAction,
-  updateTaskAction,
-  updateTaskStatusAction,
-} from "./task-actions";
+  listContactTasksForOrgAction,
+  listContactTaskStatusesAction,
+  updateContactTaskAction,
+  updateContactTaskStatusAction,
+} from "../../contact-task/data/contact-task-actions";
 import {
-  commitCsvImportAction,
+  commitContactCsvImportAction,
   exportContactsCsvAction,
-  previewCsvImportAction,
-} from "./csv-actions";
+  previewContactCsvImportAction,
+} from "./contact-csv-actions";
 import {
   addTagToContactAction,
-  createTagAction,
-  deleteTagAction,
-  listTagsAction,
+  createContactTagAction,
+  deleteContactTagAction,
+  listContactTagsAction,
   removeTagFromContactAction,
-  updateTagAction,
-} from "./tag-actions";
+  updateContactTagAction,
+} from "../../contact-tag/data/contact-tag-actions";
 import {
-  createStageAction,
-  deleteStageAction,
-  listStagesAction,
-  updateStageAction,
-} from "./stage-actions";
+  createContactStageAction,
+  deleteContactStageAction,
+  listContactStagesAction,
+  updateContactStageAction,
+} from "../../contact-stage/data/contact-stage-actions";
 
 vi.mock("@workspace/auth/guards", () => ({
   requireOrgPermissionWithActiveOrg: vi.fn().mockResolvedValue({
@@ -80,10 +80,10 @@ describe("contact domain action permissions", () => {
   });
 
   it("requires interaction permissions for notes and interactions", async () => {
-    await listInteractionsAction("contact_1");
-    await createNoteAction("contact_1", "Followed up");
-    await updateInteractionAction("interaction_1", { body: "Updated note" });
-    await archiveInteractionAction("interaction_1");
+    await listContactInteractionsAction("contact_1");
+    await createContactNoteAction("contact_1", "Followed up");
+    await updateContactInteractionAction("interaction_1", { body: "Updated note" });
+    await archiveContactInteractionAction("interaction_1");
 
     expect(requireOrgPermissionWithActiveOrg).toHaveBeenNthCalledWith(1, {
       contactInteraction: ["read"],
@@ -100,16 +100,16 @@ describe("contact domain action permissions", () => {
   });
 
   it("requires contact task permissions for task records", async () => {
-    await listOrgTasksAction();
+    await listContactTasksForOrgAction();
     await listContactTasksAction("contact_1");
-    await createTaskAction({
+    await createContactTaskAction({
       contactId: "contact_1",
       title: "Follow up",
       priority: "normal",
       sortOrder: 0,
     });
-    await updateTaskAction("task_1", { title: "Follow up again" });
-    await archiveTaskAction("task_1");
+    await updateContactTaskAction("task_1", { title: "Follow up again" });
+    await archiveContactTaskAction("task_1");
 
     expect(requireOrgPermissionWithActiveOrg).toHaveBeenNthCalledWith(1, {
       contactTask: ["read"],
@@ -129,25 +129,25 @@ describe("contact domain action permissions", () => {
   });
 
   it("requires contact settings permissions for stages and task statuses", async () => {
-    await listTaskStatusesAction();
-    await createTaskStatusAction({
+    await listContactTaskStatusesAction();
+    await createContactTaskStatusAction({
       name: "Todo",
       color: "#6366f1",
       sortOrder: 0,
       isDefault: false,
       isTerminal: false,
     });
-    await updateTaskStatusAction("status_1", { name: "Doing" });
-    await deleteTaskStatusAction("status_1");
-    await listStagesAction();
-    await createStageAction({
+    await updateContactTaskStatusAction("status_1", { name: "Doing" });
+    await deleteContactTaskStatusAction("status_1");
+    await listContactStagesAction();
+    await createContactStageAction({
       name: "Lead",
       color: "#6366f1",
       sortOrder: 0,
       isDefault: false,
     });
-    await updateStageAction("stage_1", { name: "Active" });
-    await deleteStageAction("stage_1");
+    await updateContactStageAction("stage_1", { name: "Active" });
+    await deleteContactStageAction("stage_1");
 
     expect(requireOrgPermissionWithActiveOrg).toHaveBeenNthCalledWith(1, {
       contactSettings: ["read"],
@@ -176,10 +176,10 @@ describe("contact domain action permissions", () => {
   });
 
   it("requires contact read/update permissions for tags and tag assignment", async () => {
-    await listTagsAction();
-    await createTagAction({ name: "VIP", color: "#6366f1" });
-    await updateTagAction("tag_1", { name: "Partner" });
-    await deleteTagAction("tag_1");
+    await listContactTagsAction();
+    await createContactTagAction({ name: "VIP", color: "#6366f1" });
+    await updateContactTagAction("tag_1", { name: "Partner" });
+    await deleteContactTagAction("tag_1");
     await addTagToContactAction("contact_1", "tag_1");
     await removeTagFromContactAction("contact_1", "tag_1");
 
@@ -204,8 +204,8 @@ describe("contact domain action permissions", () => {
   });
 
   it("requires import and export permissions for CSV flows", async () => {
-    await previewCsvImportAction("displayName,kind\nJane Doe,person");
-    await commitCsvImportAction("displayName,kind\nJane Doe,person");
+    await previewContactCsvImportAction("displayName,kind\nJane Doe,person");
+    await commitContactCsvImportAction("displayName,kind\nJane Doe,person");
     await exportContactsCsvAction();
 
     expect(requireOrgPermissionWithActiveOrg).toHaveBeenNthCalledWith(1, {

@@ -23,7 +23,7 @@ import {
 } from "@workspace/ui/components/select";
 import { Alert, AlertDescription } from "@workspace/ui/components/alert";
 import { resolveAndHideModal } from "@/common/ui/nice-modal-helpers";
-import { createTaskAction, updateTaskAction } from "../data/task-actions";
+import { createContactTaskAction, updateContactTaskAction } from "../data/contact-task-actions";
 
 type TaskStatus = { id: string; name: string };
 type EditableTask = {
@@ -107,8 +107,8 @@ export const ContactTaskButtonModal = NiceModal.create(
           dueAt: form.dueAt ? new Date(form.dueAt) : undefined,
         };
         const result = isEditing
-          ? await updateTaskAction(task.id, payload)
-          : await createTaskAction({
+          ? await updateContactTaskAction(task.id, payload)
+          : await createContactTaskAction({
               contactId,
               sortOrder: 0,
               ...payload,

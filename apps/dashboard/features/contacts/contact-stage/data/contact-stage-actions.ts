@@ -8,9 +8,11 @@ import {
   deleteContactStage,
 } from "@workspace/contacts";
 import type { CreateContactStageInput, UpdateContactStageInput } from "@workspace/contacts";
-import type { ActionResult } from "./contact-types";
+import type { ActionResult } from "@/common/data/action-result";
 
-export async function listStagesAction(): Promise<ActionResult<Awaited<ReturnType<typeof listContactStagesForOrg>>>> {
+export async function listContactStagesAction(): Promise<
+  ActionResult<Awaited<ReturnType<typeof listContactStagesForOrg>>>
+> {
   try {
     const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
       contactSettings: ["read"],
@@ -22,7 +24,7 @@ export async function listStagesAction(): Promise<ActionResult<Awaited<ReturnTyp
   }
 }
 
-export async function createStageAction(data: CreateContactStageInput): Promise<ActionResult> {
+export async function createContactStageAction(data: CreateContactStageInput): Promise<ActionResult> {
   try {
     const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
       contactSettings: ["create"],
@@ -34,7 +36,10 @@ export async function createStageAction(data: CreateContactStageInput): Promise<
   }
 }
 
-export async function updateStageAction(stageId: string, data: UpdateContactStageInput): Promise<ActionResult> {
+export async function updateContactStageAction(
+  stageId: string,
+  data: UpdateContactStageInput,
+): Promise<ActionResult> {
   try {
     const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
       contactSettings: ["update"],
@@ -46,7 +51,7 @@ export async function updateStageAction(stageId: string, data: UpdateContactStag
   }
 }
 
-export async function deleteStageAction(stageId: string): Promise<ActionResult> {
+export async function deleteContactStageAction(stageId: string): Promise<ActionResult> {
   try {
     const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
       contactSettings: ["delete"],

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ContactsTasksPageContent } from "@/features/contacts/ui/contacts-tasks-page-content";
+import { ContactsTasksPageContent } from "@/features/contacts/contact-task/ui/contacts-tasks-page-content";
 
 export const metadata: Metadata = { title: "Contact Tasks" };
 

@@ -22,7 +22,7 @@ import {
 } from "@workspace/ui/components/dropdown-menu";
 import { IconForAdd, IconForMore } from "@workspace/ui/components/icon-for";
 import { listContactsAction, archiveContactAction } from "../data/contact-actions";
-import { exportContactsCsvAction } from "../data/csv-actions";
+import { exportContactsCsvAction } from "../data/contact-csv-actions";
 import { AddContactButtonModal } from "./add-contact-button-modal";
 import { openAddContactFlow, type AddContactResult } from "./add-contact-flow";
 import { CsvImportDialog } from "./csv-import-dialog";

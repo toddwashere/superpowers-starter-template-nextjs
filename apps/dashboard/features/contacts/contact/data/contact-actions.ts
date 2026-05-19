@@ -9,7 +9,7 @@ import {
   archiveContact,
 } from "@workspace/contacts";
 import type { ContactListFilters, CreateContactInput, UpdateContactInput } from "@workspace/contacts";
-import type { ActionResult } from "./contact-types";
+import type { ActionResult } from "@/common/data/action-result";
 
 export async function listContactsAction(
   filters: Partial<ContactListFilters> = {},

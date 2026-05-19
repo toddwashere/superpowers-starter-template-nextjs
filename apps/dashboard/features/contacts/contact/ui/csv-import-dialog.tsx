@@ -10,10 +10,13 @@ import {
   DialogTrigger,
   DialogFooter,
 } from "@workspace/ui/components/dialog";
-import { previewCsvImportAction, commitCsvImportAction } from "../data/csv-actions";
+import {
+  previewContactCsvImportAction,
+  commitContactCsvImportAction,
+} from "../data/contact-csv-actions";
 
 type PreviewData = Extract<
-  Awaited<ReturnType<typeof previewCsvImportAction>>,
+  Awaited<ReturnType<typeof previewContactCsvImportAction>>,
   { success: true }
 >["data"];
 
@@ -32,7 +35,7 @@ export function CsvImportDialog({ onImported }: { onImported: () => void }) {
       const text = ev.target?.result as string;
       setCsvText(text);
       startTransition(async () => {
-        const result = await previewCsvImportAction(text);
+        const result = await previewContactCsvImportAction(text);
         if (result.success) setPreview(result.data);
       });
     };
@@ -41,7 +44,7 @@ export function CsvImportDialog({ onImported }: { onImported: () => void }) {
 
   function handleCommit() {
     startTransition(async () => {
-      const result = await commitCsvImportAction(csvText);
+      const result = await commitContactCsvImportAction(csvText);
       if (result.success) {
         setOpen(false);
         setCsvText("");

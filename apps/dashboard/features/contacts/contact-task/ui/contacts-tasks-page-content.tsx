@@ -11,15 +11,19 @@ import {
   TableHeader,
   TableRow,
 } from "@workspace/ui/components/table";
-import { listOrgTasksAction, updateTaskAction, listTaskStatusesAction } from "../data/task-actions";
+import {
+  listContactTasksForOrgAction,
+  updateContactTaskAction,
+  listContactTaskStatusesAction,
+} from "../data/contact-task-actions";
 
 type Task = Extract<
-  Awaited<ReturnType<typeof listOrgTasksAction>>,
+  Awaited<ReturnType<typeof listContactTasksForOrgAction>>,
   { success: true }
 >["data"][number];
 
 type Status = Extract<
-  Awaited<ReturnType<typeof listTaskStatusesAction>>,
+  Awaited<ReturnType<typeof listContactTaskStatusesAction>>,
   { success: true }
 >["data"][number];
 
@@ -34,8 +38,8 @@ export function ContactsTasksPageContent({ orgSlug: _orgSlug }: { orgSlug: strin
     let isCurrent = true;
     startTransition(async () => {
       const [tResult, sResult] = await Promise.all([
-        listOrgTasksAction(),
-        listTaskStatusesAction(),
+        listContactTasksForOrgAction(),
+        listContactTaskStatusesAction(),
       ]);
       if (!isCurrent) return;
       if (tResult.success) setTasks(tResult.data);
@@ -53,7 +57,7 @@ export function ContactsTasksPageContent({ orgSlug: _orgSlug }: { orgSlug: strin
     }
     setCompletingId(taskId);
     try {
-      const result = await updateTaskAction(taskId, {
+      const result = await updateContactTaskAction(taskId, {
         statusId: terminal.id,
         completedAt: new Date(),
       });
@@ -63,7 +67,7 @@ export function ContactsTasksPageContent({ orgSlug: _orgSlug }: { orgSlug: strin
       }
       setError(null);
       startTransition(async () => {
-        const tResult = await listOrgTasksAction();
+        const tResult = await listContactTasksForOrgAction();
         if (tResult.success) setTasks(tResult.data);
       });
     } finally {

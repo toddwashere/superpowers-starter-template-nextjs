@@ -18,9 +18,9 @@ import type {
   CreateContactTaskStatusInput,
   UpdateContactTaskStatusInput,
 } from "@workspace/contacts";
-import type { ActionResult } from "./contact-types";
+import type { ActionResult } from "@/common/data/action-result";
 
-export async function listTaskStatusesAction(): Promise<
+export async function listContactTaskStatusesAction(): Promise<
   ActionResult<Awaited<ReturnType<typeof listContactTaskStatusesForOrg>>>
 > {
   try {
@@ -34,7 +34,7 @@ export async function listTaskStatusesAction(): Promise<
   }
 }
 
-export async function listOrgTasksAction(
+export async function listContactTasksForOrgAction(
   filters: { statusId?: string; assigneeId?: string } = {},
 ): Promise<ActionResult<Awaited<ReturnType<typeof listContactTasksForOrg>>>> {
   try {
@@ -62,7 +62,7 @@ export async function listContactTasksAction(
   }
 }
 
-export async function createTaskAction(data: CreateContactTaskInput): Promise<ActionResult> {
+export async function createContactTaskAction(data: CreateContactTaskInput): Promise<ActionResult> {
   try {
     const { session, activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
       contactTask: ["create"],
@@ -74,7 +74,10 @@ export async function createTaskAction(data: CreateContactTaskInput): Promise<Ac
   }
 }
 
-export async function updateTaskAction(taskId: string, data: UpdateContactTaskInput): Promise<ActionResult> {
+export async function updateContactTaskAction(
+  taskId: string,
+  data: UpdateContactTaskInput,
+): Promise<ActionResult> {
   try {
     const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
       contactTask: ["update"],
@@ -86,7 +89,7 @@ export async function updateTaskAction(taskId: string, data: UpdateContactTaskIn
   }
 }
 
-export async function archiveTaskAction(taskId: string): Promise<ActionResult> {
+export async function archiveContactTaskAction(taskId: string): Promise<ActionResult> {
   try {
     const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
       contactTask: ["delete"],
@@ -98,7 +101,9 @@ export async function archiveTaskAction(taskId: string): Promise<ActionResult> {
   }
 }
 
-export async function createTaskStatusAction(data: CreateContactTaskStatusInput): Promise<ActionResult> {
+export async function createContactTaskStatusAction(
+  data: CreateContactTaskStatusInput,
+): Promise<ActionResult> {
   try {
     const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
       contactSettings: ["create"],
@@ -110,7 +115,7 @@ export async function createTaskStatusAction(data: CreateContactTaskStatusInput)
   }
 }
 
-export async function updateTaskStatusAction(
+export async function updateContactTaskStatusAction(
   statusId: string,
   data: UpdateContactTaskStatusInput,
 ): Promise<ActionResult> {
@@ -125,7 +130,7 @@ export async function updateTaskStatusAction(
   }
 }
 
-export async function deleteTaskStatusAction(statusId: string): Promise<ActionResult> {
+export async function deleteContactTaskStatusAction(statusId: string): Promise<ActionResult> {
   try {
     const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
       contactSettings: ["delete"],

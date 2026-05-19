@@ -15,11 +15,11 @@ import { authClient } from "@workspace/auth/client";
 import { buildCommands } from "./command-providers";
 import { CommandMenuDialog } from "./command-menu-dialog";
 import type { CommandContext, DashboardCommand } from "./command-types";
-import { AddContactButtonModal } from "@/features/contacts/ui/add-contact-button-modal";
+import { AddContactButtonModal } from "@/features/contacts/contact/ui/add-contact-button-modal";
 import {
   openAddContactFlow,
   type AddContactResult,
-} from "@/features/contacts/ui/add-contact-flow";
+} from "@/features/contacts/contact/ui/add-contact-flow";
 
 type CommandMenuContextValue = { open: () => void };
 

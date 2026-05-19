@@ -7,9 +7,9 @@ import {
   createContactWithValidation,
   listContactsForOrg,
 } from "@workspace/contacts";
-import type { ActionResult } from "./contact-types";
+import type { ActionResult } from "@/common/data/action-result";
 
-export async function previewCsvImportAction(
+export async function previewContactCsvImportAction(
   csvText: string,
 ): Promise<ActionResult<Awaited<ReturnType<typeof parseContactsCsv>>>> {
   try {
@@ -23,7 +23,7 @@ export async function previewCsvImportAction(
   }
 }
 
-export async function commitCsvImportAction(
+export async function commitContactCsvImportAction(
   csvText: string,
 ): Promise<ActionResult<{ imported: number; skipped: number }>> {
   try {

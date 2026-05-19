@@ -14,7 +14,7 @@ import { Button } from "@workspace/ui/components/button";
 import { Textarea } from "@workspace/ui/components/textarea";
 import { Alert, AlertDescription } from "@workspace/ui/components/alert";
 import { resolveAndHideModal } from "@/common/ui/nice-modal-helpers";
-import { updateInteractionAction } from "../data/interaction-actions";
+import { updateContactInteractionAction } from "../data/contact-interaction-actions";
 
 export const EditNoteButtonModal = NiceModal.create(
   ({ interactionId, body }: { interactionId: string; body: string }) => {
@@ -41,7 +41,7 @@ export const EditNoteButtonModal = NiceModal.create(
       setIsSubmitting(true);
       setError(null);
       try {
-        const result = await updateInteractionAction(interactionId, {
+        const result = await updateContactInteractionAction(interactionId, {
           body: noteBody.trim(),
         });
         if (!result.success) {

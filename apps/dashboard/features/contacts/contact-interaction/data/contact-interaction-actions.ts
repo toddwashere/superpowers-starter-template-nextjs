@@ -8,9 +8,9 @@ import {
   updateContactInteraction,
 } from "@workspace/contacts";
 import type { UpdateContactInteractionInput } from "@workspace/contacts";
-import type { ActionResult } from "./contact-types";
+import type { ActionResult } from "@/common/data/action-result";
 
-export async function listInteractionsAction(
+export async function listContactInteractionsAction(
   contactId: string,
 ): Promise<ActionResult<Awaited<ReturnType<typeof listContactInteractions>>>> {
   try {
@@ -24,7 +24,7 @@ export async function listInteractionsAction(
   }
 }
 
-export async function createNoteAction(
+export async function createContactNoteAction(
   contactId: string,
   body: string,
 ): Promise<ActionResult> {
@@ -43,7 +43,7 @@ export async function createNoteAction(
   }
 }
 
-export async function updateInteractionAction(
+export async function updateContactInteractionAction(
   interactionId: string,
   data: UpdateContactInteractionInput,
 ): Promise<ActionResult> {
@@ -58,7 +58,7 @@ export async function updateInteractionAction(
   }
 }
 
-export async function archiveInteractionAction(
+export async function archiveContactInteractionAction(
   interactionId: string,
 ): Promise<ActionResult> {
   try {

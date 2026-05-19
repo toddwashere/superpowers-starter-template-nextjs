@@ -18,18 +18,18 @@ import {
 } from "@workspace/ui/components/breadcrumb";
 import { getContactAction } from "../data/contact-actions";
 import {
-  archiveInteractionAction,
-  createNoteAction,
-  listInteractionsAction,
-} from "../data/interaction-actions";
+  archiveContactInteractionAction,
+  createContactNoteAction,
+  listContactInteractionsAction,
+} from "../../contact-interaction/data/contact-interaction-actions";
 import {
-  archiveTaskAction,
+  archiveContactTaskAction,
   listContactTasksAction,
-  listTaskStatusesAction,
-} from "../data/task-actions";
+  listContactTaskStatusesAction,
+} from "../../contact-task/data/contact-task-actions";
 import { EditContactButtonModal } from "./edit-contact-button-modal";
-import { ContactTaskButtonModal } from "./contact-task-button-modal";
-import { EditNoteButtonModal } from "./edit-note-button-modal";
+import { ContactTaskButtonModal } from "../../contact-task/ui/contact-task-button-modal";
+import { EditNoteButtonModal } from "../../contact-interaction/ui/edit-note-button-modal";
 
 type Contact = Extract<
   Awaited<ReturnType<typeof getContactAction>>,
@@ -37,7 +37,7 @@ type Contact = Extract<
 >["data"];
 
 type Interaction = Extract<
-  Awaited<ReturnType<typeof listInteractionsAction>>,
+  Awaited<ReturnType<typeof listContactInteractionsAction>>,
   { success: true }
 >["data"][number];
 
@@ -47,7 +47,7 @@ type Task = Extract<
 >["data"][number];
 
 type TaskStatus = Extract<
-  Awaited<ReturnType<typeof listTaskStatusesAction>>,
+  Awaited<ReturnType<typeof listContactTaskStatusesAction>>,
   { success: true }
 >["data"][number];
 
@@ -70,7 +70,7 @@ export function ContactDetailPageContent({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const refreshInteractions = useCallback(async () => {
-    const result = await listInteractionsAction(contactId);
+    const result = await listContactInteractionsAction(contactId);
     if (result.success) setInteractions(result.data);
   }, [contactId]);
 
@@ -91,9 +91,9 @@ export function ContactDetailPageContent({
     startTransition(async () => {
       const [cResult, iResult, tResult, sResult] = await Promise.all([
         getContactAction(contactId),
-        listInteractionsAction(contactId),
+        listContactInteractionsAction(contactId),
         listContactTasksAction(contactId),
-        listTaskStatusesAction(),
+        listContactTaskStatusesAction(),
       ]);
       if (!isCurrent) return; // discard stale response
       if (cResult.success) setContact(cResult.data);
@@ -114,7 +114,7 @@ export function ContactDetailPageContent({
     if (!noteBody.trim() || isSubmitting) return;
     setIsSubmitting(true);
     try {
-      const result = await createNoteAction(contactId, noteBody.trim());
+      const result = await createContactNoteAction(contactId, noteBody.trim());
       if (!result.success) {
         setNoteError(result.error);
         return;
@@ -151,7 +151,7 @@ export function ContactDetailPageContent({
   }
 
   async function handleArchiveTask(taskId: string) {
-    const result = await archiveTaskAction(taskId);
+    const result = await archiveContactTaskAction(taskId);
     if (result.success) await refreshTasks();
   }
 
@@ -164,7 +164,7 @@ export function ContactDetailPageContent({
   }
 
   async function handleArchiveNote(interactionId: string) {
-    const result = await archiveInteractionAction(interactionId);
+    const result = await archiveContactInteractionAction(interactionId);
     if (result.success) await refreshInteractions();
   }
 
