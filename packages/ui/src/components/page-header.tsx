@@ -53,7 +53,7 @@ export function PageHeader({
 
   return (
     <PageHeaderSection className={className}>
-      <div className="border-b">
+      <div>
         <div className="flex h-14 flex-row items-center gap-1.5 px-4 sm:px-6">
           {leading ? (
             <div

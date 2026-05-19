@@ -26,7 +26,10 @@ const PageHeaderSection = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("sticky top-0 z-20 bg-background", className)}
+    className={cn(
+      "sticky top-0 z-20 border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+      className
+    )}
     {...props}
   >
     {children}
