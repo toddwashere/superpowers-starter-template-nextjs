@@ -2,12 +2,12 @@
 
 import { useState, useEffect, useTransition } from "react";
 import { Separator } from "@workspace/ui/components/separator";
-import { listContactStagesAction } from "../contact-stage/data/contact-stage-actions";
-import { listContactTagsAction } from "../contact-tag/data/contact-tag-actions";
-import { listContactTaskStatusesAction } from "../contact-task/data/contact-task-actions";
-import { ContactStagesSettingsSection } from "../contact-stage/ui/contact-stages-settings-section";
-import { ContactTagsSettingsSection } from "../contact-tag/ui/contact-tags-settings-section";
-import { ContactTaskStatusesSettingsSection } from "../contact-task/ui/contact-task-statuses-settings-section";
+import { listContactStagesAction } from "../../contact-stage/data/contact-stage-actions";
+import { listContactTagsAction } from "../../contact-tag/data/contact-tag-actions";
+import { listContactTaskStatusesAction } from "../../contact-task/data/contact-task-actions";
+import { ContactStagesSettingsSection } from "../../contact-stage/ui/contact-stages-settings-section";
+import { ContactTagsSettingsSection } from "../../contact-tag/ui/contact-tags-settings-section";
+import { ContactTaskStatusesSettingsSection } from "../../contact-task/ui/contact-task-statuses-settings-section";
 
 type ContactStage = Extract<
   Awaited<ReturnType<typeof listContactStagesAction>>,
