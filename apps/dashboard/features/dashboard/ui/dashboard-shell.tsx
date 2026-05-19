@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import { authClient } from "@/features/auth/data/auth-client";
 import { getPathForSignIn } from "@workspace/routes";
-import { CommandMenuTrigger } from "@/features/command-menu/command-menu-trigger";
 import {
   Avatar,
   AvatarFallback,
@@ -36,9 +35,8 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
   };
 
   return (
-    <div className="min-h-screen">
-      <header className="flex h-16 items-center justify-end gap-2 border-b px-6">
-        <CommandMenuTrigger />
+    <div className="flex min-h-screen flex-col">
+      <header className="flex h-16 shrink-0 items-center justify-end gap-2 border-b px-6">
         <ThemeToggle />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -59,7 +57,9 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
           </DropdownMenuContent>
         </DropdownMenu>
       </header>
-      <main className="mx-auto max-w-2xl px-6 py-10">{children}</main>
+      <main className="mx-auto flex w-full max-w-2xl min-h-0 flex-1 flex-col px-6 py-10">
+        {children}
+      </main>
     </div>
   );
 }

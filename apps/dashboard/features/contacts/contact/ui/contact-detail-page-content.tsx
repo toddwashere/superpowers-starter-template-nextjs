@@ -7,7 +7,9 @@ import NiceModal from "@ebay/nice-modal-react";
 import { Button } from "@workspace/ui/components/button";
 import { Badge } from "@workspace/ui/components/badge";
 import { Textarea } from "@workspace/ui/components/textarea";
+import { Page, PageBody } from "@workspace/ui/components/page";
 import { Separator } from "@workspace/ui/components/separator";
+import { PageHeaderInOrg } from "@/common/ui/page-header-in-org";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -181,52 +183,46 @@ export function ContactDetailPageContent({
   const openTasks = tasks.filter((t) => !t.completedAt);
 
   return (
-    <div className="max-w-3xl space-y-6">
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href={`/${orgSlug}/contacts`}>Contacts</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>{contact.displayName}</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-
-      <div className="flex items-start justify-between">
-        <div>
-          <Button
-            variant="outline"
-            size="sm"
-            className="mb-4"
-            onClick={() => router.push(`/${orgSlug}/contacts`)}
-          >
-            Back to Contacts
+    <Page className="flex min-h-0 flex-1 flex-col">
+      <PageHeaderInOrg
+        title={contact.displayName}
+        breadcrumb={
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link href={`/${orgSlug}/contacts`}>Contacts</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>{contact.displayName}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        }
+        actions={
+          <Button variant="outline" onClick={() => void handleEditContact()}>
+            Edit Contact
           </Button>
-          <h1 className="text-2xl font-bold">{contact.displayName}</h1>
-          <div className="flex items-center gap-2 mt-1 flex-wrap">
-            <Badge variant="outline">{contact.kind}</Badge>
-            {contact.stage && (
-              <Badge
-                style={{ backgroundColor: contact.stage.color ?? undefined }}
-                className="text-white"
-              >
-                {contact.stage.name}
-              </Badge>
-            )}
-            {contact.tags.map((a) => (
-              <Badge key={a.tagId} variant="secondary">
-                {a.tag.name}
-              </Badge>
-            ))}
-          </div>
-        </div>
-        <Button variant="outline" onClick={() => void handleEditContact()}>
-          Edit Contact
-        </Button>
+        }
+      />
+      <PageBody disableScroll className="max-w-3xl space-y-6 p-6">
+      <div className="flex flex-wrap items-center gap-2">
+        <Badge variant="outline">{contact.kind}</Badge>
+        {contact.stage && (
+          <Badge
+            style={{ backgroundColor: contact.stage.color ?? undefined }}
+            className="text-white"
+          >
+            {contact.stage.name}
+          </Badge>
+        )}
+        {contact.tags.map((a) => (
+          <Badge key={a.tagId} variant="secondary">
+            {a.tag.name}
+          </Badge>
+        ))}
       </div>
 
       <div className="grid grid-cols-2 gap-4 text-sm">
@@ -393,6 +389,7 @@ export function ContactDetailPageContent({
           )}
         </div>
       </div>
-    </div>
+      </PageBody>
+    </Page>
   );
 }

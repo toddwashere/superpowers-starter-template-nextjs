@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useEffect, useTransition } from "react";
+import { Page, PageBody } from "@workspace/ui/components/page";
 import { Separator } from "@workspace/ui/components/separator";
+import { PageHeaderInOrg } from "@/common/ui/page-header-in-org";
 import { listContactStagesAction } from "../../contact-stage/data/contact-stage-actions";
 import { listContactTagsAction } from "../../contact-tag/data/contact-tag-actions";
 import { listContactTaskStatusesAction } from "../../contact-task/data/contact-task-actions";
@@ -62,8 +64,12 @@ export function ContactsSettingsPageContent({ orgSlug: _orgSlug }: { orgSlug: st
   }
 
   return (
-    <div className="space-y-8 max-w-2xl">
-      <h1 className="text-2xl font-bold">Contacts Settings</h1>
+    <Page className="flex min-h-0 flex-1 flex-col">
+      <PageHeaderInOrg
+        title="Contacts Settings"
+        description="Configure stages, tags, and task statuses for contacts."
+      />
+      <PageBody disableScroll className="max-w-2xl space-y-8 p-6">
       {error && <p className="text-sm text-destructive">{error}</p>}
 
       <ContactStagesSettingsSection
@@ -93,6 +99,7 @@ export function ContactsSettingsPageContent({ orgSlug: _orgSlug }: { orgSlug: st
         onError={handleError}
         onReload={handleReload}
       />
-    </div>
+      </PageBody>
+    </Page>
   );
 }

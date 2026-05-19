@@ -27,14 +27,8 @@ import { InputCurrency } from "@workspace/ui/components/input-currency";
 import { InputPassword } from "@workspace/ui/components/input-password";
 import { InputSearch } from "@workspace/ui/components/input-search";
 import { InputWithAdornments } from "@workspace/ui/components/input-with-adornments";
-import {
-  Page,
-  PageActions,
-  PageBody,
-  PageHeader,
-  PagePrimaryBar,
-  PageTitle,
-} from "@workspace/ui/components/page";
+import { PageHeader } from "@workspace/ui/components/page-header";
+import { Page, PageBody } from "@workspace/ui/components/page";
 import { RadioCardItem, RadioCards } from "@workspace/ui/components/radio-cards";
 import { Spinner } from "@workspace/ui/components/spinner";
 import { TabsWithContent } from "@workspace/ui/components/tabs-with-content";
@@ -406,14 +400,10 @@ export function SectionExtendedComponents() {
         </EmptyState>
 
         <Page className="h-56 rounded-lg border">
-          <PageHeader>
-            <PagePrimaryBar>
-              <PageTitle>Preview Page</PageTitle>
-              <PageActions>
-                <EditButton size="sm">Edit</EditButton>
-              </PageActions>
-            </PagePrimaryBar>
-          </PageHeader>
+          <PageHeader
+            title="Preview Page"
+            actions={<EditButton size="sm">Edit</EditButton>}
+          />
           <PageBody>
             <div className="p-4">
               <EmptyText>No activity has been recorded yet.</EmptyText>

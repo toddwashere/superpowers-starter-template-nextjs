@@ -3,7 +3,9 @@
 import { useEffect, useState, useCallback } from "react";
 import NiceModal from "@ebay/nice-modal-react";
 import { Button } from "@workspace/ui/components/button";
+import { Page, PageBody } from "@workspace/ui/components/page";
 import { toast } from "@workspace/ui/components/sonner";
+import { PageHeaderInOrg } from "@/common/ui/page-header-in-org";
 import { ApiKeyTable } from "./api-key-table";
 import { ApiKeyCreateModal } from "./api-key-create-modal";
 import { listOrgApiKeysAction, revokeApiKeyAction } from "../data/api-key-actions";
@@ -49,22 +51,19 @@ export function ApiKeysPageContent() {
   }, [load]);
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-lg font-semibold">API Keys</h2>
-          <p className="text-sm text-muted-foreground">
-            Manage keys for third-party integrations and AI agents.
-          </p>
-        </div>
-        <Button onClick={() => void handleCreate()}>Create Key</Button>
-      </div>
-
+    <Page className="flex min-h-0 flex-1 flex-col">
+      <PageHeaderInOrg
+        title="API Keys"
+        description="Manage keys for third-party integrations and AI agents."
+        actions={<Button onClick={() => void handleCreate()}>Create Key</Button>}
+      />
+      <PageBody disableScroll className="space-y-6 p-6">
       {loading ? (
         <p className="text-sm text-muted-foreground">Loading…</p>
       ) : (
         <ApiKeyTable keys={keys} onRevoke={(id) => void handleRevoke(id)} />
       )}
-    </div>
+      </PageBody>
+    </Page>
   );
 }

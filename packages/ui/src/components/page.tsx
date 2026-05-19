@@ -17,21 +17,22 @@ const Page = React.forwardRef<PageElement, PageProps>(
 )
 Page.displayName = "Page"
 
-export type PageHeaderElement = HTMLDivElement
-export type PageHeaderProps = React.HTMLAttributes<HTMLDivElement>
+export type PageHeaderSectionElement = HTMLDivElement
+export type PageHeaderSectionProps = React.HTMLAttributes<HTMLDivElement>
 
-const PageHeader = React.forwardRef<PageHeaderElement, PageHeaderProps>(
-  ({ className, children, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn("sticky top-0 z-20 bg-background", className)}
-      {...props}
-    >
-      {children}
-    </div>
-  )
-)
-PageHeader.displayName = "PageHeader"
+const PageHeaderSection = React.forwardRef<
+  PageHeaderSectionElement,
+  PageHeaderSectionProps
+>(({ className, children, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn("sticky top-0 z-20 bg-background", className)}
+    {...props}
+  >
+    {children}
+  </div>
+))
+PageHeaderSection.displayName = "PageHeaderSection"
 
 export type PagePrimaryBarElement = HTMLDivElement
 export type PagePrimaryBarProps = React.HTMLAttributes<HTMLDivElement> & {
@@ -139,7 +140,7 @@ export {
   Page,
   PageActions,
   PageBody,
-  PageHeader,
+  PageHeaderSection,
   PagePrimaryBar,
   PageSecondaryBar,
   PageTitle,

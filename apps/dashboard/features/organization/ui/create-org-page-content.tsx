@@ -24,6 +24,8 @@ import {
   FormMessage,
 } from "@workspace/ui/components/form";
 import { getPathForOrg } from "@workspace/routes";
+import { Page, PageBody } from "@workspace/ui/components/page";
+import { PageHeaderNoOrg } from "@/common/ui/page-header-no-org";
 import {
   createOrgSchema,
   type CreateOrgInput,
@@ -66,12 +68,17 @@ export function CreateOrgPageContent() {
   };
 
   return (
-    <div className="mx-auto max-w-lg">
+    <Page className="flex min-h-0 flex-1 flex-col">
+      <PageHeaderNoOrg
+        title="Create Organization"
+        description="Set up a new organization to collaborate with your team."
+      />
+      <PageBody disableScroll className="mx-auto w-full max-w-lg">
       <Card>
         <CardHeader>
-          <CardTitle>Create Organization</CardTitle>
+          <CardTitle>Organization details</CardTitle>
           <CardDescription>
-            Set up a new organization to collaborate with your team.
+            Choose a name and URL slug for your organization.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -127,6 +134,7 @@ export function CreateOrgPageContent() {
           </Form>
         </CardContent>
       </Card>
-    </div>
+      </PageBody>
+    </Page>
   );
 }

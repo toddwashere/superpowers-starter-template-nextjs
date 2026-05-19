@@ -20,7 +20,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@workspace/ui/components/dropdown-menu";
+import { Page, PageBody } from "@workspace/ui/components/page";
 import { IconForAdd, IconForMore } from "@workspace/ui/components/icon-for";
+import { PageHeaderInOrg } from "@/common/ui/page-header-in-org";
 import { listContactsAction, archiveContactAction } from "../data/contact-actions";
 import { exportContactsCsvAction } from "../data/contact-csv-actions";
 import { AddContactButtonModal } from "./add-contact-button-modal";
@@ -97,31 +99,35 @@ export function ContactsPageContent({ orgSlug }: { orgSlug: string }) {
   }
 
   return (
-    <div className="space-y-4">
+    <Page className="flex min-h-0 flex-1 flex-col">
+      <PageHeaderInOrg
+        title="Contacts"
+        description="Manage people and companies in this organization."
+        actions={
+          <>
+            <CsvImportDialog onImported={() => load(search)} />
+            <Button variant="outline" onClick={handleExport}>
+              Export CSV
+            </Button>
+            <Button onClick={() => void handleAddContact()}>
+              <IconForAdd className="mr-2" />
+              New Contact
+            </Button>
+          </>
+        }
+        toolbar={
+          <Input
+            placeholder="Search contacts…"
+            value={search}
+            onChange={handleSearchChange}
+            className="max-w-sm"
+          />
+        }
+      />
+      <PageBody className="space-y-4 p-6">
       {error && (
         <p className="text-sm text-destructive">{error}</p>
       )}
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Contacts</h1>
-        <div className="flex gap-2">
-          <CsvImportDialog onImported={() => load(search)} />
-          <Button variant="outline" onClick={handleExport}>
-            Export CSV
-          </Button>
-          <Button onClick={() => void handleAddContact()}>
-            <IconForAdd className="mr-2" />
-            New Contact
-          </Button>
-        </div>
-      </div>
-
-      <Input
-        placeholder="Search contacts…"
-        value={search}
-        onChange={handleSearchChange}
-        className="max-w-sm"
-      />
-
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -201,6 +207,7 @@ export function ContactsPageContent({ orgSlug }: { orgSlug: string }) {
           </TableBody>
         </Table>
       </div>
-    </div>
+      </PageBody>
+    </Page>
   );
 }

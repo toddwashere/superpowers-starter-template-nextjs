@@ -2,7 +2,9 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { Button } from "@workspace/ui/components/button";
+import { Page, PageBody } from "@workspace/ui/components/page";
 import { Textarea } from "@workspace/ui/components/textarea";
+import { PageHeaderInOrg } from "@/common/ui/page-header-in-org";
 import {
   Select,
   SelectContent,
@@ -52,16 +54,13 @@ export function McpTestPageContent() {
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-lg font-semibold">MCP Test Panel</h2>
-        <p className="text-sm text-muted-foreground">
-          Test MCP tools using your current session. Select a key to see its
-          context (calls authenticate as you, not as the key).
-        </p>
-      </div>
-
-      <div className="space-y-4 max-w-md">
+    <Page className="flex min-h-0 flex-1 flex-col">
+      <PageHeaderInOrg
+        title="MCP Test Panel"
+        description="Test MCP tools using your current session. Select a key to see its context (calls authenticate as you, not as the key)."
+      />
+      <PageBody disableScroll className="space-y-6 p-6">
+      <div className="max-w-md space-y-4">
         <div className="space-y-1">
           <label className="text-sm font-medium">API Key (context only)</label>
           <Select value={selectedKeyId} onValueChange={setSelectedKeyId}>
@@ -110,6 +109,7 @@ export function McpTestPageContent() {
           />
         </div>
       )}
-    </div>
+      </PageBody>
+    </Page>
   );
 }

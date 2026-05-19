@@ -24,7 +24,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@workspace/ui/components/dropdown-menu";
+import { Page, PageBody } from "@workspace/ui/components/page";
 import { Skeleton } from "@workspace/ui/components/skeleton";
+import { PageHeaderInOrg } from "@/common/ui/page-header-in-org";
 import { useCurrentOrg } from "./org-provider";
 import { InviteMemberDialog } from "./invite-member-dialog";
 import { PendingInvitations } from "./pending-invitations";
@@ -66,17 +68,17 @@ export function MembersPageContent({ orgSlug }: { orgSlug: string }) {
 
   if (isLoading || !organization) {
     return (
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <Skeleton className="h-8 w-48" />
-          <Skeleton className="h-9 w-32" />
-        </div>
-        <div className="space-y-2">
+      <Page className="flex min-h-0 flex-1 flex-col">
+        <PageHeaderInOrg
+          title="Members"
+          description="Manage your organization's team members."
+        />
+        <PageBody disableScroll className="space-y-2 p-6">
           {Array.from({ length: 3 }).map((_, i) => (
             <Skeleton key={i} className="h-16 w-full" />
           ))}
-        </div>
-      </div>
+        </PageBody>
+      </Page>
     );
   }
 
@@ -88,22 +90,20 @@ export function MembersPageContent({ orgSlug }: { orgSlug: string }) {
     currentUserRole === "owner" || currentUserRole === "admin";
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">Members</h2>
-          <p className="text-muted-foreground">
-            Manage your organization's team members.
-          </p>
-        </div>
-        {canManageMembers && (
-          <InviteMemberDialog
-            organizationId={organization.id}
-            orgSlug={orgSlug}
-          />
-        )}
-      </div>
-
+    <Page className="flex min-h-0 flex-1 flex-col">
+      <PageHeaderInOrg
+        title="Members"
+        description="Manage your organization's team members."
+        actions={
+          canManageMembers ? (
+            <InviteMemberDialog
+              organizationId={organization.id}
+              orgSlug={orgSlug}
+            />
+          ) : undefined
+        }
+      />
+      <PageBody className="space-y-6 p-6">
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -238,6 +238,7 @@ export function MembersPageContent({ orgSlug }: { orgSlug: string }) {
         organizationId={organization.id}
         orgSlug={orgSlug}
       />
-    </div>
+      </PageBody>
+    </Page>
   );
 }

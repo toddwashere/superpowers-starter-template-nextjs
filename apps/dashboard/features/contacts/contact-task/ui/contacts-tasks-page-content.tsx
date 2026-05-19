@@ -3,6 +3,8 @@
 import { useState, useEffect, useTransition } from "react";
 import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
+import { Page, PageBody } from "@workspace/ui/components/page";
+import { PageHeaderInOrg } from "@/common/ui/page-header-in-org";
 import {
   Table,
   TableBody,
@@ -76,8 +78,12 @@ export function ContactsTasksPageContent({ orgSlug: _orgSlug }: { orgSlug: strin
   }
 
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-bold">Contact Tasks</h1>
+    <Page className="flex min-h-0 flex-1 flex-col">
+      <PageHeaderInOrg
+        title="Contact Tasks"
+        description="View and complete tasks across all contacts."
+      />
+      <PageBody className="space-y-4 p-6">
       {error && <p className="text-sm text-destructive">{error}</p>}
       <div className="rounded-md border">
         <Table>
@@ -155,6 +161,7 @@ export function ContactsTasksPageContent({ orgSlug: _orgSlug }: { orgSlug: strin
           </TableBody>
         </Table>
       </div>
-    </div>
+      </PageBody>
+    </Page>
   );
 }
