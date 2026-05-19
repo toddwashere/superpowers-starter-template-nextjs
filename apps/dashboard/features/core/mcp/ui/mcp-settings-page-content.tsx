@@ -4,9 +4,8 @@ import Link from "next/link";
 import { getPathForOrgSettingsMcpTest } from "@workspace/routes";
 import { Page, PageBody } from "@workspace/ui/components/page";
 import { CopyToClipboardField } from "@workspace/ui/components/copy-to-clipboard-button";
+import { getPublicMcpEndpoint } from "@/common/env/public-mcp-url";
 import { PageHeaderInOrg } from "@/common/ui/page-header-in-org";
-
-const MCP_ENDPOINT = `${process.env.NEXT_PUBLIC_PUBLIC_MCP_URL ?? "http://localhost:4200"}/mcp`;
 
 type Props = {
   orgSlug: string;
@@ -23,7 +22,7 @@ export function McpSettingsPageContent({ orgSlug }: Props) {
         <p className="text-sm text-muted-foreground">
           Paste this URL into your AI app&apos;s settings:
         </p>
-        <CopyToClipboardField text={MCP_ENDPOINT} />
+        <CopyToClipboardField text={getPublicMcpEndpoint()} />
 
         <p className="text-sm text-muted-foreground">
           <Link

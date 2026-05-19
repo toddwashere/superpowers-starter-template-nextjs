@@ -3,13 +3,14 @@
 import { useState } from "react";
 import { Button } from "@workspace/ui/components/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@workspace/ui/components/tabs";
+import { getPublicMcpEndpoint } from "@/common/env/public-mcp-url";
 
 type Props = {
   keyPrefix: string;
 };
 
 const PUBLIC_API_URL = process.env.NEXT_PUBLIC_PUBLIC_API_URL ?? "http://localhost:4100";
-const PUBLIC_MCP_URL = process.env.NEXT_PUBLIC_PUBLIC_MCP_URL ?? "http://localhost:4200";
+const MCP_ENDPOINT = getPublicMcpEndpoint();
 
 export function ApiKeyConnectSnippets({ keyPrefix }: Props) {
   const [copied, setCopied] = useState<string | null>(null);
@@ -25,7 +26,7 @@ export function ApiKeyConnectSnippets({ keyPrefix }: Props) {
       {
         mcpServers: {
           "my-mcp": {
-            url: `${PUBLIC_MCP_URL}/mcp`,
+            url: MCP_ENDPOINT,
             headers: { "x-api-key": `${keyPrefix}...` },
           },
         },
@@ -37,7 +38,7 @@ export function ApiKeyConnectSnippets({ keyPrefix }: Props) {
       {
         mcpServers: {
           "my-mcp": {
-            url: `${PUBLIC_MCP_URL}/mcp`,
+            url: MCP_ENDPOINT,
             headers: { "x-api-key": `${keyPrefix}...` },
           },
         },

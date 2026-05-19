@@ -36,11 +36,13 @@ export function AiChatPageContent() {
         ],
       };
       setMessages((prev) => [...prev, assistantMsg]);
-    } catch {
+    } catch (error) {
+      const detail =
+        error instanceof Error ? error.message : "Unknown error";
       const errMsg: ChatMessage = {
         id: crypto.randomUUID(),
         role: "assistant",
-        content: "Failed to call MCP server. Check that it is running.",
+        content: `Failed to call MCP server. ${detail}`,
       };
       setMessages((prev) => [...prev, errMsg]);
     } finally {

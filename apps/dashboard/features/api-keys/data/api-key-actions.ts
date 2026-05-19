@@ -7,6 +7,7 @@ import {
   requireUser,
 } from "@workspace/auth/guards";
 import { headers } from "next/headers";
+import { getPublicMcpEndpoint } from "@/common/env/public-mcp-url";
 import type { CreateApiKeyInput } from "./api-key-types";
 
 export async function createOrgApiKeyAction(data: CreateApiKeyInput) {
@@ -85,8 +86,7 @@ export async function callMcpToolAsSessionAction(
   const requestHeaders = await headers();
   const cookie = requestHeaders.get("cookie") ?? "";
 
-  const PUBLIC_MCP_URL = process.env.PUBLIC_MCP_URL ?? "http://localhost:4200";
-  const res = await fetch(`${PUBLIC_MCP_URL}/mcp`, {
+  const res = await fetch(getPublicMcpEndpoint(), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

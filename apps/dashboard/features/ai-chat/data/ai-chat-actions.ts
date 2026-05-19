@@ -2,15 +2,22 @@
 
 import { requireUser } from "@workspace/auth/guards";
 import { headers } from "next/headers";
-
-const PUBLIC_MCP_URL = process.env.PUBLIC_MCP_URL ?? "http://localhost:4200";
+import { getPublicMcpEndpoint } from "@/common/env/public-mcp-url";
 
 async function mcpPost(cookie: string, body: unknown): Promise<Response> {
-  return fetch(`${PUBLIC_MCP_URL}/mcp`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", Cookie: cookie },
-    body: JSON.stringify(body),
-  });
+  const endpoint = getPublicMcpEndpoint();
+  try {
+    return await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Cookie: cookie },
+      body: JSON.stringify(body),
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    throw new Error(
+      `Cannot reach MCP server at ${endpoint}. Is public-mcp running? (${message})`,
+    );
+  }
 }
 
 export async function callMcpToolAction(toolName: string, args: Record<string, unknown>) {
@@ -22,7 +29,12 @@ export async function callMcpToolAction(toolName: string, args: Record<string, u
     method: "tools/call",
     params: { name: toolName, arguments: args },
   });
-  if (!res.ok) throw new Error(`MCP call failed: ${res.status}`);
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(
+      `MCP call failed (${res.status}) at ${getPublicMcpEndpoint()}${text ? `: ${text.slice(0, 200)}` : ""}`,
+    );
+  }
   return res.json() as Promise<unknown>;
 }
 

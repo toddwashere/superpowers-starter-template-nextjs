@@ -6,6 +6,7 @@ import { resolveMcpAuthContext, McpAuthError } from "./middleware/mcp-auth";
 import { writeJsonError } from "./lib/errors";
 import { writeProtectedResourceMetadata, getWwwAuthenticateHeader } from "./lib/metadata";
 import { registerTools } from "./tools/registry";
+import { getMcpListenPort } from "./lib/mcp-url";
 
 async function readBody(req: IncomingMessage): Promise<unknown> {
   if (req.method !== "POST") return undefined;
@@ -60,7 +61,7 @@ const server = createServer(async (req: IncomingMessage, res: ServerResponse) =>
   await transport.handleRequest(req, res, body);
 });
 
-const port = Number(process.env.PUBLIC_MCP_PORT ?? 4200);
+const port = getMcpListenPort();
 server.listen(port, () => {
   console.log(`Public MCP server running at http://localhost:${port}/mcp`);
 });
