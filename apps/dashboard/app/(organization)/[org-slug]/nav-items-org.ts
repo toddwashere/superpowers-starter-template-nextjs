@@ -33,6 +33,7 @@ export const orgNavConfig: NavConfig = {
         { title: "Members", href: "/settings/members" },
         { title: "Billing", href: "/settings/billing" },
         { title: "API Keys", href: "/settings/api-keys" },
+        { title: "MCP", href: "/settings/mcp" },
       ],
     },
   ],

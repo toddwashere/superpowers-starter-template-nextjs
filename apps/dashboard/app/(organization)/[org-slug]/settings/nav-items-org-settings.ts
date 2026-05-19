@@ -4,6 +4,7 @@ import {
   IconForBilling,
   IconForSecurity,
   IconForKey,
+  IconForAi,
 } from "@workspace/ui/components/icon-for";
 import type { NavConfig } from "@/types/nav";
 
@@ -34,6 +35,11 @@ export const orgSettingsNavConfig: NavConfig = {
       title: "API Keys",
       href: "/settings/api-keys",
       icon: IconForKey,
+    },
+    {
+      title: "MCP",
+      href: "/settings/mcp",
+      icon: IconForAi,
     },
   ],
 };

@@ -10,6 +10,8 @@ export {
   getPathForOrgSettings,
   getPathForOrgSettingsGeneral,
   getPathForOrgMembers,
+  getPathForOrgSettingsMcp,
+  getPathForOrgSettingsMcpTest,
   getPathForAcceptInvitation,
   getPathForAccountSettings,
   getPathForConsent,

@@ -42,6 +42,14 @@ export function getPathForOrgMembers(orgSlug: string) {
   return `/${orgSlug}/settings/members`;
 }
 
+export function getPathForOrgSettingsMcp(orgSlug: string) {
+  return `/${orgSlug}/settings/mcp`;
+}
+
+export function getPathForOrgSettingsMcpTest(orgSlug: string) {
+  return `/${orgSlug}/settings/api-keys/mcp-test`;
+}
+
 export function getPathForAcceptInvitation(invitationId: string) {
   return `/accept-invitation/${invitationId}`;
 }
