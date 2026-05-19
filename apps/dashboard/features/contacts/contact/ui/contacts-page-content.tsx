@@ -115,12 +115,13 @@ export function ContactsPageContent({ orgSlug }: { orgSlug: string }) {
             </Button>
           </>
         }
+        toolbarInline
         toolbar={
           <Input
             placeholder="Search contacts…"
             value={search}
             onChange={handleSearchChange}
-            className="max-w-sm"
+            className="h-9 w-full"
           />
         }
       />

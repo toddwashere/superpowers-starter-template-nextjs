@@ -66,25 +66,10 @@ export function MembersPageContent({ orgSlug }: { orgSlug: string }) {
     memberName: string;
   }>({ open: false, memberId: "", memberName: "" });
 
-  if (isLoading || !organization) {
-    return (
-      <Page className="flex min-h-0 flex-1 flex-col">
-        <PageHeaderInOrg
-          title="Members"
-          description="Manage your organization's team members."
-        />
-        <PageBody disableScroll className="space-y-2 p-6">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <Skeleton key={i} className="h-16 w-full" />
-          ))}
-        </PageBody>
-      </Page>
-    );
-  }
-
-  const currentMember = members.find(
-    (m) => m.userId === session?.user?.id,
-  );
+  const showSkeleton = isLoading || !organization;
+  const currentMember = showSkeleton
+    ? undefined
+    : members.find((m) => m.userId === session?.user?.id);
   const currentUserRole = currentMember?.role ?? "member";
   const canManageMembers =
     currentUserRole === "owner" || currentUserRole === "admin";
@@ -95,15 +80,25 @@ export function MembersPageContent({ orgSlug }: { orgSlug: string }) {
         title="Members"
         description="Manage your organization's team members."
         actions={
-          canManageMembers ? (
+          showSkeleton ? (
+            <Skeleton className="h-9 w-36" />
+          ) : canManageMembers ? (
             <InviteMemberDialog
-              organizationId={organization.id}
+              organizationId={organization!.id}
               orgSlug={orgSlug}
             />
           ) : undefined
         }
       />
       <PageBody className="space-y-6 p-6">
+      {showSkeleton ? (
+        <div className="space-y-2 rounded-md border p-0">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <Skeleton key={i} className="h-16 w-full rounded-none first:rounded-t-md last:rounded-b-md" />
+          ))}
+        </div>
+      ) : (
+      <>
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -215,7 +210,11 @@ export function MembersPageContent({ orgSlug }: { orgSlug: string }) {
           canManageInvitations={canManageMembers}
         />
       )}
+      </>
+      )}
 
+      {!showSkeleton && (
+        <>
       <UpdateMemberRoleDialog
         open={roleDialog.open}
         onOpenChange={(open) =>
@@ -224,7 +223,7 @@ export function MembersPageContent({ orgSlug }: { orgSlug: string }) {
         memberId={roleDialog.memberId}
         memberName={roleDialog.memberName}
         currentRole={roleDialog.currentRole}
-        organizationId={organization.id}
+        organizationId={organization!.id}
         orgSlug={orgSlug}
       />
 
@@ -235,9 +234,11 @@ export function MembersPageContent({ orgSlug }: { orgSlug: string }) {
         }
         memberId={removeDialog.memberId}
         memberName={removeDialog.memberName}
-        organizationId={organization.id}
+        organizationId={organization!.id}
         orgSlug={orgSlug}
       />
+        </>
+      )}
       </PageBody>
     </Page>
   );

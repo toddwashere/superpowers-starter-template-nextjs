@@ -30,7 +30,10 @@ export function OrgPickerPageContent() {
   if (isPending) {
     return (
       <Page className="flex min-h-0 flex-1 flex-col">
-        <PageHeaderNoOrg title="Your Organizations" />
+        <PageHeaderNoOrg
+          title="Your Organizations"
+          description="Select an organization to continue."
+        />
         <PageBody disableScroll className="space-y-3">
           {Array.from({ length: 3 }).map((_, i) => (
             <Skeleton key={i} className="h-16 w-full rounded-lg" />

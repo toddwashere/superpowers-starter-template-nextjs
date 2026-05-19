@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
+import { Page, PageBody } from "@workspace/ui/components/page";
+import { PageHeaderInOrg } from "@/common/ui/page-header-in-org";
 import { ChatMessageItem } from "./chat-message";
 import { callMcpToolAction } from "../data/ai-chat-actions";
 import type { ChatMessage } from "../data/ai-chat-types";
@@ -47,35 +49,46 @@ export function AiChatPageContent() {
   }
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.length === 0 && (
-          <p className="text-center text-muted-foreground text-sm mt-8">
-            Send a message to interact with AI tools.
-          </p>
-        )}
-        {messages.map((msg) => (
-          <ChatMessageItem key={msg.id} message={msg} />
-        ))}
-      </div>
+    <Page className="flex min-h-0 flex-1 flex-col">
+      <PageHeaderInOrg
+        title="AI Assistant"
+        description="Send messages and run MCP tools with your current organization session."
+      />
+      <PageBody disableScroll className="flex min-h-0 flex-1 flex-col overflow-hidden">
+        <div className="flex min-h-0 flex-1 flex-col">
+          <div className="flex-1 space-y-4 overflow-y-auto p-4">
+            {messages.length === 0 && (
+              <p className="mt-8 text-center text-sm text-muted-foreground">
+                Send a message to interact with AI tools.
+              </p>
+            )}
+            {messages.map((msg) => (
+              <ChatMessageItem key={msg.id} message={msg} />
+            ))}
+          </div>
 
-      <div className="border-t p-4 flex gap-2">
-        <Input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask something…"
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault();
-              void handleSend();
-            }
-          }}
-          disabled={loading}
-        />
-        <Button onClick={() => void handleSend()} disabled={!input.trim() || loading}>
-          {loading ? "…" : "Send"}
-        </Button>
-      </div>
-    </div>
+          <div className="flex shrink-0 gap-2 border-t p-4">
+            <Input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Ask something…"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  void handleSend();
+                }
+              }}
+              disabled={loading}
+            />
+            <Button
+              onClick={() => void handleSend()}
+              disabled={!input.trim() || loading}
+            >
+              {loading ? "…" : "Send"}
+            </Button>
+          </div>
+        </div>
+      </PageBody>
+    </Page>
   );
 }

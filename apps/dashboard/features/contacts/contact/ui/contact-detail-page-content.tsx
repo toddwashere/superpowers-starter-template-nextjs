@@ -9,6 +9,7 @@ import { Badge } from "@workspace/ui/components/badge";
 import { Textarea } from "@workspace/ui/components/textarea";
 import { Page, PageBody } from "@workspace/ui/components/page";
 import { Separator } from "@workspace/ui/components/separator";
+import { Skeleton } from "@workspace/ui/components/skeleton";
 import { PageHeaderInOrg } from "@/common/ui/page-header-in-org";
 import {
   Breadcrumb,
@@ -171,11 +172,70 @@ export function ContactDetailPageContent({
   }
 
   if (!isLoaded && isPending) {
-    return <p className="text-muted-foreground">Loading…</p>;
+    return (
+      <Page className="flex min-h-0 flex-1 flex-col">
+        <PageHeaderInOrg
+          breadcrumb={
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink asChild>
+                    <Link href={`/${orgSlug}/contacts`}>Contacts</Link>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <Skeleton className="h-4 w-32" />
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+          }
+          actions={<Skeleton className="h-9 w-28" />}
+        />
+        <PageBody disableScroll className="max-w-3xl space-y-6 p-6">
+          <div className="flex flex-wrap gap-2">
+            <Skeleton className="h-6 w-16" />
+            <Skeleton className="h-6 w-20" />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <Skeleton className="h-4 w-48" />
+            <Skeleton className="h-4 w-40" />
+          </div>
+          <Skeleton className="h-32 w-full" />
+          <Skeleton className="h-48 w-full" />
+        </PageBody>
+      </Page>
+    );
   }
 
   if (isLoaded && !contact) {
-    return <p className="text-muted-foreground">Contact not found.</p>;
+    return (
+      <Page className="flex min-h-0 flex-1 flex-col">
+        <PageHeaderInOrg
+          title="Contact not found"
+          breadcrumb={
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink asChild>
+                    <Link href={`/${orgSlug}/contacts`}>Contacts</Link>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>Contact not found</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+          }
+        />
+        <PageBody disableScroll className="p-6">
+          <p className="text-muted-foreground">
+            This contact may have been removed or you do not have access.
+          </p>
+        </PageBody>
+      </Page>
+    );
   }
 
   if (!contact) return null;
