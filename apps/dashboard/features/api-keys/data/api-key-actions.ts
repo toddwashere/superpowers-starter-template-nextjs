@@ -8,6 +8,10 @@ import {
 } from "@workspace/auth/guards";
 import { headers } from "next/headers";
 import { getPublicMcpEndpoint } from "@workspace/common/env/public-mcp";
+import {
+  mcpStreamableHttpPost,
+  readMcpJsonRpcResponse,
+} from "@workspace/common/mcp/http-client";
 import type { CreateApiKeyInput } from "./api-key-types";
 
 export async function createOrgApiKeyAction(data: CreateApiKeyInput) {
@@ -86,20 +90,17 @@ export async function callMcpToolAsSessionAction(
   const requestHeaders = await headers();
   const cookie = requestHeaders.get("cookie") ?? "";
 
-  const res = await fetch(getPublicMcpEndpoint(), {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Cookie: cookie,
-    },
-    body: JSON.stringify({
+  const res = await mcpStreamableHttpPost(
+    getPublicMcpEndpoint(),
+    {
       jsonrpc: "2.0",
       id: Date.now(),
       method: "tools/call",
       params: { name: toolName, arguments: args },
-    }),
-  });
+    },
+    { Cookie: cookie },
+  );
 
   if (!res.ok) throw new Error(`MCP call failed: ${res.status}`);
-  return res.json() as Promise<unknown>;
+  return readMcpJsonRpcResponse(res);
 }

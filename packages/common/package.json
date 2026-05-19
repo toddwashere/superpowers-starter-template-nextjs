@@ -6,7 +6,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./create-id": "./src/create-id.ts",
-    "./env/public-mcp": "./src/env/public-mcp.ts"
+    "./env/public-mcp": "./src/env/public-mcp.ts",
+    "./mcp/http-client": "./src/mcp/http-client.ts"
   },
   "scripts": {
     "type-check": "tsc --noEmit",

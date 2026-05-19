@@ -1,17 +1,17 @@
 "use server";
 
 import { requireUser } from "@workspace/auth/guards";
-import { headers } from "next/headers";
+import {
+  mcpStreamableHttpPost,
+  readMcpJsonRpcResponse,
+} from "@workspace/common/mcp/http-client";
 import { getPublicMcpEndpoint } from "@workspace/common/env/public-mcp";
+import { headers } from "next/headers";
 
 async function mcpPost(cookie: string, body: unknown): Promise<Response> {
   const endpoint = getPublicMcpEndpoint();
   try {
-    return await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Cookie: cookie },
-      body: JSON.stringify(body),
-    });
+    return await mcpStreamableHttpPost(endpoint, body, { Cookie: cookie });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     throw new Error(
@@ -35,7 +35,7 @@ export async function callMcpToolAction(toolName: string, args: Record<string, u
       `MCP call failed (${res.status}) at ${getPublicMcpEndpoint()}${text ? `: ${text.slice(0, 200)}` : ""}`,
     );
   }
-  return res.json() as Promise<unknown>;
+  return readMcpJsonRpcResponse(res);
 }
 
 export async function listMcpToolsAction() {
@@ -48,6 +48,6 @@ export async function listMcpToolsAction() {
     params: {},
   });
   if (!res.ok) return [];
-  const data = (await res.json()) as { result?: { tools?: unknown[] } };
+  const data = (await readMcpJsonRpcResponse(res)) as { result?: { tools?: unknown[] } };
   return data.result?.tools ?? [];
 }
