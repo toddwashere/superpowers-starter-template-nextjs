@@ -14,4 +14,6 @@ Favor unit tests that can run quickly over other types of tests.
 
 Avoid adding low value tests.
 
+List test file paths colocated beside implementation (for example `src/guards.test.ts`). Never plan or add `__tests__` folders — see [`colocated-tests.md`](./colocated-tests.md).
+
 This section should appear in both spec documents and implementation plans, before the task breakdown.

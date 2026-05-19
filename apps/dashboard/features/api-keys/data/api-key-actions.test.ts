@@ -24,7 +24,7 @@ vi.mock("next/headers", () => ({
 }));
 
 import { auth } from "@workspace/auth";
-import { createOrgApiKeyAction, listOrgApiKeysAction, revokeApiKeyAction, createPersonalApiKeyAction, revokePersonalApiKeyAction } from "../api-key-actions";
+import { createOrgApiKeyAction, listOrgApiKeysAction, revokeApiKeyAction, createPersonalApiKeyAction, revokePersonalApiKeyAction } from "./api-key-actions";
 
 describe("createOrgApiKeyAction", () => {
   beforeEach(() => vi.clearAllMocks());

@@ -14,4 +14,5 @@ Tool-specific folders such as `.cursor/` and `.claude/` should keep only lightwe
 
 - [`conventions/ai-guidance-files.md`](./conventions/ai-guidance-files.md) - Three-tier pattern for AI guidance files (.ai/ canonical, .cursor/ and .claude/ as references).
 - [`conventions/critical-tests-in-plans.md`](./conventions/critical-tests-in-plans.md) - Require a "Critical Tests" section in all plans and specs.
+- [`conventions/colocated-tests.md`](./conventions/colocated-tests.md) - Place unit tests beside implementation files; never use `__tests__` folders.
 - [`conventions/plan-archival.md`](./conventions/plan-archival.md) - Move completed plans and specs to `done/` subdirectories.

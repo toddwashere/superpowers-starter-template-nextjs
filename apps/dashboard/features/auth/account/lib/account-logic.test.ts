@@ -5,7 +5,7 @@ import {
   isDeleteConfirmationValid,
   isCurrentSession,
   shouldShowConnectedAccounts,
-} from "../lib/account-logic";
+} from "./account-logic";
 
 describe("hasCredentialAccount", () => {
   it("returns true when a credential account exists", () => {

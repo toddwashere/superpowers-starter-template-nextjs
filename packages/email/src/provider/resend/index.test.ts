@@ -8,14 +8,14 @@ vi.mock("resend", () => ({
   })),
 }));
 
-vi.mock("../keys", () => ({
+vi.mock("../../../keys", () => ({
   keys: vi.fn(() => ({
     RESEND_API_KEY: "re_test_key",
     EMAIL_FROM: "Test App <noreply@test.com>",
   })),
 }));
 
-import provider from "../src/provider/resend/index";
+import provider from "./index";
 
 describe("Resend provider", () => {
   beforeEach(() => {

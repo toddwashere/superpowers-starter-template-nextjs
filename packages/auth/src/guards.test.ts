@@ -4,7 +4,7 @@ vi.mock("next/headers", () => ({
   headers: vi.fn(() => Promise.resolve(new Headers())),
 }));
 
-vi.mock("../auth", () => ({
+vi.mock("./auth", () => ({
   auth: {
     api: {
       getSession: vi.fn(),
@@ -18,8 +18,8 @@ import {
   requireSystemAdmin,
   requireOrgPermission,
   requireOrgPermissionWithActiveOrg,
-} from "../guards";
-import { auth } from "../auth";
+} from "./guards";
+import { auth } from "./auth";
 
 const mockGetSession = vi.mocked(auth.api.getSession);
 const mockHasPermission = vi.mocked(auth.api.hasPermission);

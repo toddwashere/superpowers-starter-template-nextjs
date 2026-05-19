@@ -3,7 +3,7 @@ import {
   createOrgSchema,
   inviteMemberSchema,
   updateMemberRoleSchema,
-} from "../org-types";
+} from "./org-types";
 
 describe("createOrgSchema", () => {
   it("accepts valid org input", () => {

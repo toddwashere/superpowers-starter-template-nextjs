@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { ac, permissions } from "../permissions";
+import { ac, permissions } from "./permissions";
 
 describe("permissions", () => {
   it("exports all three org roles", () => {

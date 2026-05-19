@@ -3,5 +3,5 @@
   "compilerOptions": {
     "outDir": "dist"
   },
-  "include": ["src", "keys.ts", "__tests__"]
+  "include": ["src", "keys.ts"]
 }

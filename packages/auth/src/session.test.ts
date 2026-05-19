@@ -4,7 +4,7 @@ vi.mock("next/headers", () => ({
   headers: vi.fn(() => Promise.resolve(new Headers())),
 }));
 
-vi.mock("../auth", () => ({
+vi.mock("./auth", () => ({
   auth: {
     api: {
       getSession: vi.fn(),
@@ -12,8 +12,8 @@ vi.mock("../auth", () => ({
   },
 }));
 
-import { auth } from "../auth";
-import { getCurrentUser } from "../session";
+import { auth } from "./auth";
+import { getCurrentUser } from "./session";
 
 const mockGetSession = vi.mocked(auth.api.getSession);
 

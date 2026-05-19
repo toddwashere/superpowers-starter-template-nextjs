@@ -11,7 +11,7 @@ vi.mock("@workspace/email/send-email-change-verification-email", () => ({
   sendEmailChangeVerificationEmail: mockSendEmailChangeVerification,
 }));
 
-import { routeVerificationEmail } from "../email-routing";
+import { routeVerificationEmail } from "./email-routing";
 
 describe("routeVerificationEmail", () => {
   beforeEach(() => {

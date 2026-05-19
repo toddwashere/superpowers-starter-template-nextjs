@@ -1,10 +1,10 @@
 import { describe, it, expect } from "vitest";
 import { render } from "@react-email/render";
-import { WelcomeAndVerifyEmail } from "../src/templates/welcome-and-verify-email";
-import { WelcomeEmail } from "../src/templates/welcome-email";
-import { EmailChangeVerificationEmail } from "../src/templates/email-change-verification-email";
-import { PasswordResetEmail } from "../src/templates/password-reset-email";
-import { InvitationEmail } from "../src/templates/invitation-email";
+import { WelcomeAndVerifyEmail } from "./welcome-and-verify-email";
+import { WelcomeEmail } from "./welcome-email";
+import { EmailChangeVerificationEmail } from "./email-change-verification-email";
+import { PasswordResetEmail } from "./password-reset-email";
+import { InvitationEmail } from "./invitation-email";
 
 describe("Template render smoke tests", () => {
   it("WelcomeAndVerifyEmail renders to HTML and text", async () => {
