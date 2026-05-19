@@ -4,7 +4,7 @@ import Link from "next/link";
 import { getPathForOrgSettingsMcpTest } from "@workspace/routes";
 import { Page, PageBody } from "@workspace/ui/components/page";
 import { CopyToClipboardField } from "@workspace/ui/components/copy-to-clipboard-button";
-import { getPublicMcpEndpoint } from "@/common/env/public-mcp-url";
+import { getPublicMcpEndpoint } from "@workspace/common/env/public-mcp";
 import { PageHeaderInOrg } from "@/common/ui/page-header-in-org";
 
 type Props = {

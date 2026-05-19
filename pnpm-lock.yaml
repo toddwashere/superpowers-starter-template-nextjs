@@ -176,6 +176,9 @@ importers:
       '@workspace/auth':
         specifier: workspace:*
         version: link:../../packages/auth
+      '@workspace/common':
+        specifier: workspace:*
+        version: link:../../packages/common
       '@workspace/database':
         specifier: workspace:*
         version: link:../../packages/database
@@ -290,6 +293,9 @@ importers:
       '@paralleldrive/cuid2':
         specifier: ^3.3.0
         version: 3.3.0
+      zod:
+        specifier: ^3
+        version: 3.25.76
     devDependencies:
       '@types/node':
         specifier: ^22

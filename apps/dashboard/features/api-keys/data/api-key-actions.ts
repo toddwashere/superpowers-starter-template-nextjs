@@ -7,7 +7,7 @@ import {
   requireUser,
 } from "@workspace/auth/guards";
 import { headers } from "next/headers";
-import { getPublicMcpEndpoint } from "@/common/env/public-mcp-url";
+import { getPublicMcpEndpoint } from "@workspace/common/env/public-mcp";
 import type { CreateApiKeyInput } from "./api-key-types";
 
 export async function createOrgApiKeyAction(data: CreateApiKeyInput) {

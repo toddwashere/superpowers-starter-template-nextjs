@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "email dev --port 4002",
+    "dev": "email dev --port 4004",
     "export": "email export",
     "type-check": "tsc --noEmit"
   },

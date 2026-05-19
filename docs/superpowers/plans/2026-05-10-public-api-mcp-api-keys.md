@@ -2127,8 +2127,8 @@ type Props = {
   keyPrefix: string;
 };
 
-const PUBLIC_API_URL = process.env.NEXT_PUBLIC_PUBLIC_API_URL ?? "http://localhost:4100";
-const PUBLIC_MCP_URL = process.env.NEXT_PUBLIC_PUBLIC_MCP_URL ?? "http://localhost:4200";
+const PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4100";
+const PUBLIC_MCP_URL = process.env.NEXT_PUBLIC_MCP_URL ?? "http://localhost:4200";
 
 export function ApiKeyConnectSnippets({ keyPrefix }: Props) {
   const [copied, setCopied] = useState<string | null>(null);

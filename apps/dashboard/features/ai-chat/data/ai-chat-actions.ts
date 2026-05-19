@@ -2,7 +2,7 @@
 
 import { requireUser } from "@workspace/auth/guards";
 import { headers } from "next/headers";
-import { getPublicMcpEndpoint } from "@/common/env/public-mcp-url";
+import { getPublicMcpEndpoint } from "@workspace/common/env/public-mcp";
 
 async function mcpPost(cookie: string, body: unknown): Promise<Response> {
   const endpoint = getPublicMcpEndpoint();

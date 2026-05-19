@@ -9,7 +9,7 @@ const app = new OpenAPIHono<AppEnv>();
 app.route("/", createV1Router());
 registerDocs(app);
 
-const port = Number(process.env.PUBLIC_API_PORT ?? 4100);
+const port = Number(process.env.PUBLIC_API_PORT ?? 4002);
 serve({ fetch: app.fetch, port }, () => {
   console.log(`Public API running at http://localhost:${port}`);
   console.log(`Docs: http://localhost:${port}/docs`);

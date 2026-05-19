@@ -5,7 +5,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./create-id": "./src/create-id.ts"
+    "./create-id": "./src/create-id.ts",
+    "./env/public-mcp": "./src/env/public-mcp.ts"
   },
   "scripts": {
     "type-check": "tsc --noEmit",
@@ -19,6 +20,7 @@
     "vitest": "^4.1.6"
   },
   "dependencies": {
-    "@paralleldrive/cuid2": "^3.3.0"
+    "@paralleldrive/cuid2": "^3.3.0",
+    "zod": "^3"
   }
 }

@@ -1,12 +1,11 @@
 import type { ServerResponse } from "node:http";
-import { getMcpBaseUrl } from "./mcp-url";
+import { getPublicMcpUrl } from "@workspace/common/env/public-mcp";
 
 const AUTH_URL = process.env.BETTER_AUTH_URL ?? "http://localhost:4000";
 
 export function writeProtectedResourceMetadata(res: ServerResponse): void {
-  const mcpUrl = getMcpBaseUrl();
   const metadata = {
-    resource: mcpUrl,
+    resource: getPublicMcpUrl(),
     authorization_servers: [AUTH_URL],
     scopes_supported: ["account:read", "offline_access"],
   };
@@ -15,6 +14,6 @@ export function writeProtectedResourceMetadata(res: ServerResponse): void {
 }
 
 export function getWwwAuthenticateHeader(): string {
-  const metadataUrl = `${getMcpBaseUrl()}/.well-known/oauth-protected-resource`;
+  const metadataUrl = `${getPublicMcpUrl()}/.well-known/oauth-protected-resource`;
   return `Bearer realm="MCP", resource_metadata="${metadataUrl}"`;
 }
