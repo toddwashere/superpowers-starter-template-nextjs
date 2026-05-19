@@ -45,14 +45,27 @@ export function PageHeader({
   const useBreadcrumbLine = Boolean(breadcrumb)
   const showInlineToolbar = Boolean(toolbar && toolbarInline)
   const showBelowToolbar = Boolean(toolbar && !toolbarInline)
+  const showCenterColumn =
+    useBreadcrumbLine ||
+    isLoading ||
+    (title != null && title !== "") ||
+    showInlineToolbar
 
   return (
     <PageHeaderSection className={className}>
       <div className="border-b">
         <div className="flex h-14 flex-row items-center gap-1.5 px-4 sm:px-6">
           {leading ? (
-            <div className="flex shrink-0 items-center gap-1">{leading}</div>
+            <div
+              className={cn(
+                "flex min-w-0 items-center gap-1",
+                !title && !breadcrumb && !isLoading ? "flex-1" : "shrink-0"
+              )}
+            >
+              {leading}
+            </div>
           ) : null}
+          {showCenterColumn ? (
           <div className="flex min-w-0 flex-1 items-center gap-2">
             {useBreadcrumbLine ? (
               <div
@@ -66,11 +79,11 @@ export function PageHeader({
               </div>
             ) : isLoading ? (
               <Skeleton className="h-5 w-48 max-w-full shrink-0" />
-            ) : (
+            ) : title != null && title !== "" ? (
               <PageTitle className="shrink-0 truncate" title={description}>
                 {title}
               </PageTitle>
-            )}
+            ) : null}
             {useBreadcrumbLine && !isLoading && title ? (
               <span className="sr-only">
                 <PageTitle title={description}>{title}</PageTitle>
@@ -80,6 +93,7 @@ export function PageHeader({
               <div className="min-w-0 flex-1">{toolbar}</div>
             ) : null}
           </div>
+          ) : null}
           {showTrailingOrActions ? (
             <div className="flex shrink-0 items-center gap-2">
               {trailing}

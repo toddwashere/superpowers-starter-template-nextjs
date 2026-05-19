@@ -4,9 +4,9 @@ import { PageHeader } from "@workspace/ui/components/page-header";
 import { Separator } from "@workspace/ui/components/separator";
 import { SidebarTrigger } from "@workspace/ui/components/sidebar";
 import { CommandMenuTrigger } from "@/features/command-menu/command-menu-trigger";
-import type { DashboardPageHeaderProps } from "./page-header-types";
+import type { DashboardPageHeaderInOrgProps } from "./page-header-types";
 
-export function PageHeaderInOrg(props: DashboardPageHeaderProps) {
+export function PageHeaderInOrg(props: DashboardPageHeaderInOrgProps) {
   return (
     <PageHeader
       leading={

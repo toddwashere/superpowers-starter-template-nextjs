@@ -2,7 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ScrollAnchor } from "@workspace/ui/components/scroll-anchor";
+import { Page } from "@workspace/ui/components/page";
 import { ThemeToggle } from "@workspace/ui/components/theme-toggle";
+import { PageHeaderNoOrg } from "@/common/ui/page-header-no-org";
 import { SectionColors } from "./section-colors";
 import { SectionTypography } from "./section-typography";
 import { SectionIcons } from "./section-icons";
@@ -58,18 +60,19 @@ export function DevUiPageContent() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-50 flex h-14 items-center justify-between border-b bg-background/95 px-6 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <h1 className="text-lg font-semibold">Design System</h1>
-        <ThemeToggle />
-      </header>
-
-      <div className="flex">
+    <Page className="flex min-h-screen flex-col bg-background text-foreground">
+      <PageHeaderNoOrg
+        title="Design System"
+        description="Preview and test shared UI components, tokens, and patterns."
+        actions={<ThemeToggle />}
+      />
+      <div className="flex min-h-0 flex-1">
         <nav className="sticky top-14 hidden h-[calc(100vh-3.5rem)] w-52 shrink-0 overflow-y-auto border-r p-4 lg:block">
           <ul className="space-y-1">
             {tocItems.map((item) => (
               <li key={item.id}>
                 <button
+                  type="button"
                   onClick={() => scrollTo(item.id)}
                   className={`w-full rounded-md px-3 py-1.5 text-left text-sm transition-colors ${
                     activeSection === item.id
@@ -116,6 +119,6 @@ export function DevUiPageContent() {
           </div>
         </main>
       </div>
-    </div>
+    </Page>
   );
 }
