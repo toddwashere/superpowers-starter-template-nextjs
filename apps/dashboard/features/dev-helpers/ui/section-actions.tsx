@@ -1,6 +1,10 @@
 "use client";
 
 import { Button } from "@workspace/ui/components/button";
+import {
+  CopyToClipboardButton,
+  CopyToClipboardField,
+} from "@workspace/ui/components/copy-to-clipboard-button";
 import { Checkbox } from "@workspace/ui/components/checkbox";
 import { Input } from "@workspace/ui/components/input";
 import {
@@ -73,6 +77,19 @@ export function SectionActions() {
         <div className="space-y-2">
           <Label htmlFor="labeled-input">Email</Label>
           <Input id="labeled-input" placeholder="Email address" />
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold">Copy to clipboard</h3>
+        <div className="max-w-md space-y-4">
+          <CopyToClipboardField text="https://example.com/api/mcp" />
+          <CopyToClipboardButton
+            text="Standalone label button"
+            display="label"
+            variant="outline"
+            size="sm"
+          />
         </div>
       </div>
 
