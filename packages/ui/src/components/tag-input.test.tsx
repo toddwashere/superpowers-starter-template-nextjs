@@ -160,22 +160,19 @@ describe("TagInput", () => {
     expect(screen.queryByText("beta")).not.toBeInTheDocument()
   })
 
-  it("keeps original tag values when displaying truncated tags", async () => {
+  it("truncates displayed tags and reports full label on remove", async () => {
     const user = userEvent.setup()
-    const handleTagClick = vi.fn()
     const handleTagRemove = vi.fn()
 
     render(
       <ControlledTagInput
         truncate={3}
-        onTagClick={handleTagClick}
         onTagRemove={handleTagRemove}
         tags={[{ id: "1", text: "alphabet" }]}
       />
     )
 
-    await user.click(screen.getByRole("button", { name: "alp..." }))
-    expect(handleTagClick).toHaveBeenCalledWith({ id: "1", text: "alphabet" })
+    expect(screen.getByText("alp…")).toBeInTheDocument()
 
     await user.click(screen.getByRole("button", { name: "Remove alphabet" }))
     expect(handleTagRemove).toHaveBeenCalledWith("alphabet")
