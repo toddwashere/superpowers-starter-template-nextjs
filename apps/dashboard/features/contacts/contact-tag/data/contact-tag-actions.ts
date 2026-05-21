@@ -8,6 +8,7 @@ import {
   deleteContactTag,
   addTagToContact,
   removeTagFromContact,
+  setContactTagsForContact,
 } from "@workspace/contacts";
 import type { CreateContactTagInput, UpdateContactTagInput } from "@workspace/contacts";
 import type { ActionResult } from "@/common/data/action-result";
@@ -89,5 +90,20 @@ export async function removeTagFromContactAction(
     return { success: true, data: undefined };
   } catch (err) {
     return { success: false, error: err instanceof Error ? err.message : "Failed to remove tag" };
+  }
+}
+
+export async function setContactTagsAction(
+  contactId: string,
+  tagNames: string[],
+): Promise<ActionResult> {
+  try {
+    const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
+      contact: ["update"],
+    });
+    await setContactTagsForContact(contactId, activeOrganizationId, tagNames);
+    return { success: true, data: undefined };
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : "Failed to set tags" };
   }
 }

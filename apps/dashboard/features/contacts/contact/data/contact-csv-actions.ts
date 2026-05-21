@@ -6,7 +6,12 @@ import {
   exportContactsToCsv,
   createContactWithValidation,
   listContactsForOrg,
+  parseTagNamesFromCsv,
+  setContactTagsForContact,
+  formatContactTagsForCsv,
+  listContactsForSegment,
 } from "@workspace/contacts";
+import type { ContactListFilters } from "@workspace/contacts";
 import type { ActionResult } from "@/common/data/action-result";
 
 export async function previewContactCsvImportAction(
@@ -31,12 +36,11 @@ export async function commitContactCsvImportAction(
       contact: ["import"],
     });
     const { valid } = parseContactsCsv(csvText);
-    // Best-effort: import each row independently so one failure doesn't block the rest.
     let imported = 0;
     let skipped = 0;
     for (const row of valid) {
       try {
-        await createContactWithValidation(activeOrganizationId, {
+        const contact = await createContactWithValidation(activeOrganizationId, {
           kind: row.kind,
           displayName: row.displayName,
           firstName: row.firstName,
@@ -47,6 +51,10 @@ export async function commitContactCsvImportAction(
           website: row.website,
           source: row.source,
         });
+        const tagNames = parseTagNamesFromCsv(row.tags);
+        if (tagNames.length > 0) {
+          await setContactTagsForContact(contact.id, activeOrganizationId, tagNames);
+        }
         imported++;
       } catch {
         skipped++;
@@ -58,12 +66,23 @@ export async function commitContactCsvImportAction(
   }
 }
 
-export async function exportContactsCsvAction(): Promise<ActionResult<string>> {
+export async function exportContactsCsvAction(
+  options: { segmentId?: string; filters?: Partial<ContactListFilters> } = {},
+): Promise<ActionResult<string>> {
   try {
     const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
       contact: ["export"],
     });
-    const contacts = await listContactsForOrg(activeOrganizationId, { pageSize: 5000 });
+
+    const contacts = options.segmentId
+      ? await listContactsForSegment(activeOrganizationId, options.segmentId, {
+          pageSize: 5000,
+        })
+      : await listContactsForOrg(activeOrganizationId, {
+          ...options.filters,
+          pageSize: 5000,
+        });
+
     const csv = exportContactsToCsv(
       contacts.map((c) => ({
         displayName: c.displayName,
@@ -75,6 +94,7 @@ export async function exportContactsCsvAction(): Promise<ActionResult<string>> {
         primaryPhone: c.primaryPhone ?? undefined,
         website: c.website ?? undefined,
         source: c.source ?? undefined,
+        tags: formatContactTagsForCsv(c.tags),
       })),
     );
     return { success: true, data: csv };

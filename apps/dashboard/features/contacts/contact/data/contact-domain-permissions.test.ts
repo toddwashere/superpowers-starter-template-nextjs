@@ -28,8 +28,15 @@ import {
   deleteContactTagAction,
   listContactTagsAction,
   removeTagFromContactAction,
+  setContactTagsAction,
   updateContactTagAction,
 } from "../../contact-tag/data/contact-tag-actions";
+import {
+  createContactSegmentAction,
+  deleteContactSegmentAction,
+  listContactSegmentsAction,
+  listContactsForSegmentAction,
+} from "../../contact-segment/data/contact-segment-actions";
 import {
   createContactStageAction,
   deleteContactStageAction,
@@ -68,6 +75,11 @@ vi.mock("@workspace/contacts", () => ({
   deleteContactTag: vi.fn().mockResolvedValue({ id: "tag_1" }),
   addTagToContact: vi.fn().mockResolvedValue(undefined),
   removeTagFromContact: vi.fn().mockResolvedValue(undefined),
+  setContactTagsForContact: vi.fn().mockResolvedValue(undefined),
+  listContactSegmentsForOrg: vi.fn().mockResolvedValue([]),
+  createContactSegment: vi.fn().mockResolvedValue({ id: "cseg_1" }),
+  deleteContactSegment: vi.fn().mockResolvedValue({ id: "cseg_1" }),
+  listContactsForSegment: vi.fn().mockResolvedValue([]),
   listContactStagesForOrg: vi.fn().mockResolvedValue([]),
   createContactStage: vi.fn().mockResolvedValue({ id: "stage_1" }),
   updateContactStage: vi.fn().mockResolvedValue({ id: "stage_1" }),
@@ -182,6 +194,7 @@ describe("contact domain action permissions", () => {
     await deleteContactTagAction("tag_1");
     await addTagToContactAction("contact_1", "tag_1");
     await removeTagFromContactAction("contact_1", "tag_1");
+    await setContactTagsAction("contact_1", ["VIP"]);
 
     expect(requireOrgPermissionWithActiveOrg).toHaveBeenNthCalledWith(1, {
       contactSettings: ["read"],
@@ -200,6 +213,35 @@ describe("contact domain action permissions", () => {
     });
     expect(requireOrgPermissionWithActiveOrg).toHaveBeenNthCalledWith(6, {
       contact: ["update"],
+    });
+    expect(requireOrgPermissionWithActiveOrg).toHaveBeenNthCalledWith(7, {
+      contact: ["update"],
+    });
+  });
+
+  it("requires contact read and contactSettings for segments", async () => {
+    await listContactSegmentsAction();
+    await listContactsForSegmentAction("cseg_1");
+    await createContactSegmentAction({
+      name: "Active VIP",
+      filters: { tagIds: ["tag_1"] },
+      filterVersion: 1,
+      sortKey: "displayName",
+      sortDirection: "asc",
+    });
+    await deleteContactSegmentAction("cseg_1");
+
+    expect(requireOrgPermissionWithActiveOrg).toHaveBeenNthCalledWith(1, {
+      contact: ["read"],
+    });
+    expect(requireOrgPermissionWithActiveOrg).toHaveBeenNthCalledWith(2, {
+      contact: ["read"],
+    });
+    expect(requireOrgPermissionWithActiveOrg).toHaveBeenNthCalledWith(3, {
+      contactSettings: ["create"],
+    });
+    expect(requireOrgPermissionWithActiveOrg).toHaveBeenNthCalledWith(4, {
+      contactSettings: ["delete"],
     });
   });
 
