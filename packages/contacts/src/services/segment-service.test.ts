@@ -1,5 +1,16 @@
 // packages/contacts/src/services/segment-service.test.ts
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
+
+vi.mock("@workspace/database", () => ({
+  prisma: {
+    contact: { findMany: vi.fn() },
+  },
+}));
+
+vi.mock("../data-models/contact-segment-repo", () => ({
+  getContactSegmentById: vi.fn(),
+}));
+
 import { validateSegmentFilters, buildContactWhereFromSegment } from "./segment-service";
 
 describe("validateSegmentFilters", () => {

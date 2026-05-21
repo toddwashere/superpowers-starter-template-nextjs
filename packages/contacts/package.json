@@ -4,7 +4,13 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./schemas/contact-schemas": "./src/schemas/contact-schemas.ts",
+    "./schemas/segment-schemas": "./src/schemas/segment-schemas.ts",
+    "./schemas/stage-schemas": "./src/schemas/stage-schemas.ts",
+    "./schemas/tag-schemas": "./src/schemas/tag-schemas.ts",
+    "./schemas/interaction-schemas": "./src/schemas/interaction-schemas.ts",
+    "./schemas/task-schemas": "./src/schemas/task-schemas.ts"
   },
   "scripts": {
     "type-check": "tsc --noEmit",

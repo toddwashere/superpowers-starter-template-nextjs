@@ -1,4 +1,6 @@
+import { prisma } from "@workspace/database";
 import type { Prisma } from "@workspace/database";
+import { getContactSegmentById } from "../data-models/contact-segment-repo";
 import {
   ContactSegmentFilterSchemaV1,
   type ContactSegmentFilterV1,
@@ -45,4 +47,29 @@ export function buildContactWhereFromSegment(
   }
 
   return where;
+}
+
+export async function listContactsForSegment(
+  organizationId: string,
+  segmentId: string,
+  options: { page?: number; pageSize?: number } = {},
+) {
+  const segment = await getContactSegmentById(segmentId, organizationId);
+  if (!segment) {
+    throw new Error("Segment not found in this organization");
+  }
+
+  const filters = validateSegmentFilters(segment.filters, segment.filterVersion);
+  const { page = 1, pageSize = 20 } = options;
+
+  return prisma.contact.findMany({
+    where: buildContactWhereFromSegment(organizationId, filters),
+    include: {
+      stage: true,
+      tags: { include: { tag: true } },
+    },
+    orderBy: { [segment.sortKey]: segment.sortDirection },
+    take: pageSize,
+    skip: (page - 1) * pageSize,
+  });
 }
