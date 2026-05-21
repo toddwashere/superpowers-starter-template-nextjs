@@ -5,7 +5,9 @@ alwaysApply: true
 
 # Shared AI Guidance
 
-Canonical AI guidance lives in `.ai/`. Prefer adding durable agent instructions there, with `.cursor/` and `.claude/` containing lightweight references.
+Canonical AI guidance lives in `.ai/`. See `.ai/README.md` and root `AGENTS.md`. Prefer adding durable agent instructions there, with `.cursor/` and `.claude/` containing lightweight references.
+
+**Architecture invariants (enforced by ESLint in `apps/`):** Dashboard and www must not import `@workspace/database`, `@workspace/database/client`, or `@prisma/client` — use domain packages and repos. All apps under `apps/` must not import `lucide-react` — use `@workspace/ui/components/icon-for`.
 
 When adding or changing database models, Prisma schema, model repositories, or CRUD data access, read `.ai/skills/add-data-model-to-database/SKILL.md` before making changes.
 

@@ -3,11 +3,13 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-  IconForProfile,
+  IconForDevice,
   IconForExpand,
+  IconForMoon,
+  IconForProfile,
   IconForSignOut,
+  IconForSun,
 } from "@workspace/ui/components/icon-for";
-import { Sun, Moon, Monitor } from "lucide-react";
 import { authClient } from "@/features/auth/data/auth-client";
 import { getPathForSignIn, getPathForAccountSettings } from "@workspace/routes";
 import {
@@ -123,15 +125,15 @@ export function NavUser() {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem onSelect={() => setTheme("light")}>
-                <Sun className="size-4" />
+                <IconForSun />
                 Light
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={() => setTheme("dark")}>
-                <Moon className="size-4" />
+                <IconForMoon />
                 Dark
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={() => setTheme("system")}>
-                <Monitor className="size-4" />
+                <IconForDevice />
                 System
               </DropdownMenuItem>
             </DropdownMenuGroup>

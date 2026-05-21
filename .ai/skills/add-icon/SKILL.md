@@ -13,6 +13,8 @@ Use this skill whenever app code (`apps/*`) needs an icon. The project uses a ce
 
 App code never imports from `lucide-react` directly. All icons come from `@workspace/ui/components/icon-for`.
 
+ESLint enforces this for all files under `apps/` via `tooling/eslint/apps-architecture.js` (included from the Next.js ESLint config).
+
 **Exception:** Icons inside `packages/ui/src/components/` (shadcn primitives) continue to import directly from `lucide-react` — those are internal to the component library.
 
 ## Before Adding an Icon

@@ -20,7 +20,9 @@ import {
   LogOut,
   Mail,
   Monitor,
+  Moon,
   MoreHorizontal,
+  Sun,
   Plus,
   Search,
   Settings,
@@ -215,6 +217,20 @@ export const IconForDevice = forwardRef<SVGSVGElement, LucideProps>(
   )
 );
 IconForDevice.displayName = "IconForDevice";
+
+export const IconForSun = forwardRef<SVGSVGElement, LucideProps>(
+  (props, ref) => (
+    <Sun ref={ref} {...props} className={cn("size-4", props.className)} />
+  )
+);
+IconForSun.displayName = "IconForSun";
+
+export const IconForMoon = forwardRef<SVGSVGElement, LucideProps>(
+  (props, ref) => (
+    <Moon ref={ref} {...props} className={cn("size-4", props.className)} />
+  )
+);
+IconForMoon.displayName = "IconForMoon";
 
 export const IconForKey = forwardRef<SVGSVGElement, LucideProps>(
   (props, ref) => (

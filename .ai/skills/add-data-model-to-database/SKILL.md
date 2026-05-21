@@ -13,6 +13,8 @@ Use this skill whenever adding, changing, or removing persisted data models. The
 
 Schema is centralized. Repositories are domain-owned. Apps should never import Prisma directly.
 
+ESLint blocks `@workspace/database`, `@workspace/database/client`, and `@prisma/client` imports in `apps/dashboard` and `apps/www` via `tooling/eslint/apps-architecture.js`.
+
 ## Before Editing
 
 1. Identify the domain that owns the model: `auth`, `contacts`, `billing`, `mcp`, or another package.

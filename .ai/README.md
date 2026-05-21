@@ -4,11 +4,16 @@ This folder contains canonical project guidance for AI coding agents.
 
 Tool-specific folders such as `.cursor/` and `.claude/` should keep only lightweight references or wrappers when possible. The durable instructions should live here (`.ai/`) so all agents follow the same project conventions.
 
+Entry points for agents: [../AGENTS.md](../AGENTS.md) and [`.cursor/rules/shared-ai-guidance.mdc`](../.cursor/rules/shared-ai-guidance.mdc).
+
 ## Skills
 
-- [`skills/add-data-model-to-database/SKILL.md`](./skills/add-data-model-to-database/SKILL.md) - Conventions for adding Prisma schema models, domain-owned repositories, and database access patterns.
-- [`skills/create-skill/SKILL.md`](./skills/create-skill/SKILL.md) - Create new project-level AI agent skills following this monorepo's three-tier pattern (canonical .ai/ + .cursor/ and .claude/ wrappers).
-- [`skills/add-modal-or-confirm-dialog/SKILL.md`](./skills/add-modal-or-confirm-dialog/SKILL.md) - Conventions for adding modals, confirm dialogs, and overlay UI using NiceModal.
+- [`skills/add-data-model-to-database/SKILL.md`](./skills/add-data-model-to-database/SKILL.md) - Prisma schema, domain-owned repositories, and database access patterns.
+- [`skills/add-icon/SKILL.md`](./skills/add-icon/SKILL.md) - Centralized icon registry; never import `lucide-react` in app code.
+- [`skills/add-modal-or-confirm-dialog/SKILL.md`](./skills/add-modal-or-confirm-dialog/SKILL.md) - Modals, confirm dialogs, and overlay UI using NiceModal.
+- [`skills/add-new-app/SKILL.md`](./skills/add-new-app/SKILL.md) - Add a runnable app under `apps/` (ports, Turborepo, package setup).
+- [`skills/add-new-page/SKILL.md`](./skills/add-new-page/SKILL.md) - Sparse routes and feature folders for dashboard and www pages.
+- [`skills/create-skill/SKILL.md`](./skills/create-skill/SKILL.md) - Create project-level skills (canonical `.ai/` + tool wrappers).
 
 ## Conventions
 

@@ -1,10 +1,9 @@
-import type { LucideProps } from "lucide-react";
-import type { ComponentType } from "react";
+import type { ComponentType, SVGProps } from "react";
 
 export interface NavItem {
   title: string;
   href: string;
-  icon: ComponentType<LucideProps>;
+  icon: ComponentType<SVGProps<SVGSVGElement>>;
   isActive?: boolean;
   items?: NavSubItem[];
 }

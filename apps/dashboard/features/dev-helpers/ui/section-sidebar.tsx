@@ -1,16 +1,18 @@
 "use client";
 
-import { Sun, Moon, Monitor } from "lucide-react";
 import {
-  IconForExpand,
   IconForAdd,
-  IconForProfile,
-  IconForNotifications,
-  IconForSignOut,
-  IconForDashboard,
   IconForBilling,
+  IconForDashboard,
+  IconForDevice,
+  IconForExpand,
   IconForMembers,
+  IconForMoon,
+  IconForNotifications,
+  IconForProfile,
   IconForSettings,
+  IconForSignOut,
+  IconForSun,
 } from "@workspace/ui/components/icon-for";
 import {
   Sidebar,
@@ -193,15 +195,15 @@ function MockNavUser() {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem onSelect={() => setTheme("light")}>
-                <Sun className="size-4" />
+                <IconForSun />
                 Light
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={() => setTheme("dark")}>
-                <Moon className="size-4" />
+                <IconForMoon />
                 Dark
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={() => setTheme("system")}>
-                <Monitor className="size-4" />
+                <IconForDevice />
                 System
               </DropdownMenuItem>
             </DropdownMenuGroup>
