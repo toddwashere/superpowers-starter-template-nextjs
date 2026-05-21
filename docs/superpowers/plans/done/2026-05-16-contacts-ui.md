@@ -12,23 +12,55 @@
 
 ---
 
+## Implementation status (2026-05-20)
+
+### Done
+
+- Nav + four routes under `/[org-slug]/contacts/*`
+- Feature layout: `contact/`, `contact-tag/`, `contact-stage/`, `contact-task/`, `contact-interaction/` (not flat `data/` from original file map)
+- Server actions: contacts, CSV, stages, tags (CRUD + add/remove on contact), interactions, tasks
+- List page: search, CSV import/export, archive, stage column
+- Detail page: fields, read-only tags/stage, notes, tasks, edit contact modal
+- Tasks page: org-wide list, complete to terminal status
+- Settings: stages, tags, task statuses
+- Permission tests in `contact-domain-permissions.test.ts`
+
+### Completed in follow-up (2026-05-20)
+
+- [x] `contact-segment/` actions, filters helper, save-segment modal, list filters (stage, tag, segment)
+- [x] Tags column on list; `ContactTagsEditor` on detail (`setContactTagsAction`)
+- [x] `stageId` on add/edit contact forms (`ContactStageField`)
+- [x] CSV import/export tag names (via updated `contact-csv-actions.ts`)
+- [x] Task board status filter on `/contacts/tasks`
+
+### Deferred (not required for v1)
+
+- [ ] Task board assignee / due-date filters (API supports `assigneeId`; UI not added)
+- [ ] Unified `contact-form.tsx` (add/edit modals remain separate)
+
+> Historical task checkboxes below are left for reference; prefer this status section for current truth.
+
+---
+
 ## File Map
 
-### Created
-- `apps/dashboard/features/contacts/data/contact-types.ts`
-- `apps/dashboard/features/contacts/data/contact-actions.ts`
-- `apps/dashboard/features/contacts/data/stage-actions.ts`
-- `apps/dashboard/features/contacts/data/tag-actions.ts`
-- `apps/dashboard/features/contacts/data/segment-actions.ts`
-- `apps/dashboard/features/contacts/data/interaction-actions.ts`
-- `apps/dashboard/features/contacts/data/task-actions.ts`
-- `apps/dashboard/features/contacts/data/csv-actions.ts`
-- `apps/dashboard/features/contacts/ui/contacts-page-content.tsx`
-- `apps/dashboard/features/contacts/ui/contact-detail-page-content.tsx`
-- `apps/dashboard/features/contacts/ui/contacts-tasks-page-content.tsx`
-- `apps/dashboard/features/contacts/ui/contacts-settings-page-content.tsx`
-- `apps/dashboard/features/contacts/ui/contact-form.tsx`
-- `apps/dashboard/features/contacts/ui/csv-import-dialog.tsx`
+### Created (actual paths)
+- `apps/dashboard/features/contacts/contact/data/contact-actions.ts`
+- `apps/dashboard/features/contacts/contact/data/contact-csv-actions.ts`
+- `apps/dashboard/features/contacts/contact-stage/data/contact-stage-actions.ts`
+- `apps/dashboard/features/contacts/contact-tag/data/contact-tag-actions.ts`
+- `apps/dashboard/features/contacts/contact-segment/data/contact-segment-actions.ts`
+- `apps/dashboard/features/contacts/contact-segment/data/contact-segment-filters.ts`
+- `apps/dashboard/features/contacts/contact-interaction/data/contact-interaction-actions.ts`
+- `apps/dashboard/features/contacts/contact-task/data/contact-task-actions.ts`
+- `apps/dashboard/features/contacts/contact/ui/contacts-page-content.tsx`
+- `apps/dashboard/features/contacts/contact/ui/contact-detail-page-content.tsx`
+- `apps/dashboard/features/contacts/contact-task/ui/contacts-tasks-page-content.tsx`
+- `apps/dashboard/features/contacts/contact/ui/contacts-settings-page-content.tsx`
+- `apps/dashboard/features/contacts/contact/ui/contact-form-state.ts`
+- `apps/dashboard/features/contacts/contact/ui/csv-import-dialog.tsx`
+- `apps/dashboard/features/contacts/contact-tag/ui/contact-tags-editor.tsx`
+- `apps/dashboard/features/contacts/contact-segment/ui/save-contact-segment-button-modal.tsx`
 - `apps/dashboard/app/(organization)/[org-slug]/contacts/page.tsx`
 - `apps/dashboard/app/(organization)/[org-slug]/contacts/[contact-id]/page.tsx`
 - `apps/dashboard/app/(organization)/[org-slug]/contacts/tasks/page.tsx`

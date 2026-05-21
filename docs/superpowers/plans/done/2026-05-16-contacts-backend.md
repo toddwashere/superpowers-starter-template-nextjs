@@ -10,6 +10,32 @@
 
 ---
 
+## Implementation status (2026-05-20)
+
+### Done
+
+- Prefixed IDs (`packages/common/src/create-id.ts`)
+- Prisma schema + migration (`contacts.prisma`, `20260517024946_add_contacts_domain`)
+- `packages/contacts` package: schemas, all repos (contact, stage, tag, segment, interaction, task, task status), services (contact validation, segment filters, CSV parse/export), public exports
+- Colocated Vitest coverage for repos and services
+- Demo org seed for default stages and task statuses (`packages/database/prisma/seed.ts`)
+- MCP contact tools in `packages/tool-calls/src/tools/contact-tools.ts` + registry wiring
+- Interaction archive migration (`20260517054100_add_contact_interaction_archive`)
+
+### Completed in follow-up (2026-05-20)
+
+- [x] `setContactTagsForContact`, `parseTagNamesFromCsv`, `formatContactTagsForCsv` (`contact-tag-service.ts` + tests)
+- [x] `listContactsForSegment` in segment service (segment-service.test.ts mocks prisma)
+- [x] CSV import applies `tags` column; export includes assigned tag names (dashboard `contact-csv-actions.ts`)
+
+### Deferred (not required for v1)
+
+- [ ] Org bootstrap on first contacts use (demo org seed covers local dev; new orgs create stages/tags via settings UI)
+
+> Historical task checkboxes below are left for reference; prefer this status section for current truth.
+
+---
+
 ## File Map
 
 ### Created
