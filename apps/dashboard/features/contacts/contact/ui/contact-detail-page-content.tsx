@@ -33,6 +33,7 @@ import {
 import { EditContactButtonModal } from "./edit-contact-button-modal";
 import { ContactTaskButtonModal } from "../../contact-task/ui/contact-task-button-modal";
 import { EditNoteButtonModal } from "../../contact-interaction/ui/edit-note-button-modal";
+import { ContactTagsEditor } from "../../contact-tag/ui/contact-tags-editor";
 
 type Contact = Extract<
   Awaited<ReturnType<typeof getContactAction>>,
@@ -278,11 +279,15 @@ export function ContactDetailPageContent({
             {contact.stage.name}
           </Badge>
         )}
-        {contact.tags.map((a) => (
-          <Badge key={a.tagId} variant="secondary">
-            {a.tag.name}
-          </Badge>
-        ))}
+      </div>
+
+      <div className="space-y-2">
+        <h2 className="text-sm font-semibold text-muted-foreground">Tags</h2>
+        <ContactTagsEditor
+          contactId={contact.id}
+          assignments={contact.tags}
+          onUpdated={loadContact}
+        />
       </div>
 
       <div className="grid grid-cols-2 gap-4 text-sm">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import {
   Dialog,
@@ -23,13 +23,15 @@ import {
 import { Alert, AlertDescription } from "@workspace/ui/components/alert";
 import { resolveAndHideModal } from "@/common/ui/nice-modal-helpers";
 import { createContactAction } from "../data/contact-actions";
-import type { CreateContactInput } from "@workspace/contacts";
+import type { CreateContactInput } from "@workspace/contacts/schemas/contact-schemas";
 import type { AddContactResult } from "./add-contact-flow";
 import {
   contactFormStateToInput,
   createEmptyContactFormState,
   type ContactFormState,
 } from "./contact-form-state";
+import { listContactStagesAction } from "../../contact-stage/data/contact-stage-actions";
+import { ContactStageField } from "../../contact-stage/ui/contact-stage-field";
 
 export const AddContactButtonModal = NiceModal.create(() => {
   const modal = useModal();
@@ -38,6 +40,8 @@ export const AddContactButtonModal = NiceModal.create(() => {
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [stages, setStages] = useState<{ id: string; name: string }[]>([]);
+  const [, startStagesTransition] = useTransition();
 
   function resetForm() {
     setForm(createEmptyContactFormState());
@@ -46,7 +50,12 @@ export const AddContactButtonModal = NiceModal.create(() => {
   }
 
   useEffect(() => {
-    if (modal.visible) resetForm();
+    if (!modal.visible) return;
+    resetForm();
+    startStagesTransition(async () => {
+      const result = await listContactStagesAction();
+      if (result.success) setStages(result.data);
+    });
   }, [modal.visible]);
 
   async function handleCreate() {
@@ -153,6 +162,15 @@ export const AddContactButtonModal = NiceModal.create(() => {
               placeholder="(555) 123-4567"
             />
           </div>
+
+          <ContactStageField
+            id="contact-stage"
+            value={form.stageId}
+            stages={stages}
+            onChange={(stageId) =>
+              setForm((current) => ({ ...current, stageId }))
+            }
+          />
         </div>
 
         {error && (

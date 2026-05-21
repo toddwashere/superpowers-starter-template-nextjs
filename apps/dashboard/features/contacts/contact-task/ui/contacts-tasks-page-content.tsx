@@ -3,6 +3,13 @@
 import { useState, useEffect, useTransition } from "react";
 import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@workspace/ui/components/select";
 import { Page, PageBody } from "@workspace/ui/components/page";
 import { PageHeaderInOrg } from "@/common/ui/page-header-in-org";
 import {
@@ -35,19 +42,23 @@ export function ContactsTasksPageContent({ orgSlug: _orgSlug }: { orgSlug: strin
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const [completingId, setCompletingId] = useState<string | null>(null);
+  const [statusFilter, setStatusFilter] = useState<string>("__all__");
 
-  useEffect(() => {
-    let isCurrent = true;
+  function loadTasks(statusId?: string) {
     startTransition(async () => {
       const [tResult, sResult] = await Promise.all([
-        listContactTasksForOrgAction(),
+        listContactTasksForOrgAction(
+          statusId ? { statusId } : {},
+        ),
         listContactTaskStatusesAction(),
       ]);
-      if (!isCurrent) return;
       if (tResult.success) setTasks(tResult.data);
       if (sResult.success) setStatuses(sResult.data);
     });
-    return () => { isCurrent = false; };
+  }
+
+  useEffect(() => {
+    loadTasks();
   }, []);
 
   async function handleComplete(taskId: string) {
@@ -68,10 +79,7 @@ export function ContactsTasksPageContent({ orgSlug: _orgSlug }: { orgSlug: strin
         return;
       }
       setError(null);
-      startTransition(async () => {
-        const tResult = await listContactTasksForOrgAction();
-        if (tResult.success) setTasks(tResult.data);
-      });
+      loadTasks(statusFilter === "__all__" ? undefined : statusFilter);
     } finally {
       setCompletingId(null);
     }
@@ -82,6 +90,28 @@ export function ContactsTasksPageContent({ orgSlug: _orgSlug }: { orgSlug: strin
       <PageHeaderInOrg
         title="Contact Tasks"
         description="View and complete tasks across all contacts."
+        toolbarInline
+        toolbar={
+          <Select
+            value={statusFilter}
+            onValueChange={(value) => {
+              setStatusFilter(value);
+              loadTasks(value === "__all__" ? undefined : value);
+            }}
+          >
+            <SelectTrigger className="h-9 w-full sm:w-48">
+              <SelectValue placeholder="Filter by status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="__all__">All statuses</SelectItem>
+              {statuses.map((status) => (
+                <SelectItem key={status.id} value={status.id}>
+                  {status.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        }
       />
       <PageBody className="space-y-4 p-6">
       {error && <p className="text-sm text-destructive">{error}</p>}

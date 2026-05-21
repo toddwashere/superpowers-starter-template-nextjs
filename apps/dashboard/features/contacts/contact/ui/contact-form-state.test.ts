@@ -17,6 +17,7 @@ describe("contact form state", () => {
       primaryPhone: "",
       website: "",
       source: "",
+      stageId: "",
     });
   });
 
@@ -28,6 +29,7 @@ describe("contact form state", () => {
       primaryPhone: "555-1234",
       website: "https://acme.test",
       source: "import",
+      stageId: "cstage_customer",
     });
 
     expect(state).toMatchObject({
@@ -37,6 +39,7 @@ describe("contact form state", () => {
       primaryPhone: "555-1234",
       website: "https://acme.test",
       source: "import",
+      stageId: "cstage_customer",
     });
   });
 
@@ -49,6 +52,7 @@ describe("contact form state", () => {
         primaryPhone: "",
         website: "",
         source: "",
+        stageId: "",
       }),
     ).toEqual({
       kind: "person",
@@ -57,6 +61,21 @@ describe("contact form state", () => {
       primaryPhone: undefined,
       website: undefined,
       source: undefined,
+      stageId: undefined,
     });
+  });
+
+  it("includes stageId when set on the form", () => {
+    expect(
+      contactFormStateToInput({
+        kind: "person",
+        displayName: "Jane",
+        primaryEmail: "",
+        primaryPhone: "",
+        website: "",
+        source: "",
+        stageId: "cstage_active",
+      }),
+    ).toMatchObject({ stageId: "cstage_active" });
   });
 });
