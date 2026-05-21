@@ -27,13 +27,15 @@ export async function listContactTagsAction(): Promise<
   }
 }
 
-export async function createContactTagAction(data: CreateContactTagInput): Promise<ActionResult> {
+export async function createContactTagAction(
+  data: CreateContactTagInput,
+): Promise<ActionResult<Awaited<ReturnType<typeof createContactTag>>>> {
   try {
     const { activeOrganizationId } = await requireOrgPermissionWithActiveOrg({
       contactSettings: ["create"],
     });
-    await createContactTag(activeOrganizationId, data);
-    return { success: true, data: undefined };
+    const tag = await createContactTag(activeOrganizationId, data);
+    return { success: true, data: tag };
   } catch (err) {
     return { success: false, error: err instanceof Error ? err.message : "Failed to create tag" };
   }

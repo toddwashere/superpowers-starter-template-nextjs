@@ -32,7 +32,7 @@ import { Page, PageBody } from "@workspace/ui/components/page";
 import { RadioCardItem, RadioCards } from "@workspace/ui/components/radio-cards";
 import { Spinner } from "@workspace/ui/components/spinner";
 import { TabsWithContent } from "@workspace/ui/components/tabs-with-content";
-import { TagInput, type TagType } from "@workspace/ui/components/tag-input";
+import { TagsField, type TagValue } from "@workspace/ui/components/tags-field";
 import { ThemeSwitcher } from "@workspace/ui/components/theme-switcher";
 import { TooltipProvider } from "@workspace/ui/components/tooltip";
 
@@ -252,9 +252,14 @@ export function SectionExtendedComponents() {
     from: new Date(2026, 4, 11),
     to: new Date(2026, 4, 15),
   });
-  const [tags, setTags] = useState<TagType[]>([
-    { id: "tag-design-0", text: "design" },
-    { id: "tag-release-1", text: "release" },
+  const tagSuggestions: TagValue[] = [
+    { id: "tag-design", label: "design", color: "#6366f1" },
+    { id: "tag-release", label: "release", color: "#22c55e" },
+    { id: "tag-billing", label: "billing", color: "#f59e0b" },
+  ];
+  const [tags, setTags] = useState<TagValue[]>([
+    tagSuggestions[0]!,
+    tagSuggestions[1]!,
   ]);
   const [dropzoneMessage, setDropzoneMessage] = useState(
     "Drag a mock image here or click to select one."
@@ -346,12 +351,13 @@ export function SectionExtendedComponents() {
 
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">Tags</h3>
-          <TagInput
+          <TagsField
+            aria-label="Demo tags"
             tags={tags}
+            suggestions={tagSuggestions}
             onTagsChange={setTags}
-            placeholder="Add a tag and press Enter"
+            placeholder="Search or create a tag…"
             maxTags={5}
-            clearAll
           />
         </div>
       </div>
